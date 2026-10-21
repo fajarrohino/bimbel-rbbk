@@ -79,7 +79,7 @@ export default function StudentDetailPage() {
 
   useEffect(() => {
     if (!mockStore.getIsLoggedIn()) {
-      router.push('/admin/login');
+      router.push('/auth/login');
       return;
     }
     loadData();

@@ -27,7 +27,7 @@ export default function EditProgramPage() {
 
   useEffect(() => {
     if (!mockStore.getIsLoggedIn()) {
-      router.push('/admin/login');
+      router.push('/auth/login');
       return;
     }
     const all = mockStore.getPrograms();

@@ -28,7 +28,7 @@ export default function NewStudentPage() {
 
   useEffect(() => {
     if (!mockStore.getIsLoggedIn()) {
-      router.push('/admin/login');
+      router.push('/auth/login');
       return;
     }
     const allProg = mockStore.getPrograms().filter((p) => p.isActive && !p.isDeleted);

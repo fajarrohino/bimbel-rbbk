@@ -17,7 +17,7 @@ export default function AdminHeader({ onToggleSidebar, title }: AdminHeaderProps
   const handleLogout = () => {
     if (confirm('Apakah Anda yakin ingin logout dari sesi admin?')) {
       mockStore.setLoggedIn(false);
-      router.push('/admin/login');
+      router.push('/auth/login');
     }
   };
 

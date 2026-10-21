@@ -19,7 +19,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     if (!mockStore.getIsLoggedIn()) {
-      router.push('/admin/login');
+      router.push('/auth/login');
       return;
     }
     setStudents(mockStore.getStudents().filter((s) => !s.isDeleted));

@@ -156,7 +156,7 @@ export default function Footer() {
             <span className="hover:text-slate-400 transition cursor-pointer">
               Bimbingan Belajar Ramah Anak &amp; Terpercaya di Purbalingga
             </span>
-            {/* <Link href="/admin/login" className="hover:text-slate-400 transition-colors">
+            {/* <Link href="/auth/login" className="hover:text-slate-400 transition-colors">
               Portal Admin
             </Link> */}
           </div>

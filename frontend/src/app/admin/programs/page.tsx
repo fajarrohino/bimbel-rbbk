@@ -23,7 +23,7 @@ export default function AdminProgramsPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !mockStore.getIsLoggedIn()) {
-      router.push('/admin/login');
+      router.push('/auth/login');
       return;
     }
     loadPrograms();

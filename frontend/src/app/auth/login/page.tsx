@@ -72,14 +72,6 @@ export default function AdminLoginPage() {
             </span>
           </div>
         </Link>
-
-        <Link
-          href="/"
-          className="text-xs font-bold text-slate-600 hover:text-primary flex items-center gap-1 transition-colors"
-        >
-          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-          <span>Kembali ke Beranda</span>
-        </Link>
       </header>
 
       {/* Main Login Card */}
@@ -89,11 +81,8 @@ export default function AdminLoginPage() {
             <span className="material-symbols-outlined text-2xl">admin_panel_settings</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Portal Masuk Admin
+            Login admin
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xs mx-auto leading-relaxed">
-            Masuk untuk mengelola program, data siswa, dan atur jadwal bimbingan belajar.
-          </p>
         </div>
 
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-100 space-y-6">
@@ -184,7 +173,7 @@ export default function AdminLoginPage() {
 
       {/* Footer Note */}
       <footer className="w-full py-6 text-center text-xs text-slate-400 border-t border-slate-100">
-        Rumah Belajar Bu Khotimah &bull; Khusus Pengajar &amp; Owner
+        Developer by EANNOY
       </footer>
     </div>
   );
