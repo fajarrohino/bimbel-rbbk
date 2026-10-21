@@ -1,0 +1,557 @@
+<!DOCTYPE html><html lang="id" style="width: 1280px; height: 381px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_dashboard" name="shell-type">
+<title>Program Belajar - Rumah Belajar Bu Khotimah</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0284c7",
+            "primary-dark": "#0369a1",
+            "primary-light": "#e0f2fe",
+            "primary-container": "#0284c7",
+            "on-primary": "#ffffff",
+            secondary: "#006a61",
+            "secondary-container": "#ccfbf1",
+            "on-secondary-container": "#0f766e",
+            surface: "#f8fafc",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f1f5f9",
+            "surface-container": "#e2e8f0",
+            "surface-container-high": "#cbd5e1",
+            "on-surface": "#0f172a",
+            "on-surface-variant": "#64748b",
+            outline: "#94a3b8",
+            error: "#ef4444",
+            "error-container": "#fee2e2",
+            "on-error": "#ffffff"
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-sans antialiased min-h-screen flex flex-col">
+<!-- SIDEBAR KIRI -->
+<aside id="sidebar" class="fixed left-0 top-0 h-full w-72 bg-white border-r border-slate-200/80 z-50 flex flex-col justify-between shrink-0 shadow-sm transition-all duration-200">
+    <!-- Bagian Atas: Logo & Navigasi -->
+    <div class="flex flex-col">
+      <!-- Logo Container -->
+      <div class="h-20 px-6 flex items-center border-b border-slate-100 gap-3">
+        <div class="w-10 h-10 flex items-center justify-center shrink-0">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEix-yZ0WxQOm3MXoOUIkRydDgJW_Pt8KWywdwYaXPgJFVMmOYNfCMIaOBWSBVMiAvLtlWnqXFMqd78yHF9mswbaHQ0iEn-XyFFv2htafPj6I3Rb2NthrmIws2C1wfZ8Z9PkD_AS-KJyYiQdi0qDs2CaSHkKFmiSgyhbFzGUhuHn8Wf5Ylr2Fs3XOdTGq9YrZiCkVtqzmpgiIpzElxN4qS2YVWynouZK2zawFP9f0S3LJDP74Gq2tUWG_w9d2GjZgMrA" alt="Logo Rumah Belajar Bu Khotimah" class="max-w-full max-h-full object-contain filter drop-shadow-sm">
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-[15px] tracking-tight text-[#0284c7] leading-tight">Rumah Belajar</span>
+          <span class="text-[11px] font-semibold text-slate-500 tracking-wide uppercase">Bu Khotimah</span>
+        </div>
+      </div>
+
+      <!-- Menu Navigasi -->
+      <nav class="px-4 py-6 space-y-1.5 overflow-y-auto max-h-[calc(100vh-100px)]">
+        <!-- 1. Dashboard -->
+        <a href="#dashboard" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+          </svg>
+          <span class="">Dashboard</span>
+        </a>
+
+        <!-- 2. Data Siswa -->
+        <a href="#data-siswa" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <span class="">Data Siswa</span>
+        </a>
+
+        <!-- 3. Jadwal Bimbingan (Dropdown) -->
+        <div class="relative">
+          <button type="button" onclick="toggleJadwalDropdown()" id="btn-jadwal" class="w-full flex items-center justify-between px-4 py-3 rounded-xl font-medium text-sm text-slate-700 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+            <div class="flex items-center gap-3.5">
+              <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span class="">Jadwal Bimbingan</span>
+            </div>
+            <svg id="arrow-jadwal" class="w-4 h-4 text-slate-400 transition-transform duration-200 transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          <!-- Sub-menu Jadwal Bimbingan -->
+          <div id="submenu-jadwal" class="mt-1 pl-10 pr-2 space-y-1 hidden transition-all duration-200">
+            <a href="#jadwal-siswa" class="flex items-center gap-2.5 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-[#0284c7] hover:bg-sky-50 transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+              <span class="">Jadwal Siswa</span>
+            </a>
+            <a href="#atur-jadwal" class="flex items-center gap-2.5 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-[#0284c7] hover:bg-sky-50 transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+              <span class="">Atur Jadwal</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4. Absensi -->
+        <a href="#absensi" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+          </svg>
+          <span class="">Absensi</span>
+        </a>
+
+        <!-- 5. Pembayaran -->
+        <a href="#pembayaran" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          <span class="">Pembayaran</span>
+        </a>
+
+        <!-- 6. Program Belajar (ACTIVE) -->
+        <a href="#program-belajar" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-semibold text-sm text-[#0284c7] bg-sky-50 border border-sky-200/60 transition-colors group">
+          <svg class="w-5 h-5 text-[#0284c7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          <span class="">Program Belajar</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Bagian Bawah: Bersih sesuai SCREEN_2 -->
+    <div class="p-4">
+    </div>
+  </aside>
+<!-- AREA KONTEN UTAMA DENGAN MARGIN SIDEBAR -->
+<div class="pl-72 flex-1 flex flex-col">
+<!-- TOPBAR -->
+<header class="h-20 bg-white border-b border-slate-200/80 fixed top-0 left-72 right-0 z-40 px-8 flex items-center justify-end shrink-0">
+      <!-- Right Action Items: Notifikasi & Profile Dropdown -->
+      <div class="flex items-center gap-4">
+        <!-- 1. Icon Notifikasi -->
+        <div class="relative">
+          <button type="button" class="w-10 h-10 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-600 flex items-center justify-center transition-colors relative" title="Notifikasi">
+            <svg class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <!-- Red notification dot -->
+            <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+          </button>
+        </div>
+
+        <!-- 2. Profile Icon & Dropdown -->
+        <div class="relative" id="profile-container">
+          <button type="button" onclick="toggleProfileDropdown()" id="profile-btn" class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200/80 text-[#0284c7] hover:bg-sky-100 flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-[#0284c7]/20" title="Profil Pengguna">
+            <!-- Icon Profile -->
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </button>
+
+          <!-- Dropdown Menu Profile & Logout -->
+          <div id="profile-dropdown" class="hidden absolute right-0 mt-2.5 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 transform transition-all duration-150 origin-top-right">
+            <!-- Item 1: Profile -->
+            <a href="#profile" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0284c7] transition-colors">
+              <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              <span class="">Profile</span>
+            </a>
+
+            <!-- Divider -->
+            <div class="my-1.5 border-t border-slate-100"></div>
+
+            <!-- Item 2: Logout -->
+            <a href="#logout" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors">
+              <svg class="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+              </svg>
+              <span class="">Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+<!-- MAIN BODY CONTENT -->
+<main class="flex-1 pt-28 px-8 pb-12 bg-slate-50 max-w-7xl w-full mx-auto">
+<!-- TITLE / HEADER HALAMAN -->
+<div class="flex items-center justify-between mb-6">
+<h1 class="text-2xl font-bold text-slate-900 tracking-tight">Program Belajar</h1>
+<button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary-dark text-white font-semibold text-sm shadow-sm transition-all active:scale-95" onclick="openAddModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span class="">Tambah Program Baru</span>
+</button>
+</div>
+<!-- LAYOUT 1: KARTU STATISTIK (3 KARTU) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+<!-- Kartu 1: Program Aktif -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Program Aktif</p>
+<h3 class="text-2xl font-extrabold text-slate-900" id="countActive">6 Program</h3>
+</div>
+<div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">check_circle</span>
+</div>
+</div>
+<!-- Kartu 2: Program Non Aktif -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Program Non Aktif</p>
+<h3 class="text-2xl font-extrabold text-slate-900" id="countInactive">2 Program</h3>
+</div>
+<div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">pause_circle</span>
+</div>
+</div>
+<!-- Kartu 3: Total Program -->
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Program</p>
+<h3 class="text-2xl font-extrabold text-primary" id="countTotal">8 Program</h3>
+</div>
+<div class="w-12 h-12 rounded-xl bg-sky-50 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">menu_book</span>
+</div>
+</div>
+</div>
+<!-- LAYOUT 2: TABEL DATA PROGRAM (HANYA 4 KOLOM: NO, NAMA PROGRAM, STATUS, AKSI) -->
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="mainProgramTable">
+<thead>
+<tr class="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider">
+<th class="py-3.5 px-6 text-center w-16">NO</th>
+<th class="py-3.5 px-6">NAMA PROGRAM</th>
+<th class="py-3.5 px-6 text-center w-48">STATUS</th>
+<th class="py-3.5 px-6 text-center w-40">AKSI</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-sm" id="programTableList">
+<!-- Rendered via JavaScript or fallback static below -->
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+<!-- MODAL DETAIL PROGRAM -->
+<div class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-200" id="detailModalOverlay">
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform scale-95 transition-all duration-200 flex flex-col" id="detailModalBox">
+<!-- Modal Header -->
+<div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">info</span>
+</div>
+<h3 class="font-bold text-slate-800 text-base">Detail Program Belajar</h3>
+</div>
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors" onclick="closeDetailModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Modal Body (Nama, Deskripsi, Tanggal Dibuat, Tanggal Update) -->
+<div class="p-6 space-y-4">
+<div>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Nama Program</span>
+<h4 class="text-base font-bold text-slate-900 leading-snug" id="detailName"></h4>
+</div>
+<div>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Status</span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold" id="detailStatusBadge"></span>
+</div>
+<div>
+<span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Deskripsi Program</span>
+<p class="text-sm text-slate-600 bg-slate-50 p-3.5 rounded-xl border border-slate-100 leading-relaxed" id="detailDescription"></p>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-1">
+<div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+<span class="text-xs font-medium text-slate-400 block mb-0.5">Tanggal Dibuat</span>
+<span class="text-xs font-bold text-slate-800 block" id="detailCreatedAt"></span>
+</div>
+<div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+<span class="text-xs font-medium text-slate-400 block mb-0.5">Tanggal Update</span>
+<span class="text-xs font-bold text-slate-800 block" id="detailUpdatedAt"></span>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex justify-end">
+<button class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs rounded-lg transition-colors" onclick="closeDetailModal()" type="button">
+          Tutup
+        </button>
+</div>
+</div>
+</div>
+<!-- TOAST NOTIFICATION -->
+<div class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-2.5 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" id="toast">
+<span class="material-symbols-outlined text-emerald-400 text-[20px]" id="toastIcon">check_circle</span>
+<span class="text-xs font-medium" id="toastMessage">Operasi berhasil</span>
+</div>
+<script>
+    // Data Program Belajar persis sesuai spesifikasi user
+    const programsData = [
+      {
+        id: 1,
+        name: "Calistung (Baca, Tulis, Hitung)",
+        status: "Enable",
+        description: "Bimbingan pondasi membaca suku kata, menulis rapi, dan berhitung angka dasar secara ramah dan menyenangkan untuk anak usia dini.",
+        createdAt: "05 Januari 2024, 08:00 WIB",
+        updatedAt: "15 Februari 2025, 11:20 WIB"
+      },
+      {
+        id: 2,
+        name: "Matematika Dasar & Logika",
+        status: "Enable",
+        description: "Pendalaman konsep dasar hitung, pecahan, logika matematika, serta latihan trik cepat pengerjaan soal secara bertahap.",
+        createdAt: "10 Januari 2024, 09:00 WIB",
+        updatedAt: "18 Februari 2025, 14:10 WIB"
+      },
+      {
+        id: 3,
+        name: "Pendampingan PR & Tugas Sekolah",
+        status: "Enable",
+        description: "Bimbingan harian mendampingi siswa menuntaskan PR, tugas tematik sekolah, dan pemahaman materi yang diajarkan pada hari berjalan.",
+        createdAt: "12 Januari 2024, 09:15 WIB",
+        updatedAt: "24 Februari 2025, 17:30 WIB"
+      },
+      {
+        id: 4,
+        name: "Penguatan Materi & Kurikulum",
+        status: "Enable",
+        description: "Program intensif penguatan konsep kurikulum sekolah untuk mata pelajaran utama seperti IPAS dan Bahasa Indonesia.",
+        createdAt: "18 Januari 2024, 10:00 WIB",
+        updatedAt: "20 Januari 2025, 16:00 WIB"
+      },
+      {
+        id: 5,
+        name: "Persiapan ASTS, ASAS & Ujian",
+        status: "Enable",
+        description: "Pembahasan kisi-kisi soal Asesmen Sumatif Tengah Semester & Akhir Semester serta try out rutin persiapan ujian akhir sekolah.",
+        createdAt: "02 Februari 2025, 13:40 WIB",
+        updatedAt: "26 Februari 2025, 10:00 WIB"
+      },
+      {
+        id: 6,
+        name: "Komputer Dasar",
+        status: "Enable",
+        description: "Pengenalan perangkat keras komputer, ketik 10 jari ceria, pengoperasian dasar software edukasi, dan literasi internet sehat.",
+        createdAt: "12 Januari 2025, 09:30 WIB",
+        updatedAt: "28 Februari 2025, 14:15 WIB"
+      },
+      {
+        id: 7,
+        name: "Bahasa Inggris Dasar",
+        status: "Disable",
+        description: "Pengenalan kosa kata bahasa Inggris sehari-hari, pelafalan sederhana, serta percakapan ringan melalui dongeng bergambar.",
+        createdAt: "01 Februari 2024, 11:15 WIB",
+        updatedAt: "10 Januari 2025, 09:40 WIB"
+      },
+      {
+        id: 8,
+        name: "Sains & Percobaan Sederhana",
+        status: "Disable",
+        description: "Eksplorasi eksperimen sains kreatif dan aman dengan media peraga di sekitar untuk menumbuhkan rasa ingin tahu anak.",
+        createdAt: "15 Desember 2023, 14:20 WIB",
+        updatedAt: "05 Januari 2024, 15:00 WIB"
+      }
+    ];
+
+    function renderTable() {
+      const tableBody = document.getElementById('programTableList');
+      if (!tableBody) return;
+
+      tableBody.innerHTML = '';
+      let enableCount = 0;
+      let disableCount = 0;
+
+      programsData.forEach((item, index) => {
+        if (item.status === 'Enable') {
+          enableCount++;
+        } else {
+          disableCount++;
+        }
+
+        const isEnable = item.status === 'Enable';
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50/80 transition-colors";
+
+        tr.innerHTML = `
+          <td class="py-4 px-6 text-center text-slate-500 font-semibold">${index + 1}</td>
+          <td class="py-4 px-6">
+            <span class="font-bold text-slate-800 text-[14px]">${item.name}</span>
+          </td>
+          <td class="py-4 px-6 text-center">
+            <button onclick="toggleStatus(${item.id})" type="button" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all ${
+              isEnable 
+                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' 
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }">
+              <span class="w-1.5 h-1.5 rounded-full ${isEnable ? 'bg-emerald-500' : 'bg-slate-400'}"></span>
+              <span>${item.status}</span>
+            </button>
+          </td>
+          <td class="py-4 px-6 text-center">
+            <div class="inline-flex items-center gap-1.5">
+              <!-- Detail (Mata) -->
+              <button onclick="openDetailModal(${item.id})" type="button" title="Detail" class="p-1.5 rounded-lg text-slate-500 hover:text-primary hover:bg-sky-50 transition-colors">
+                <span class="material-symbols-outlined text-[19px]">visibility</span>
+              </button>
+              <!-- Edit (Pensil) -->
+              <button onclick="editProgram(${item.id})" type="button" title="Edit" class="p-1.5 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                <span class="material-symbols-outlined text-[19px]">edit</span>
+              </button>
+              <!-- Hapus (Tempat Sampah) -->
+              <button onclick="deleteProgram(${item.id})" type="button" title="Hapus" class="p-1.5 rounded-lg text-slate-500 hover:text-error hover:bg-red-50 transition-colors">
+                <span class="material-symbols-outlined text-[19px]">delete</span>
+              </button>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+
+      // Update counters
+      document.getElementById('countActive').textContent = `${enableCount} Program`;
+      document.getElementById('countInactive').textContent = `${disableCount} Program`;
+      document.getElementById('countTotal').textContent = `${programsData.length} Program`;
+    }
+
+    // Toggle Status Enable / Disable
+    function toggleStatus(id) {
+      const prog = programsData.find(p => p.id === id);
+      if (prog) {
+        prog.status = prog.status === 'Enable' ? 'Disable' : 'Enable';
+        prog.updatedAt = "Hari ini, baru saja";
+        renderTable();
+        showToast(`Status "${prog.name}" diubah ke ${prog.status}`);
+      }
+    }
+
+    // Modal Detail
+    function openDetailModal(id) {
+      const prog = programsData.find(p => p.id === id);
+      if (!prog) return;
+
+      document.getElementById('detailName').textContent = prog.name;
+      document.getElementById('detailDescription').textContent = prog.description;
+      document.getElementById('detailCreatedAt').textContent = prog.createdAt;
+      document.getElementById('detailUpdatedAt').textContent = prog.updatedAt;
+
+      const badge = document.getElementById('detailStatusBadge');
+      if (prog.status === 'Enable') {
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700";
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>Enable</span>';
+      } else {
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600";
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span><span>Disable</span>';
+      }
+
+      const overlay = document.getElementById('detailModalOverlay');
+      const box = document.getElementById('detailModalBox');
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      box.classList.remove('scale-95');
+      box.classList.add('scale-100');
+    }
+
+    function closeDetailModal() {
+      const overlay = document.getElementById('detailModalOverlay');
+      const box = document.getElementById('detailModalBox');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      box.classList.remove('scale-100');
+      box.classList.add('scale-95');
+    }
+
+    // Backdrop click
+    document.getElementById('detailModalOverlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeDetailModal();
+      }
+    });
+
+    // Submenu Toggle
+    function toggleSubmenu() {
+      const menu = document.getElementById('submenuContainer');
+      const chevron = document.getElementById('submenuChevron');
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        chevron.style.transform = 'rotate(0deg)';
+      } else {
+        menu.classList.add('hidden');
+        chevron.style.transform = 'rotate(-90deg)';
+      }
+    }
+
+    // Actions
+    function openAddModal() {
+      showToast("Form tambah program baru siap digunakan", "info");
+    }
+
+    function editProgram(id) {
+      const prog = programsData.find(p => p.id === id);
+      showToast(`Membuka editor program: ${prog ? prog.name : ''}`, "edit");
+    }
+
+    function deleteProgram(id) {
+      const prog = programsData.find(p => p.id === id);
+      if (confirm(`Hapus program "${prog ? prog.name : ''}"?`)) {
+        const index = programsData.findIndex(p => p.id === id);
+        if (index > -1) {
+          programsData.splice(index, 1);
+          renderTable();
+          showToast("Program berhasil dihapus");
+        }
+      }
+    }
+
+    function showToast(message, type = 'check') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.textContent = message;
+      if (type === 'edit') {
+        toastIcon.textContent = 'edit_note';
+      } else if (type === 'info') {
+        toastIcon.textContent = 'info';
+      } else {
+        toastIcon.textContent = 'check_circle';
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // Inisialisasi awal render
+    window.addEventListener('DOMContentLoaded', () => {
+      renderTable();
+    });
+  </script>
+<div id="snapdom-sandbox" data-snapdom-sandbox="true" aria-hidden="true" style="position: absolute; left: -9999px; top: -9999px; width: 0px; height: 0px; overflow: hidden;"></div>
+
+</body></html>

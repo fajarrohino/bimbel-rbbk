@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="id"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar - Rumah Belajar Bu Khotimah</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            wa: {
+              50: '#f0fdf4',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen">
+
+  <!-- Header / Navigation Bar Container -->
+  <header class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo & Brand Identity -->
+        <a href="#beranda" class="flex items-center gap-3.5 group focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-xl p-1 -m-1"><span class="text-xl font-extrabold text-slate-900 tracking-tight group-hover:text-brand-600 transition-colors">Rumah <span class="text-[#0284c7]">Belajar</span><span class="inline-block w-1.5 h-1.5 rounded-full bg-[#0284c7] ml-0.5 align-baseline"></span></span></a>
+
+        <!-- Desktop Navigation Links (Center / Right align) -->
+        <nav class="hidden md:flex items-center gap-1 lg:gap-2"><a href="#program-belajar" class="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 rounded-xl hover:bg-slate-50 transition-all">Program Belajar</a>
+<a href="#tentang-kami" class="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 rounded-xl hover:bg-slate-50 transition-all">Tentang Kami</a></nav>
+
+        <!-- Desktop Action Buttons (WhatsApp & Daftar) -->
+        <div class="hidden md:flex items-center gap-3"><a href="#daftar" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 active:scale-95 shadow-md shadow-brand-600/25 transition-all duration-200">Daftar</a>
+<a href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-wa-700 bg-wa-50 hover:bg-wa-500 hover:text-white border border-emerald-200 hover:border-transparent transition-all duration-200 shadow-sm"><span class="material-symbols-outlined text-[19px]">chat</span><span class="">WhatsApp</span></a></div>
+
+        <!-- Mobile Hamburger Button -->
+        <div class="flex items-center md:hidden">
+          <button id="mobile-menu-btn" type="button" aria-label="Toggle navigation menu" class="p-2.5 rounded-xl text-slate-700 hover:text-brand-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-colors">
+            <span id="menu-icon" class="material-symbols-outlined text-2xl">menu</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-100 bg-white/98 backdrop-blur-lg px-4 pt-3 pb-6 space-y-2 shadow-xl animate-fadeIn">
+      <div class="space-y-1"><a href="#program-belajar" class="mobile-link flex items-center px-3.5 py-3 rounded-xl text-base font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition-colors">Program Belajar</a>
+<a href="#tentang-kami" class="mobile-link flex items-center px-3.5 py-3 rounded-xl text-base font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition-colors">Tentang Kami</a></div>
+
+      <div class="pt-3 border-t border-slate-100 flex flex-col gap-2.5"><a href="#daftar" class="mobile-link flex items-center justify-center w-full py-3 px-4 rounded-xl text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-600/25 transition-all">Daftar</a>
+<a href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="mobile-link flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl text-sm font-bold text-wa-700 bg-wa-50 border border-emerald-200 hover:bg-emerald-100 transition-colors"><span class="material-symbols-outlined text-[20px] text-emerald-600">chat</span>Hubungi via WhatsApp</a></div>
+    </div>
+  </header>
+
+  <!-- Showcase / Context Preview Body (menunjukkan tampilan navbar dalam context halaman) -->
+  
+
+  <!-- Interactive script for mobile toggle -->
+  <script>
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    if (mobileMenuBtn && mobileMenu && menuIcon) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        if (isHidden) {
+          mobileMenu.classList.remove('hidden');
+          menuIcon.textContent = 'close';
+        } else {
+          mobileMenu.classList.add('hidden');
+          menuIcon.textContent = 'menu';
+        }
+      });
+
+      // Close mobile menu on clicking any link
+      document.querySelectorAll('.mobile-link').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          menuIcon.textContent = 'menu';
+        });
+      });
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+
+</body></html>

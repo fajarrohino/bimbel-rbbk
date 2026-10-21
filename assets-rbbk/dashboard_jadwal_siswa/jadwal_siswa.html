@@ -1,0 +1,986 @@
+<!DOCTYPE html><html lang="id" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-secondary-fixed-variant":"#005049","surface-tint":"#006398","background":"#faf8ff","tertiary-container":"#a36700","on-primary-container":"#fdfcff","surface-container-highest":"#dae2fd","on-surface-variant":"#3f4850","on-error":"#ffffff","on-background":"#131b2e","primary":"#006194","inverse-primary":"#93ccff","surface-variant":"#dae2fd","on-primary-fixed":"#001d31","tertiary-fixed":"#ffddb8","surface-container":"#eaedff","error":"#ba1a1a","tertiary":"#825100","secondary":"#006a61","on-secondary-fixed":"#00201d","tertiary-fixed-dim":"#ffb95f","outline":"#707881","on-primary":"#ffffff","on-tertiary-fixed":"#2a1700","surface-container-low":"#f2f3ff","secondary-fixed-dim":"#6bd8cb","on-secondary":"#ffffff","secondary-fixed":"#89f5e7","surface-container-high":"#e2e7ff","on-tertiary-container":"#fffbff","on-tertiary":"#ffffff","on-error-container":"#93000a","surface-bright":"#faf8ff","error-container":"#ffdad6","on-primary-fixed-variant":"#004b73","outline-variant":"#bfc7d2","inverse-surface":"#283044","primary-fixed":"#cce5ff","surface-dim":"#d2d9f4","on-tertiary-fixed-variant":"#653e00","secondary-container":"#86f2e4","on-secondary-container":"#006f66","primary-fixed-dim":"#93ccff","primary-container":"#007bb9","on-surface":"#131b2e","surface-container-lowest":"#ffffff","surface":"#faf8ff","inverse-on-surface":"#eef0ff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-mobile":"1rem","margin":"2rem","space-md":"1rem","space-lg":"1.5rem","space-xl":"2.5rem","margin-mobile":"1.25rem","space-xs":"0.25rem","space-sm":"0.5rem","gutter":"1.5rem"},"fontFamily":{"label-md":["Plus Jakarta Sans"],"display-hero-mobile":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"display-hero":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"]},"fontSize":{"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"display-hero-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"800"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"700"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","fontWeight":"600"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"700"}],"display-hero":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"800"}],"body-md":["15px",{"lineHeight":"24px","fontWeight":"400"}],"label-lg":["15px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface min-h-screen"><aside id="sidebar" class="fixed left-0 top-0 w-72 bg-white border-r border-slate-200/80 min-h-screen flex flex-col justify-between shrink-0 shadow-sm transition-all duration-200 z-50">
+    <!-- Bagian Atas: Logo & Navigasi -->
+    <div class="flex flex-col">
+      <!-- Logo Container -->
+      <div class="h-24 px-6 flex items-center border-b border-slate-100 gap-3">
+        <div class="w-12 h-12 flex items-center justify-center shrink-0">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7124WlxkGN1_tWAV-oI76-Mi2VSfGDbkpw75W9lC7KmmxoI0qUdxP2qsuPEJWW5IGIg3Rm7h3z5OUSYYd8gR-35zvK2XiZKxWz_CTAh5RtjUL2XAU6hn34vgx2poPhAsPxyDiafHFsENq1-usY7UfKLPJ0m0L0zQ31_U73GTvmSlAM80KFhpGJrQT6A5mwpyxLnQz3DMMBqTi-xsSy1e6uhrH4gBmnMU8veryY47NxGcAtmFLO9yfhCJRcM2KRFblbA" alt="Logo Rumah Belajar Bu Khotimah" class="max-w-full max-h-full object-contain filter drop-shadow-sm">
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-base tracking-tight text-[#0284c7] leading-tight">Rumah Belajar</span>
+          <span class="text-xs font-semibold text-slate-500 tracking-wide uppercase">Bu Khotimah</span>
+        </div>
+      </div>
+
+      <!-- Menu Navigasi -->
+      <nav class="px-4 py-6 space-y-1.5 overflow-y-auto max-h-[calc(100vh-170px)]">
+        <!-- 1. Dashboard -->
+        <a href="#dashboard" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+          </svg>
+          <span class="">Dashboard</span>
+        </a>
+
+        <!-- 2. Data Siswa -->
+        <a href="#data-siswa" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <span class="">Data Siswa</span>
+        </a>
+
+        <!-- 3. Jadwal Bimbingan (Dropdown) -->
+        <div class="relative">
+          <button type="button" onclick="toggleJadwalDropdown()" id="btn-jadwal" class="w-full flex items-center justify-between px-4 py-3 rounded-xl font-semibold text-sm text-[#0284c7] bg-[#f0f7ff] border border-[#bae6fd]/50 transition-colors group">
+            <div class="flex items-center gap-3.5">
+              <svg class="w-5 h-5 text-[#0284c7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span class="">Jadwal Bimbingan</span>
+            </div>
+            <svg id="arrow-jadwal" class="w-4 h-4 text-[#0284c7] transition-transform duration-200 transform rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          <!-- Sub-menu Jadwal Bimbingan -->
+          <div id="submenu-jadwal" class="mt-1 pl-10 pr-2 space-y-1 block transition-all duration-200">
+            <a href="#jadwal-siswa" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#0284c7] bg-[#f0f7ff] transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#0284c7]"></span>
+              <span class="">Jadwal Siswa</span>
+            </a>
+            <a href="#atur-jadwal" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-[#0284c7] hover:bg-[#f0f7ff] transition-colors">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+              <span class="">Atur Jadwal</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4. Absensi -->
+        <a href="#absensi" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+          </svg>
+          <span class="">Absensi</span>
+        </a>
+
+        <!-- 5. Pembayaran -->
+        <a href="#pembayaran" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          <span class="">Pembayaran</span>
+        </a>
+
+        <!-- 6. Program Belajar -->
+        <a href="#program-belajar" class="flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors group">
+          <svg class="w-5 h-5 text-slate-400 group-hover:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          <span class="">Program Belajar</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Bagian Bawah: Card Info Ringkas Bersih -->
+    <div class="p-4 border-t border-slate-100">
+    </div>
+  </aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-20 bg-white border-b border-slate-200/80 px-8 flex items-center justify-end z-40 shrink-0">
+    <!-- Right Action Items: Notifikasi & Profile Dropdown -->
+    <div class="flex items-center gap-4">
+      <!-- 1. Icon Notifikasi -->
+      <div class="relative">
+        <button type="button" class="w-10 h-10 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-600 flex items-center justify-center transition-colors relative" title="Notifikasi">
+          <svg class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+          <!-- Red notification dot -->
+          <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+        </button>
+      </div>
+
+      <!-- 2. Profile Icon & Dropdown -->
+      <div class="relative" id="profile-container">
+        <button type="button" onclick="toggleProfileDropdown()" id="profile-btn" class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200/80 text-[#0284c7] hover:bg-sky-100 flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-[#0284c7]/20" title="Profil Pengguna">
+          <!-- Icon Profile -->
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu Profile & Logout -->
+        <div id="profile-dropdown" class="hidden absolute right-0 mt-2.5 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 transform transition-all duration-150 origin-top-right">
+          <!-- Item 1: Profile -->
+          <a href="#profile" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0284c7] transition-colors">
+            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span class="">Profile</span>
+          </a>
+
+          <!-- Divider -->
+          <div class="my-1.5 border-t border-slate-100"></div>
+
+          <!-- Item 2: Logout -->
+          <a href="#logout" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors">
+            <svg class="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            <span class="">Logout</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header><main class="relative bg-background min-h-screen w-full px-8 pb-12" style="padding-top: 5rem;"><div class="flex flex-col w-full pt-6">
+<!-- Top Welcome & Status Banner (Tactile Micro-Breadcrumb) -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"><div class="flex flex-col justify-center"><h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Jadwal Siswa</h1></div></div>
+<!-- ========================================================================= -->
+<!-- LAYOUT PERTAMA: JADWAL BIMBINGAN HARI INI (3 Kolom Sesi Simetris) -->
+<!-- ========================================================================= -->
+<section class="flex flex-col mb-12">
+<!-- Header Bagian Hari Ini -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 gap-2"><div class="flex items-center gap-3"><div class="w-3 h-8 rounded-full bg-primary"></div><div><h2 class="font-headline-md text-headline-md text-on-surface">Hari Ini</h2></div></div></div>
+<!-- 3 Kolom Sesi Simetris -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
+<!-- KOLOM 1: Sesi 1 (Aksen Amber / Oranye Lembut) -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex flex-col transition-all hover:shadow-md">
+<!-- Session Badge & Header -->
+<div class="flex items-center justify-between pb-4 mb-4 bg-surface-container-low/70 -mx-5 -mt-5 p-5 rounded-t-2xl">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[18px]">wb_twilight</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Sesi 1</span>
+
+</div>
+</div>
+<span class="font-label-md text-label-md px-2.5 py-1 rounded-full bg-tertiary-fixed/60 text-on-tertiary-fixed font-bold">
+            6 Siswa
+          </span>
+</div>
+<!-- Daftar Kartu Nama Siswa Sesi 1 (Hanya Nama Saja) -->
+<div class="flex flex-col gap-2.5 flex-1">
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center font-label-md font-bold text-label-md">
+              NP
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Nabila Putri</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center font-label-md font-bold text-label-md">
+              DB
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Dimas Bagus</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center font-label-md font-bold text-label-md">
+              AK
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Althaf Keenan</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center font-label-md font-bold text-label-md">
+              SS
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Siti Syifa</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center font-label-md font-bold text-label-md">
+              MR
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Muhammad Rayhan</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center font-label-md font-bold text-label-md">
+              AN
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Aisyah Nur</span>
+</div>
+</div>
+</div>
+<!-- KOLOM 2: Sesi 2 (Aksen Biru Lembut) -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex flex-col transition-all hover:shadow-md">
+<!-- Session Badge & Header -->
+<div class="flex items-center justify-between pb-4 mb-4 bg-surface-container-low/70 -mx-5 -mt-5 p-5 rounded-t-2xl">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[18px]">sunny</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Sesi 2</span>
+
+</div>
+</div>
+<span class="font-label-md text-label-md px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-bold">
+            6 Siswa
+          </span>
+</div>
+<!-- Daftar Kartu Nama Siswa Sesi 2 (Hanya Nama Saja) -->
+<div class="flex flex-col gap-2.5 flex-1">
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-label-md font-bold text-label-md">
+              RR
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Rizky Ramadhan</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-label-md font-bold text-label-md">
+              ZA
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Zahra Aurelia</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-label-md font-bold text-label-md">
+              FA
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Fadhil Abimanyu</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-label-md font-bold text-label-md">
+              KM
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Kayla Maharani</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-label-md font-bold text-label-md">
+              BP
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Bintang Pratama</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-label-md font-bold text-label-md">
+              HN
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Hafiz Nugraha</span>
+</div>
+</div>
+</div>
+<!-- KOLOM 3: Sesi 3 (Aksen Toska / Emerald Lembut) -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex flex-col transition-all hover:shadow-md">
+<!-- Session Badge & Header -->
+<div class="flex items-center justify-between pb-4 mb-4 bg-surface-container-low/70 -mx-5 -mt-5 p-5 rounded-t-2xl">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[18px]">dark_mode</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Sesi 3</span>
+
+</div>
+</div>
+<span class="font-label-md text-label-md px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold">
+            6 Siswa
+          </span>
+</div>
+<!-- Daftar Kartu Nama Siswa Sesi 3 (Hanya Nama Saja) -->
+<div class="flex flex-col gap-2.5 flex-1">
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-label-md font-bold text-label-md">
+              DS
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Danendra Sakha</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-label-md font-bold text-label-md">
+              NA
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Naura Anindita</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-label-md font-bold text-label-md">
+              RS
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Rafasya Setiawan</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-label-md font-bold text-label-md">
+              MA
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Meisya Azzahra</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-label-md font-bold text-label-md">
+              GH
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Gibran Habibi</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center font-label-md font-bold text-label-md">
+              AQ
+            </div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Aqila Qanita</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- LAYOUT KEDUA: KALENDER JADWAL SISWA BULANAN & KONTROL FILTER LENGKAP -->
+<!-- ========================================================================= -->
+<section class="flex flex-col bg-surface-container-lowest rounded-3xl p-6 sm:p-8 shadow-sm">
+<!-- Header Kalender & Navigasi Bulan -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">calendar_month</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Kalender Jadwal Siswa Bulanan</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Oktober 2025 • Jadwal Reguler Kelas Tatap Muka</span>
+</div>
+</div>
+<!-- Navigasi Bulan & Hari Ini Button -->
+<div class="flex items-center gap-2 self-start lg:self-auto">
+<div class="flex items-center bg-surface-container rounded-xl p-1 gap-1">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface hover:text-on-surface transition-colors" title="Bulan Sebelumnya">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<span class="font-label-md text-label-md px-3 text-on-surface font-bold">Oktober 2025</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface hover:text-on-surface transition-colors" title="Bulan Berikutnya">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+<button class="px-3.5 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container font-label-md text-label-md text-on-surface transition-all" id="btn-today">
+          Hari Ini
+        </button>
+</div>
+</div>
+<!-- Toolbar Filter Interaktif (Group Sesi, Siswa Selector, & Mode Tampilan) -->
+<div class="bg-surface-container-low p-4 sm:p-5 rounded-2xl mb-6 flex flex-col gap-4"><div class="flex items-center gap-3"><span class="font-label-md text-label-md text-on-surface font-semibold">Sesi:</span><div class="relative min-w-[180px]"><select class="w-full h-10 pl-3 pr-8 rounded-xl bg-surface-container-lowest font-body-sm text-body-sm text-on-surface font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-primary shadow-sm cursor-pointer" id="session-filter-select"><option value="all">Semua Sesi</option><option value="sesi-1">Sesi 1</option><option value="sesi-2">Sesi 2</option><option value="sesi-3">Sesi 3</option></select><span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">arrow_drop_down</span></div></div></div>
+<!-- Kalender Grid: 7 Kolom (Senin s/d Minggu) -->
+<div class="w-full overflow-x-auto pb-2">
+<div class="min-w-[840px] flex flex-col">
+<!-- Header Hari Kalender -->
+<div class="grid grid-cols-7 gap-2 mb-2 text-center">
+<div class="py-2 rounded-xl bg-surface-container font-label-md text-label-md text-on-surface font-semibold">Senin</div>
+<div class="py-2 rounded-xl bg-surface-container font-label-md text-label-md text-on-surface font-semibold">Selasa</div>
+<div class="py-2 rounded-xl bg-surface-container font-label-md text-label-md text-on-surface font-semibold">Rabu</div>
+<div class="py-2 rounded-xl bg-surface-container font-label-md text-label-md text-on-surface font-semibold">Kamis</div>
+<div class="py-2 rounded-xl bg-surface-container font-label-md text-label-md text-on-surface font-semibold">Jumat</div>
+<div class="py-2 rounded-xl bg-surface-container font-label-md text-label-md text-on-surface font-semibold">Sabtu</div>
+<div class="py-2 rounded-xl bg-error-container/40 font-label-md text-label-md text-error font-semibold">Minggu</div>
+</div>
+<!-- Matrix Tanggal Kalender (Oktober 2025) -->
+<!-- 1 Oktober 2025 jatuh pada hari Rabu. Maka Senin & Selasa di minggu pertama adalah leading days -->
+<div class="grid grid-cols-7 gap-2">
+<!-- Leading Days September (29 & 30 Sep) -->
+<div class="min-h-[140px] p-2 rounded-2xl bg-surface-container-low/40 opacity-40 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">29 Sep</span>
+</div>
+<div class="min-h-[140px] p-2 rounded-2xl bg-surface-container-low/40 opacity-40 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">30 Sep</span>
+</div>
+<!-- MINGGU 1: 1 - 5 Okt -->
+<!-- 1 Okt (Rabu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">1</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Nabila Putri</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Rizky Ramadhan</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Danendra Sakha</span>
+</div>
+</div>
+</div>
+<!-- 2 Okt (Kamis) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">2</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Dimas Bagus</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Zahra Aurelia</span>
+</div>
+</div>
+</div>
+<!-- 3 Okt (Jumat) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">3</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Althaf Keenan</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Naura Anindita</span>
+</div>
+</div>
+</div>
+<!-- 4 Okt (Sabtu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">4</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Fadhil Abimanyu</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Rafasya Setiawan</span>
+</div>
+</div>
+</div>
+<!-- 5 Okt (Minggu - Libur) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-error-container/20 flex flex-col justify-between items-center text-center">
+<div class="flex items-center justify-end w-full mb-1.5">
+<span class="font-label-md text-label-md font-bold text-error">5</span>
+</div>
+<div class="flex flex-col items-center justify-center flex-1 text-error/80">
+<span class="material-symbols-outlined text-[20px] mb-0.5">beach_access</span>
+<span class="font-label-sm text-label-sm font-semibold">Libur Mingguan</span>
+</div>
+</div>
+<!-- MINGGU 2: 6 - 12 Okt -->
+<!-- 6 Okt (Senin) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">6</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Nabila Putri</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Rizky Ramadhan</span>
+</div>
+</div>
+</div>
+<!-- 7 Okt (Selasa) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">7</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Zahra Aurelia</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Danendra Sakha</span>
+</div>
+</div>
+</div>
+<!-- 8 Okt (Rabu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">8</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Dimas Bagus</span>
+</div>
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Althaf Keenan</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Naura Anindita</span>
+</div>
+</div>
+</div>
+<!-- 9 Okt (Kamis) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">9</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Fadhil Abimanyu</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Rafasya Setiawan</span>
+</div>
+</div>
+</div>
+<!-- 10 Okt (Jumat) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">10</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Nabila Putri</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Danendra Sakha</span>
+</div>
+</div>
+</div>
+<!-- 11 Okt (Sabtu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">11</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Rizky Ramadhan</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Zahra Aurelia</span>
+</div>
+</div>
+</div>
+<!-- 12 Okt (Minggu - Libur) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-error-container/20 flex flex-col justify-between items-center text-center">
+<div class="flex items-center justify-end w-full mb-1.5">
+<span class="font-label-md text-label-md font-bold text-error">12</span>
+</div>
+<div class="flex flex-col items-center justify-center flex-1 text-error/80">
+<span class="material-symbols-outlined text-[20px] mb-0.5">beach_access</span>
+<span class="font-label-sm text-label-sm font-semibold">Libur Mingguan</span>
+</div>
+</div>
+<!-- MINGGU 3: 13 - 19 Okt -->
+<!-- 13 Okt (Senin) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">13</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Althaf Keenan</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Naura Anindita</span>
+</div>
+</div>
+</div>
+<!-- 14 Okt (Selasa) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">14</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Dimas Bagus</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Fadhil Abimanyu</span>
+</div>
+</div>
+</div>
+<!-- 15 Okt (Rabu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">15</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Nabila Putri</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Rizky Ramadhan</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Rafasya Setiawan</span>
+</div>
+</div>
+</div>
+<!-- 16 Okt (Kamis) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">16</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Zahra Aurelia</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Danendra Sakha</span>
+</div>
+</div>
+</div>
+<!-- 17 Okt (Jumat) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">17</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Althaf Keenan</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Fadhil Abimanyu</span>
+</div>
+</div>
+</div>
+<!-- 18 Okt (Sabtu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">18</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Naura Anindita</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Rafasya Setiawan</span>
+</div>
+</div>
+</div>
+<!-- 19 Okt (Minggu - Libur) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-error-container/20 flex flex-col justify-between items-center text-center">
+<div class="flex items-center justify-end w-full mb-1.5">
+<span class="font-label-md text-label-md font-bold text-error">19</span>
+</div>
+<div class="flex flex-col items-center justify-center flex-1 text-error/80">
+<span class="material-symbols-outlined text-[20px] mb-0.5">beach_access</span>
+<span class="font-label-sm text-label-sm font-semibold">Libur Mingguan</span>
+</div>
+</div>
+<!-- MINGGU 4: 20 - 26 Okt -->
+<!-- 20 Okt (Senin) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">20</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Dimas Bagus</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Rizky Ramadhan</span>
+</div>
+</div>
+</div>
+<!-- 21 Okt (Selasa) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">21</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Nabila Putri</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Danendra Sakha</span>
+</div>
+</div>
+</div>
+<!-- 22 Okt (Rabu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">22</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Zahra Aurelia</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Fadhil Abimanyu</span>
+</div>
+</div>
+</div>
+<!-- 23 Okt (Kamis) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">23</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Althaf Keenan</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Rafasya Setiawan</span>
+</div>
+</div>
+</div>
+<!-- 24 Okt (HARI INI - HIGHLIGHT SPESIAL) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-primary-fixed/30 shadow-md flex flex-col justify-between transition-all scale-[1.01]" id="today-cell">
+<div class="flex items-center justify-between mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm font-bold">24</span>
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Hari Ini</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/90 text-on-tertiary-fixed font-label-sm text-label-sm truncate font-semibold shadow-xs">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Nabila Putri</span>, Dimas B.
+              </div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed-dim/90 text-on-primary-fixed font-label-sm text-label-sm truncate font-semibold shadow-xs">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Rizky Ramadhan</span>, Zahra A.
+              </div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed/90 text-on-secondary-fixed font-label-sm text-label-sm truncate font-semibold shadow-xs">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Danendra Sakha</span>, Naura A.
+              </div>
+</div>
+</div>
+<!-- 25 Okt (Sabtu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">25</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Dimas Bagus</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Fadhil Abimanyu</span>
+</div>
+</div>
+</div>
+<!-- 26 Okt (Minggu - Libur) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-error-container/20 flex flex-col justify-between items-center text-center">
+<div class="flex items-center justify-end w-full mb-1.5">
+<span class="font-label-md text-label-md font-bold text-error">26</span>
+</div>
+<div class="flex flex-col items-center justify-center flex-1 text-error/80">
+<span class="material-symbols-outlined text-[20px] mb-0.5">beach_access</span>
+<span class="font-label-sm text-label-sm font-semibold">Libur Mingguan</span>
+</div>
+</div>
+<!-- MINGGU 5: 27 - 31 Okt -->
+<!-- 27 Okt (Senin) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">27</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Nabila Putri</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Naura Anindita</span>
+</div>
+</div>
+</div>
+<!-- 28 Okt (Selasa) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">28</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Rizky Ramadhan</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Danendra Sakha</span>
+</div>
+</div>
+</div>
+<!-- 29 Okt (Rabu) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">29</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Althaf Keenan</span>
+</div>
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Zahra Aurelia</span>
+</div>
+</div>
+</div>
+<!-- 30 Okt (Kamis) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">30</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-2 px-2 py-0.5 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S2:</span><span class="student-name">Fadhil Abimanyu</span>
+</div>
+<div class="session-badge sesi-3 px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S3:</span><span class="student-name">Rafasya Setiawan</span>
+</div>
+</div>
+</div>
+<!-- 31 Okt (Jumat - Hari Terakhir Bulan Ini) -->
+<div class="calendar-day min-h-[140px] p-2.5 rounded-2xl bg-surface-container-low flex flex-col justify-between hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-md text-label-md font-bold text-on-surface">31</span>
+</div>
+<div class="flex flex-col gap-1 w-full flex-1">
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Dimas Bagus</span>
+</div>
+<div class="session-badge sesi-1 px-2 py-0.5 rounded-md bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-sm text-label-sm truncate">
+<span class="font-bold mr-1">S1:</span><span class="student-name">Nabila Putri</span>
+</div>
+</div>
+</div>
+<!-- Trailing Days November (1 & 2 Nov) -->
+<div class="min-h-[140px] p-2 rounded-2xl bg-surface-container-low/40 opacity-40 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">1 Nov</span>
+</div>
+<div class="min-h-[140px] p-2 rounded-2xl bg-surface-container-low/40 opacity-40 flex flex-col">
+<span class="font-label-sm text-label-sm text-outline">2 Nov</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Kalender Footer Legend & Information -->
+<div class="flex flex-wrap items-center justify-between gap-4 pt-6 mt-6 bg-surface-container-lowest">
+<div class="flex flex-wrap items-center gap-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Keterangan:</span>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-md bg-tertiary-fixed"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Sesi 1 (Aksen Amber)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-md bg-primary-fixed"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Sesi 2 (Aksen Biru)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-md bg-secondary-fixed"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Sesi 3 (Aksen Toska)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-md bg-error-container"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Minggu Libur</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-2 transition-colors" onclick="window.print()">
+<span class="material-symbols-outlined text-[18px]">print</span>
+          Cetak Jadwal
+        </button>
+</div>
+</div>
+</section>
+</div>
+<!-- Micro-Interaction Script for Sidebar Highlight, Filters & View Toggle -->
+<script>
+  // 1. Sidebar Active State: Highlight Jadwal Bimbingan -> Jadwal Siswa
+  document.addEventListener("DOMContentLoaded", () => {
+    const sidebarLinks = document.querySelectorAll('aside nav a[data-path]');
+    sidebarLinks.forEach(link => {
+      if (link.getAttribute('data-path') === 'jadwal-bimbingan') {
+        link.className = "flex items-center gap-3 px-4 py-3 rounded-xl font-label-lg text-label-lg bg-primary text-on-primary shadow-sm transition-all";
+      } else {
+        link.className = "flex items-center gap-3 px-4 py-3 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all";
+      }
+    });
+
+    // 2. Interactive Filtering Logic
+    const sessionButtons = document.querySelectorAll('#session-filter-group button');
+    const studentSelect = document.getElementById('student-filter');
+    const filterText = document.getElementById('filter-text');
+    const resetBtn = document.getElementById('reset-filter-btn');
+    const calendarBadges = document.querySelectorAll('.calendar-day .session-badge');
+    const viewGroupBtn = document.getElementById('view-mode-group');
+    const viewStudentBtn = document.getElementById('view-mode-student');
+    const btnToday = document.getElementById('btn-today');
+    const todayCell = document.getElementById('today-cell');
+
+    let currentSessionFilter = 'all';
+    let currentStudentFilter = 'all';
+
+    function applyFilters() {
+      let visibleCount = 0;
+
+      calendarBadges.forEach(badge => {
+        let matchSession = (currentSessionFilter === 'all') || badge.classList.contains(currentSessionFilter);
+        let matchStudent = (currentStudentFilter === 'all') || badge.innerText.toLowerCase().includes(currentStudentFilter.toLowerCase());
+
+        if (matchSession && matchStudent) {
+          badge.style.display = 'block';
+          visibleCount++;
+        } else {
+          badge.style.display = 'none';
+        }
+      });
+
+      // Update text and reset button visibility
+      let isFiltered = (currentSessionFilter !== 'all' || currentStudentFilter !== 'all');
+      if (isFiltered) {
+        resetBtn.classList.remove('hidden');
+        let sessionDesc = currentSessionFilter === 'all' ? 'Semua Sesi' : currentSessionFilter.replace('-', ' ').toUpperCase();
+        let studentDesc = currentStudentFilter === 'all' ? 'Semua Siswa' : `Siswa "${currentStudentFilter}"`;
+        filterText.textContent = `Menampilkan jadwal untuk ${studentDesc} pada ${sessionDesc}.`;
+      } else {
+        resetBtn.classList.add('hidden');
+        filterText.textContent = "Menampilkan seluruh siswa pada semua sesi (1 - 31 Oktober 2025).";
+      }
+    }
+
+    // Session buttons listener
+    sessionButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sessionButtons.forEach(b => {
+          b.className = "filter-pill-btn px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-surface hover:bg-surface-container-high text-on-surface-variant transition-all flex items-center gap-1.5";
+        });
+        btn.className = "filter-pill-btn active px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-primary text-on-primary transition-all flex items-center gap-1.5 shadow-sm";
+        currentSessionFilter = btn.getAttribute('data-filter');
+        applyFilters();
+      });
+    });
+
+    // Student select listener
+    studentSelect.addEventListener('change', (e) => {
+      currentStudentFilter = e.target.value;
+      if (currentStudentFilter !== 'all') {
+        // Automatically switch view toggle feel
+        viewStudentBtn.className = "view-mode-btn active px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1.5";
+        viewGroupBtn.className = "view-mode-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5";
+      }
+      applyFilters();
+    });
+
+    // Reset button
+    resetBtn.addEventListener('click', () => {
+      currentSessionFilter = 'all';
+      currentStudentFilter = 'all';
+      studentSelect.value = 'all';
+
+      sessionButtons.forEach((b, index) => {
+        if (index === 0) {
+          b.className = "filter-pill-btn active px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-primary text-on-primary transition-all shadow-sm";
+        } else {
+          b.className = "filter-pill-btn px-3.5 py-1.5 rounded-full font-label-md text-label-md font-semibold bg-surface hover:bg-surface-container-high text-on-surface-variant transition-all flex items-center gap-1.5";
+        }
+      });
+
+      viewGroupBtn.className = "view-mode-btn active px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1.5";
+      viewStudentBtn.className = "view-mode-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5";
+
+      applyFilters();
+    });
+
+    // Toggle button view mode handlers
+    viewGroupBtn.addEventListener('click', () => {
+      viewGroupBtn.className = "view-mode-btn active px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1.5";
+      viewStudentBtn.className = "view-mode-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5";
+      studentSelect.value = 'all';
+      currentStudentFilter = 'all';
+      applyFilters();
+    });
+
+    viewStudentBtn.addEventListener('click', () => {
+      viewStudentBtn.className = "view-mode-btn active px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1.5";
+      viewGroupBtn.className = "view-mode-btn px-3 py-1.5 rounded-lg font-label-sm text-label-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5";
+      if (studentSelect.value === 'all') {
+        studentSelect.value = 'Nabila Putri';
+        currentStudentFilter = 'Nabila Putri';
+        applyFilters();
+      }
+    });
+
+    // Scroll / Highlight today's date
+    btnToday.addEventListener('click', () => {
+      if (todayCell) {
+        todayCell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        todayCell.classList.add('ring-4', 'ring-primary');
+        setTimeout(() => todayCell.classList.remove('ring-4', 'ring-primary'), 1500);
+      }
+    });
+  });
+</script></main></div>
+
+
+
+</body></html>
