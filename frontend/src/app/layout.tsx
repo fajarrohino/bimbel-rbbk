@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { AuthProvider } from "@/lib/authContext";
 
 const plusJakartaSans = localFont({
   src: "./fonts/PlusJakartaSans-Variable.woff2",
@@ -37,7 +38,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={`${plusJakartaSans.variable} font-sans min-h-screen bg-surface text-on-surface`}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

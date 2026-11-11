@@ -4,7 +4,9 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockStore } from '@/lib/mockData';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { scheduleApi } from '@/lib/api/schedules';
+import { studentApi } from '@/lib/api/students';
 import { Student, ScheduleAssignment, ScheduleSession } from '@/types';
 
 interface DragPayload {
@@ -22,7 +24,7 @@ interface ToastMessage {
   type?: 'success' | 'warning' | 'info';
 }
 
-export default function AdminAturJadwalPage() {
+function AdminAturJadwalContent() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -43,6 +45,7 @@ export default function AdminAturJadwalPage() {
   // Data state
   const [students, setStudents] = useState<Student[]>([]);
   const [schedules, setSchedules] = useState<ScheduleAssignment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Search filter for student distribution columns
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,21 +79,40 @@ export default function AdminAturJadwalPage() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // Auth & Data loading
+  // Load Active Students
   useEffect(() => {
-    if (!mockStore.getIsLoggedIn()) {
-      router.push('/auth/login');
-      return;
+    async function loadActiveStudents() {
+      try {
+        const res = await studentApi.getAll({ status: 'Aktif', limit: 100 });
+        setStudents((res.students || []).filter((s) => !s.isDeleted));
+      } catch (err) {
+        console.error('Failed to load active students:', err);
+      }
     }
-    loadData();
-  }, [router]);
+    loadActiveStudents();
+  }, []);
 
-  const loadData = () => {
-    // Only active students
-    const activeList = mockStore.getStudents().filter((s) => !s.isDeleted && s.status === 'Aktif');
-    setStudents(activeList);
-    setSchedules(mockStore.getSchedules());
-  };
+  // Load schedules whenever currentMonthDate changes
+  const loadMonthSchedules = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const monthStr = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
+      const list = await scheduleApi.getByMonth(monthStr);
+      const normalized = list.map((sch) => ({
+        ...sch,
+        date: typeof sch.date === 'string' ? sch.date.split('T')[0] : new Date(sch.date).toISOString().split('T')[0],
+      }));
+      setSchedules(normalized);
+    } catch (err) {
+      console.error('Failed to load schedules:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentMonthDate]);
+
+  useEffect(() => {
+    loadMonthSchedules();
+  }, [loadMonthSchedules]);
 
   // ==================== AUTO-SCROLL ENGINE WHILE DRAGGING ====================
   // Memungkinkan layar otomatis scroll ke atas saat menyeret siswa menuju Tanggal 1
@@ -378,7 +400,7 @@ export default function AdminAturJadwalPage() {
   };
 
   // Drop onto a Calendar Day Session Dropzone
-  const handleDropOnCalendarSession = (
+  const handleDropOnCalendarSession = async (
     e: React.DragEvent,
     dateStr: string,
     sessionNum: ScheduleSession
@@ -421,45 +443,52 @@ export default function AdminAturJadwalPage() {
       if (sourceDate === dateStr && sourceSession === sessionNum) {
         return; // No-op
       }
-      const updated = schedules.map((sch) =>
-        sch.id === sourceAssignmentId
-          ? { ...sch, date: dateStr, session: sessionNum, updatedAt: new Date().toISOString() }
-          : sch
-      );
-      setSchedules(updated);
-      mockStore.saveSchedules(updated);
-      addToast(
-        `Berhasil memindahkan ${studentName} ke Tanggal ${dateStr} - Sesi ${sessionNum}`,
-        'success'
-      );
+      try {
+        await scheduleApi.delete(sourceAssignmentId);
+        const created = await scheduleApi.create({ studentId, date: dateStr, session: sessionNum });
+        const normalizedNew = {
+          ...created,
+          date: typeof created.date === 'string' ? created.date.split('T')[0] : new Date(created.date).toISOString().split('T')[0],
+        };
+        setSchedules((prev) => [
+          ...prev.filter((sch) => sch.id !== sourceAssignmentId),
+          normalizedNew,
+        ]);
+        addToast(
+          `Berhasil memindahkan ${studentName} ke Tanggal ${dateStr} - Sesi ${sessionNum}`,
+          'success'
+        );
+      } catch (err: any) {
+        addToast(err.message || 'Gagal memindahkan jadwal.', 'warning');
+      }
     } else {
       // Add from pool
-      const newAssignment: ScheduleAssignment = {
-        id: 'sch-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
-        studentId,
-        date: dateStr,
-        session: sessionNum,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      const updated = [...schedules, newAssignment];
-      setSchedules(updated);
-      mockStore.saveSchedules(updated);
-      addToast(
-        `Berhasil menjadwalkan ${studentName} ke Tanggal ${dateStr} - Sesi ${sessionNum}`,
-        'success'
-      );
+      try {
+        const created = await scheduleApi.create({ studentId, date: dateStr, session: sessionNum });
+        const normalizedNew = {
+          ...created,
+          date: typeof created.date === 'string' ? created.date.split('T')[0] : new Date(created.date).toISOString().split('T')[0],
+        };
+        setSchedules((prev) => [...prev, normalizedNew]);
+        addToast(
+          `Berhasil menjadwalkan ${studentName} ke Tanggal ${dateStr} - Sesi ${sessionNum}`,
+          'success'
+        );
+      } catch (err: any) {
+        addToast(err.message || 'Gagal menjadwalkan siswa.', 'warning');
+      }
     }
   };
 
-
-
   // Quick remove from calendar badge button
-  const handleRemoveAssignment = (assignmentId: string, studentName: string, dateStr: string) => {
-    const updated = schedules.filter((sch) => sch.id !== assignmentId);
-    setSchedules(updated);
-    mockStore.saveSchedules(updated);
-    addToast(`${studentName} dihapus dari jadwal tanggal ${dateStr}`, 'info');
+  const handleRemoveAssignment = async (assignmentId: string, studentName: string, dateStr: string) => {
+    try {
+      await scheduleApi.delete(assignmentId);
+      setSchedules((prev) => prev.filter((sch) => sch.id !== assignmentId));
+      addToast(`${studentName} dihapus dari jadwal tanggal ${dateStr}`, 'info');
+    } catch (err: any) {
+      addToast(err.message || 'Gagal menghapus jadwal.', 'warning');
+    }
   };
 
   // Quick modal assign
@@ -485,34 +514,30 @@ export default function AdminAturJadwalPage() {
     });
   };
 
-  const handleConfirmQuickAssign = () => {
+  const handleConfirmQuickAssign = async () => {
     if (!quickAssignModal || !selectedStudentToAssign) return;
 
     const { date, session } = quickAssignModal;
     const studentObj = studentsMap.get(selectedStudentToAssign);
     const studentName = studentObj?.name || 'Siswa';
 
-    const newAssignment: ScheduleAssignment = {
-      id: 'sch-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
-      studentId: selectedStudentToAssign,
-      date,
-      session,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    const updated = [...schedules, newAssignment];
-    setSchedules(updated);
-    mockStore.saveSchedules(updated);
-    addToast(`Berhasil menjadwalkan ${studentName} ke Tanggal ${date} - Sesi ${session}`, 'success');
-    setQuickAssignModal(null);
+    try {
+      const created = await scheduleApi.create({ studentId: selectedStudentToAssign, date, session });
+      const normalizedNew = {
+        ...created,
+        date: typeof created.date === 'string' ? created.date.split('T')[0] : new Date(created.date).toISOString().split('T')[0],
+      };
+      setSchedules((prev) => [...prev, normalizedNew]);
+      addToast(`Berhasil menjadwalkan ${studentName} ke Tanggal ${date} - Sesi ${session}`, 'success');
+      setQuickAssignModal(null);
+    } catch (err: any) {
+      addToast(err.message || 'Gagal menjadwalkan siswa.', 'warning');
+    }
   };
 
   // Save Schedule Button
   const handleSaveSchedule = () => {
-    mockStore.saveSchedules(schedules);
-    mockStore.saveStudents(students);
-    addToast('Perubahan jadwal & plotting siswa berhasil disimpan ke sistem pusat!', 'success');
+    addToast('Perubahan jadwal & plotting siswa sudah otomatis tersimpan di database!', 'success');
   };
 
   return (
@@ -1334,5 +1359,13 @@ export default function AdminAturJadwalPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminAturJadwalPage() {
+  return (
+    <ProtectedRoute>
+      <AdminAturJadwalContent />
+    </ProtectedRoute>
   );
 }

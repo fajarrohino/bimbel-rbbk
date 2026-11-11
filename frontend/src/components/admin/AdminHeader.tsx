@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { mockStore } from '@/lib/mockData';
+import { useAuth } from '@/lib/authContext';
 
 interface AdminHeaderProps {
   onToggleSidebar?: () => void;
@@ -11,12 +11,13 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({ onToggleSidebar, title }: AdminHeaderProps) {
   const router = useRouter();
+  const { logout, user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const profileContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (confirm('Apakah Anda yakin ingin logout dari sesi admin?')) {
-      mockStore.setLoggedIn(false);
+      await logout();
       router.push('/auth/login');
     }
   };
@@ -125,8 +126,8 @@ export default function AdminHeader({ onToggleSidebar, title }: AdminHeaderProps
             >
               {/* Header Info Akun */}
               <div className="px-4 py-2.5 border-b border-slate-100">
-                <p className="text-sm font-bold text-slate-800 leading-tight">Bu Khotimah</p>
-                <p className="text-xs text-slate-400 font-medium">Owner / Admin</p>
+                <p className="text-sm font-bold text-slate-800 leading-tight">{user?.username || 'Admin'}</p>
+                <p className="text-xs text-slate-400 font-medium">{user?.role === 'owner' ? 'Owner / Admin' : user?.role || 'Admin'}</p>
               </div>
 
               {/* Item 1: Profile */}

@@ -1,12 +1,29 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
+import { programApi } from '@/lib/api/programs';
+import { Program } from '@/types';
 
 export default function HomePage() {
+  const [publicPrograms, setPublicPrograms] = useState<Program[]>([]);
+
+  useEffect(() => {
+    async function loadPrograms() {
+      try {
+        const progs = await programApi.getPublicPrograms();
+        if (progs && progs.length > 0) {
+          setPublicPrograms(progs);
+        }
+      } catch (err) {
+        console.error('Failed to load public programs:', err);
+      }
+    }
+    loadPrograms();
+  }, []);
   return (
     <div className="font-sans bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white min-h-screen flex flex-col">
       <Navbar />
@@ -302,122 +319,160 @@ export default function HomePage() {
               </h2>
             </div>
 
-            {/* 6 Programs Grid */}
+            {/* Programs Grid (Dynamic from Backend API if available) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Program 1: Calistung */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                    </svg>
+              {publicPrograms.length > 0 ? (
+                publicPrograms.map((prog, idx) => {
+                  const colorPresets = [
+                    { bg: 'bg-brand-100', text: 'text-brand-600', border: 'hover:border-brand-400', badge: '★ Terarah', badgeText: 'text-amber-500' },
+                    { bg: 'bg-rose-100', text: 'text-rose-600', border: 'hover:border-rose-400', badge: '✓ Sabar', badgeText: 'text-emerald-600' },
+                    { bg: 'bg-amber-100', text: 'text-amber-600', border: 'hover:border-amber-400', badge: '✓ Terpadu', badgeText: 'text-blue-600' },
+                    { bg: 'bg-indigo-100', text: 'text-indigo-600', border: 'hover:border-indigo-400', badge: '★ Pemantapan', badgeText: 'text-indigo-600' },
+                    { bg: 'bg-teal-100', text: 'text-teal-600', border: 'hover:border-teal-400', badge: 'Siap Ujian', badgeText: 'text-teal-700 font-bold' },
+                    { bg: 'bg-sky-100', text: 'text-sky-600', border: 'hover:border-sky-400', badge: '★ Keterampilan', badgeText: 'text-sky-600 font-bold' },
+                  ];
+                  const preset = colorPresets[idx % colorPresets.length];
+                  return (
+                    <div
+                      key={prog.id}
+                      className={`p-6 rounded-2xl bg-white border border-slate-200 ${preset.border} hover:shadow-card transition-all duration-300 group flex flex-col justify-between`}
+                    >
+                      <div>
+                        <div className={`w-12 h-12 rounded-xl ${preset.bg} ${preset.text} flex items-center justify-center mb-5 group-hover:scale-105 transition-transform`}>
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">{prog.name}</h3>
+                        <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                          {prog.description}
+                        </p>
+                      </div>
+                      <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
+                        <span>{prog.gradeLevels || 'Jenjang SD'}</span>
+                        <span className={preset.badgeText}>{preset.badge}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <>
+                  {/* Program 1: Calistung */}
+                  <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Calistung</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                        Belajar membaca, menulis, dan berhitung secara intensif dengan trik yang menyenangkan, ramah, dan cepat dipahami anak pemula.
+                      </p>
+                    </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
+                      <span>Dasar Membaca &amp; Hitung</span>
+                      <span className="text-amber-500">★ Terarah</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Calistung</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    Belajar membaca, menulis, dan berhitung secara intensif dengan trik yang menyenangkan, ramah, dan cepat dipahami anak pemula.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
-                  <span>Dasar Membaca &amp; Hitung</span>
-                  <span className="text-amber-500">★ Terarah</span>
-                </div>
-              </div>
 
-              {/* Program 2: Pendampingan PR */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                    </svg>
+                  {/* Program 2: Pendampingan PR */}
+                  <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Pendampingan PR</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                        Membantu tumbuh kembang anak dalam memahami dan menyelesaikan pekerjaan rumah dari sekolah tanpa stres atau kebingungan.
+                      </p>
+                    </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
+                      <span>Bebas Stres PR</span>
+                      <span className="text-emerald-600">✓ Sabar</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Pendampingan PR</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    Membantu tumbuh kembang anak dalam memahami dan menyelesaikan pekerjaan rumah dari sekolah tanpa stres atau kebingungan.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
-                  <span>Bebas Stres PR</span>
-                  <span className="text-emerald-600">✓ Sabar</span>
-                </div>
-              </div>
 
-              {/* Program 3: Pembelajaran Sekolah */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                    </svg>
+                  {/* Program 3: Pembelajaran Sekolah */}
+                  <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Pembelajaran Sekolah</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                        Belajar lebih fokus dan terarah sesuai silabus kurikulum nasional jenjang SD (Matematika, Bahasa Inggris, Sains, Tematik).
+                      </p>
+                    </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
+                      <span>Sinkron Kurikulum SD</span>
+                      <span className="text-blue-600">✓ Terpadu</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Pembelajaran Sekolah</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    Belajar lebih fokus dan terarah sesuai silabus kurikulum nasional jenjang SD (Matematika, Bahasa Inggris, Sains, Tematik).
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
-                  <span>Sinkron Kurikulum SD</span>
-                  <span className="text-blue-600">✓ Terpadu</span>
-                </div>
-              </div>
 
-              {/* Program 4: Penguatan Materi */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                    </svg>
+                  {/* Program 4: Penguatan Materi */}
+                  <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Penguatan Materi</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                        Memperdalam konsep-konsep dasar yang masih membingungkan sehingga anak percaya diri dan mandiri mengerjakan latihan soal.
+                      </p>
+                    </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
+                      <span>Pendalaman Konsep</span>
+                      <span className="text-indigo-600">★ Pemantapan</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Penguatan Materi</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    Memperdalam konsep-konsep dasar yang masih membingungkan sehingga anak percaya diri dan mandiri mengerjakan latihan soal.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
-                  <span>Pendalaman Konsep</span>
-                  <span className="text-indigo-600">★ Pemantapan</span>
-                </div>
-              </div>
 
-              {/* Program 5: Persiapan ASTS, ASAS & Ujian */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 14l9-5-9-5-9 5 9 5z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                      <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                    </svg>
+                  {/* Program 5: Persiapan ASTS, ASAS & Ujian */}
+                  <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 14l9-5-9-5-9 5 9 5z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
+                          <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Persiapan ASTS, ASAS &amp; Ujian Sekolah</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                        Simulasi intensif latihan soal dan trik pengerjaan cepat jelang Asesmen Sumatif Tengah Semester (ASTS), Asesmen Akhir Semester (ASAS), dan ujian kenaikan kelas agar siswa siap mental dan meraih nilai memuaskan.
+                      </p>
+                    </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
+                      <span>Latihan Soal Intensif &amp; Bahas Tuntas</span>
+                      <span className="text-teal-700 font-bold">Siap Ujian &amp; Berprestasi</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Persiapan ASTS, ASAS &amp; Ujian Sekolah</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    Simulasi intensif latihan soal dan trik pengerjaan cepat jelang Asesmen Sumatif Tengah Semester (ASTS), Asesmen Akhir Semester (ASAS), dan ujian kenaikan kelas agar siswa siap mental dan meraih nilai memuaskan.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
-                  <span>Latihan Soal Intensif &amp; Bahas Tuntas</span>
-                  <span className="text-teal-700 font-bold">Siap Ujian &amp; Berprestasi</span>
-                </div>
-              </div>
 
-              {/* Program 6: Komputer Dasar */}
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
-                    </svg>
+                  {/* Program 6: Komputer Dasar */}
+                  <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-brand-400 hover:shadow-card transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                      <div className="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path>
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">Komputer Dasar</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                        Pengenalan dasar komputer, mengetik, logika digital, dan penggunaan internet aman untuk anak usia sekolah dasar.
+                      </p>
+                    </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
+                      <span>Literasi Digital</span>
+                      <span className="text-sky-600 font-bold">★ Keterampilan Modern</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Komputer Dasar</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    Pengenalan dasar komputer, mengetik, logika digital, dan penggunaan internet aman untuk anak usia sekolah dasar.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-600">
-                  <span>Literasi Digital</span>
-                  <span className="text-sky-600 font-bold">★ Keterampilan Modern</span>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
         </section>

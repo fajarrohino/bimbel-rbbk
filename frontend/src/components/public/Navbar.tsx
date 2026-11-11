@@ -47,7 +47,7 @@ export default function Navbar() {
               Daftar
             </Link>
             <a
-              href="https://wa.me/6285865777636?text=Halo%20Bu%20Khotimah,%20saya%20ingin%20konsultasi%20kelas%20untuk%20anak%20saya"
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_PHONE_NUMBER}?text=${process.env.NEXT_PUBLIC_MESSAGE}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-wa-700 bg-wa-50 hover:bg-wa-500 hover:text-white border border-emerald-200 hover:border-transparent transition-all duration-200 shadow-sm"

@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockStore } from '@/lib/mockData';
-import { Program } from '@/types';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { programApi } from '@/lib/api/programs';
 
-export default function NewProgramPage() {
+function NewProgramContent() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -21,7 +21,7 @@ export default function NewProgramPage() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -49,35 +49,18 @@ export default function NewProgramPage() {
     setIsSubmitting(true);
 
     try {
-      const all = mockStore.getPrograms();
-      // Calculate displayOrder automatically: max(displayOrder) of active and non-deleted + 1 (PRD 6.4)
-      const activeNonDeleted = all.filter((p) => p.isActive && !p.isDeleted);
-      const maxDisplayOrder = activeNonDeleted.reduce(
-        (max, p) => (p.displayOrder > max ? p.displayOrder : max),
-        0
-      );
-      const nextDisplayOrder = maxDisplayOrder + 1;
-
-      const now = new Date().toISOString();
-      const newProgram: Program = {
-        id: 'prog-' + Date.now(),
+      await programApi.create({
         name: name.trim(),
         description: description.trim(),
         gradeLevels: gradeLevels.trim(),
         subjects: subjects.trim(),
         fee: Number(fee),
         isActive,
-        displayOrder: nextDisplayOrder,
-        isDeleted: false,
-        deletedAt: null,
-        createdAt: now,
-        updatedAt: now,
-      };
-
-      mockStore.savePrograms([...all, newProgram]);
+      });
       router.push('/admin/programs');
-    } catch {
-      setError('Gagal menyimpan program. Silakan coba lagi.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Gagal menyimpan program. Silakan coba lagi.';
+      setError(msg);
       setIsSubmitting(false);
     }
   };
@@ -238,5 +221,13 @@ export default function NewProgramPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function NewProgramPage() {
+  return (
+    <ProtectedRoute>
+      <NewProgramContent />
+    </ProtectedRoute>
   );
 }

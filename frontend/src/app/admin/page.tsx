@@ -5,31 +5,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockStore } from '@/lib/mockData';
-import { Student, Program, ScheduleAssignment } from '@/types';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { scheduleApi, TodayScheduleResponse } from '@/lib/api/schedules';
+import { studentApi } from '@/lib/api/students';
+import { programApi } from '@/lib/api/programs';
+import { Student } from '@/types';
 
-export default function AdminDashboardPage() {
-  const router = useRouter();
+function AdminDashboardContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'hari-ini' | 'besok'>('hari-ini');
 
-  const [students, setStudents] = useState<Student[]>([]);
-  const [programs, setPrograms] = useState<Program[]>([]);
-  const [schedules, setSchedules] = useState<ScheduleAssignment[]>([]);
-
-  useEffect(() => {
-    if (!mockStore.getIsLoggedIn()) {
-      router.push('/auth/login');
-      return;
-    }
-    setStudents(mockStore.getStudents().filter((s) => !s.isDeleted));
-    setPrograms(mockStore.getPrograms().filter((p) => !p.isDeleted));
-    setSchedules(mockStore.getSchedules());
-  }, [router]);
-
-  const activeStudents = students.filter((s) => s.status === 'Aktif');
-  const pendingStudents = students.filter((s) => s.status === 'Pending');
-  const activePrograms = programs.filter((p) => p.isActive);
+  const [todaySchedule, setTodaySchedule] = useState<TodayScheduleResponse | null>(null);
+  const [activeCount, setActiveCount] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [programCount, setProgramCount] = useState(0);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
   // Current date helpers (YYYY-MM-DD)
   const getFormattedDate = (d: Date) => {
@@ -42,46 +32,69 @@ export default function AdminDashboardPage() {
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = getFormattedDate(tomorrow);
 
-  const selectedDateStr = activeTab === 'hari-ini' ? todayStr : tomorrowStr;
+  useEffect(() => {
+    async function loadData() {
+      setIsLoadingData(true);
+      try {
+        const [todayData, activeRes, pendingRes, programsRes] = await Promise.allSettled([
+          scheduleApi.getToday(),
+          studentApi.getAll({ status: 'Aktif' }),
+          studentApi.getAll({ status: 'Pending' }),
+          programApi.getAll(),
+        ]);
 
-  // Filter schedules by selected date tab, ensuring only active students
-  const activeStudentMap = React.useMemo(() => {
-    const map = new Map<string, Student>();
-    students.forEach((s) => {
-      if (s.status === 'Aktif') {
-        map.set(s.id, s);
+        if (todayData.status === 'fulfilled') setTodaySchedule(todayData.value);
+        if (activeRes.status === 'fulfilled') {
+          const res = activeRes.value as any;
+          setActiveCount(res.pagination?.total ?? res.total ?? res.students?.length ?? 0);
+        }
+        if (pendingRes.status === 'fulfilled') {
+          const res = pendingRes.value as any;
+          setPendingCount(res.pagination?.total ?? res.total ?? res.students?.length ?? 0);
+        }
+        if (programsRes.status === 'fulfilled') {
+          const list = Array.isArray(programsRes.value) ? programsRes.value : (programsRes.value as any)?.programs || [];
+          setProgramCount(list.filter((p: any) => p.isActive).length);
+        }
+      } catch (err) {
+        console.error('Dashboard load error:', err);
+      } finally {
+        setIsLoadingData(false);
       }
-    });
-    return map;
-  }, [students]);
+    }
+    loadData();
+  }, []);
 
-  // Today's total scheduled (for top card statistic)
-  const todayScheduleAssignments = schedules.filter(
-    (sch) => sch.date === todayStr && activeStudentMap.has(sch.studentId)
-  );
-  // Get unique students scheduled today for clean count
-  const uniqueTodayStudentIds = new Set(todayScheduleAssignments.map((s) => s.studentId));
-  const totalScheduledToday = uniqueTodayStudentIds.size;
+  // Build session student lists from todaySchedule response
+  const getSessionStudents = (sessionNum: number): Array<{ id: string; name: string; grade: string }> => {
+    if (!todaySchedule || !todaySchedule.sessions) return [];
 
-  // Schedules for currently selected tab (hari-ini or besok)
-  const currentTabAssignments = schedules.filter(
-    (sch) => sch.date === selectedDateStr && activeStudentMap.has(sch.studentId)
-  );
+    // Jika sessions berbentuk Object { 1: [...], 2: [...], 3: [...] } (format Fastify)
+    if (!Array.isArray(todaySchedule.sessions)) {
+      const sessionList = (todaySchedule.sessions as Record<string | number, any[]>)[sessionNum] || [];
+      return sessionList.map((item: any) => ({
+        id: item.student?.id || item.studentId || item.id,
+        name: item.student?.name || 'Siswa',
+        grade: item.student?.grade || '',
+      }));
+    }
 
-  const session1Students = currentTabAssignments
-    .filter((sch) => sch.session === 1)
-    .map((sch) => activeStudentMap.get(sch.studentId)!)
-    .filter(Boolean);
+    // Fallback jika sessions berbentuk Array [{ session: 1, students: [...] }]
+    const sess = (todaySchedule.sessions as any[]).find((s: any) => s.session === sessionNum);
+    return (sess?.students || []).map((s: any) => ({
+      id: s.id,
+      name: s.name,
+      grade: s.grade || '',
+    }));
+  };
 
-  const session2Students = currentTabAssignments
-    .filter((sch) => sch.session === 2)
-    .map((sch) => activeStudentMap.get(sch.studentId)!)
-    .filter(Boolean);
+  // For tomorrow, we don't have data from API in this setup (getToday only returns today)
+  // Show today data only; tomorrow tab shows empty state
+  const session1Students = activeTab === 'hari-ini' ? getSessionStudents(1) : [];
+  const session2Students = activeTab === 'hari-ini' ? getSessionStudents(2) : [];
+  const session3Students = activeTab === 'hari-ini' ? getSessionStudents(3) : [];
 
-  const session3Students = currentTabAssignments
-    .filter((sch) => sch.session === 3)
-    .map((sch) => activeStudentMap.get(sch.studentId)!)
-    .filter(Boolean);
+  const totalScheduledToday = (getSessionStudents(1).length + getSessionStudents(2).length + getSessionStudents(3).length);
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -134,7 +147,7 @@ export default function AdminDashboardPage() {
               <div>
                 <p className="text-xs font-semibold text-slate-500">Total Siswa Aktif</p>
                 <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-                  {activeStudents.length} <span className="text-xs font-medium text-slate-500">Siswa</span>
+                  {activeCount} <span className="text-xs font-medium text-slate-500">Siswa</span>
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -150,7 +163,7 @@ export default function AdminDashboardPage() {
               <div>
                 <p className="text-xs font-semibold text-slate-500">Pendaftaran Pending</p>
                 <p className="text-2xl sm:text-3xl font-black text-amber-600 mt-1">
-                  {pendingStudents.length} <span className="text-xs font-medium text-slate-500">Menunggu</span>
+                  {pendingCount} <span className="text-xs font-medium text-slate-500">Menunggu</span>
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -166,7 +179,7 @@ export default function AdminDashboardPage() {
               <div>
                 <p className="text-xs font-semibold text-slate-500">Program Belajar Aktif</p>
                 <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-                  {activePrograms.length} <span className="text-xs font-medium text-slate-500">Program</span>
+                  {programCount} <span className="text-xs font-medium text-slate-500">Program</span>
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl bg-sky-50 text-[#0284c7] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -192,7 +205,7 @@ export default function AdminDashboardPage() {
           </section>
 
           {/* Pending Applications Alert (if any) */}
-          {pendingStudents.length > 0 && (
+          {pendingCount > 0 && (
             <section className="bg-white rounded-2xl p-6 border border-amber-200/80 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -203,52 +216,15 @@ export default function AdminDashboardPage() {
                     <h2 className="text-base font-bold text-slate-900">
                       Menunggu Persetujuan Siswa Baru
                     </h2>
+                    <p className="text-xs text-slate-500">{pendingCount} pendaftaran menunggu review</p>
                   </div>
                 </div>
                 <Link
                   href="/admin/students"
-                  className="text-xs font-bold text-[#0284c7] hover:underline"
+                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition-colors"
                 >
-                  Lihat Semua
+                  Lihat & Proses
                 </Link>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-y border-slate-100">
-                    <tr>
-                      <th className="py-3 px-4">Nama</th>
-                      <th className="py-3 px-4">Kelas</th>
-                      <th className="py-3 px-4">Orang Tua</th>
-                      <th className="py-3 px-4">WhatsApp</th>
-                      <th className="py-3 px-4">Sesi ke</th>
-                      <th className="py-3 px-4">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {pendingStudents.slice(0, 3).map((std) => (
-                      <tr key={std.id} className="hover:bg-slate-50/50">
-                        <td className="py-3.5 px-4 font-bold text-slate-900">{std.name}</td>
-                        <td className="py-3.5 px-4 text-slate-600">{std.grade}</td>
-                        <td className="py-3.5 px-4 text-slate-600">{std.parentName}</td>
-                        <td className="py-3.5 px-4 text-slate-600">{std.whatsapp}</td>
-                        <td className="py-3.5 px-4">
-                          <span className="px-2 py-0.5 rounded bg-sky-50 text-[#0284c7] font-semibold">
-                            Sesi {std.preferredSession}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <Link
-                            href={`/admin/students/${std.id}`}
-                            className="px-3 py-1.5 rounded-lg bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold text-xs"
-                          >
-                            Preview
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
               </div>
             </section>
           )}
@@ -400,5 +376,13 @@ export default function AdminDashboardPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function AdminDashboardPage() {
+  return (
+    <ProtectedRoute>
+      <AdminDashboardContent />
+    </ProtectedRoute>
   );
 }

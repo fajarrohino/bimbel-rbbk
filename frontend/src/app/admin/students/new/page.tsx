@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockStore } from '@/lib/mockData';
-import { Student, StudentGender, ScheduleSession, Program, StudentProgram } from '@/types';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { programApi } from '@/lib/api/programs';
+import { studentApi } from '@/lib/api/students';
+import { StudentGender, ScheduleSession, Program } from '@/types';
 
-export default function NewStudentPage() {
+function NewStudentContent() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [programs, setPrograms] = useState<Program[]>([]);
@@ -27,18 +29,22 @@ export default function NewStudentPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!mockStore.getIsLoggedIn()) {
-      router.push('/auth/login');
-      return;
+    async function fetchPrograms() {
+      try {
+        const all = await programApi.getAll();
+        const activeProgs = all.filter((p) => p.isActive && !p.isDeleted);
+        setPrograms(activeProgs);
+        if (activeProgs.length > 0) {
+          setSelectedProgramId(activeProgs[0].id);
+        }
+      } catch (err) {
+        console.error('Failed to load programs:', err);
+      }
     }
-    const allProg = mockStore.getPrograms().filter((p) => p.isActive && !p.isDeleted);
-    setPrograms(allProg);
-    if (allProg.length > 0) {
-      setSelectedProgramId(allProg[0].id);
-    }
-  }, [router]);
+    fetchPrograms();
+  }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -74,55 +80,22 @@ export default function NewStudentPage() {
     setIsSubmitting(true);
 
     try {
-      const studentId = 'std-' + Date.now();
-      const now = new Date().toISOString();
-      const cleanPhone = mockStore.normalizeWhatsApp(whatsapp);
-      const chosenProgram = programs.find((p) => p.id === selectedProgramId);
-
-      // PRD 6.3: Siswa yang ditambahkan admin berstatus "Aktif"
-      const newStudent: Student = {
-        id: studentId,
+      await studentApi.create({
         name: name.trim(),
         gender,
         birthDate,
         grade: grade.trim(),
         school: school.trim(),
         parentName: parentName.trim(),
-        whatsapp: cleanPhone,
+        whatsapp: whatsapp.trim(),
         preferredSession,
-        status: 'Aktif',
-        note: note.trim() || null,
-        rejectionReason: null,
-        isDeleted: false,
-        deletedAt: null,
-        createdAt: now,
-        updatedAt: now,
-      };
-
-      const existingStudents = mockStore.getStudents();
-      mockStore.saveStudents([newStudent, ...existingStudents]);
-
-      // Snapshot program di student_programs (PRD 6.5)
-      if (chosenProgram) {
-        const newSP: StudentProgram = {
-          id: 'sp-' + Date.now(),
-          studentId: studentId,
-          programId: chosenProgram.id,
-          programNameAtRegistration: chosenProgram.name,
-          feeAtRegistration: chosenProgram.fee,
-          status: 'Aktif',
-          startedAt: now.split('T')[0],
-          note: 'Ditambahkan langsung oleh Admin',
-          createdAt: now,
-          updatedAt: now,
-        };
-        const existingSP = mockStore.getStudentPrograms();
-        mockStore.saveStudentPrograms([newSP, ...existingSP]);
-      }
+        programId: selectedProgramId,
+        note: note.trim() || undefined,
+      });
 
       router.push('/admin/students');
-    } catch {
-      setError('Gagal menambahkan siswa. Silakan coba lagi.');
+    } catch (err: any) {
+      setError(err.message || 'Gagal menambahkan siswa. Silakan coba lagi.');
       setIsSubmitting(false);
     }
   };
@@ -364,5 +337,13 @@ export default function NewStudentPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function NewStudentPage() {
+  return (
+    <ProtectedRoute>
+      <NewStudentContent />
+    </ProtectedRoute>
   );
 }

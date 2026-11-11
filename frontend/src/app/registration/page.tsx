@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
-import { mockStore } from '@/lib/mockData';
-import { StudentGender, ScheduleSession, Student, StudentProgram } from '@/types';
+import { studentApi } from '@/lib/api/students';
+import { programApi } from '@/lib/api/programs';
+import { StudentGender, ScheduleSession, Program } from '@/types';
 
 interface FaqItem {
   question: string;
@@ -53,6 +54,7 @@ export default function RegisterPage() {
   const [childSchool, setChildSchool] = useState('');
   const [parentName, setParentName] = useState('');
   const [parentWA, setParentWA] = useState('');
+  const [availableProgramsList, setAvailableProgramsList] = useState<Program[]>([]);
   const [selectedPrograms, setSelectedPrograms] = useState<string[]>(['Pendampingan PR Harian']);
   const [studyTime, setStudyTime] = useState<string>('Sesi 1 (14:00 - 15:00)');
   const [childNotes, setChildNotes] = useState('');
@@ -62,6 +64,21 @@ export default function RegisterPage() {
   const [successNotice, setSuccessNotice] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0); // first item open by default
+
+  useEffect(() => {
+    async function loadPrograms() {
+      try {
+        const progs = await programApi.getPublicPrograms();
+        if (progs && progs.length > 0) {
+          setAvailableProgramsList(progs);
+          setSelectedPrograms([progs[0].name]);
+        }
+      } catch (err) {
+        console.error('Failed to load public programs:', err);
+      }
+    }
+    loadPrograms();
+  }, []);
 
   const toggleProgram = (program: string) => {
     setSelectedPrograms((prev) =>
@@ -73,7 +90,7 @@ export default function RegisterPage() {
     setOpenFaqIndex((prev) => (prev === index ? null : index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -113,91 +130,50 @@ export default function RegisterPage() {
     setIsSubmitting(true);
 
     try {
-      const studentId = 'std-' + Date.now();
-      const now = new Date().toISOString();
-      const cleanPhone = mockStore.normalizeWhatsApp(parentWA);
-
       // Determine preferred session number (1, 2, or 3)
       let sessionNum: ScheduleSession = 1;
       if (studyTime.includes('Sesi 2')) sessionNum = 2;
       if (studyTime.includes('Sesi 3')) sessionNum = 3;
 
-      // 1. Save new Student in mockStore with status Pending (PRD 6.2)
-      const newStudent: Student = {
-        id: studentId,
+      const chosenProgram =
+        availableProgramsList.find((p) =>
+          selectedPrograms.some(
+            (sp) =>
+              p.name.toLowerCase() === sp.toLowerCase() ||
+              p.name.toLowerCase().includes(sp.toLowerCase().split(' ')[0])
+          )
+        ) || availableProgramsList[0];
+
+      if (!chosenProgram) {
+        setErrorMessage('Program belajar belum tersedia. Silakan hubungi admin langsung.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      const res = await studentApi.register({
         name: childName.trim(),
         gender: childGender as StudentGender,
         birthDate: childBirthDate,
         grade: childGrade,
         school: childSchool.trim(),
         parentName: parentName.trim(),
-        whatsapp: cleanPhone,
+        whatsapp: parentWA.trim(),
         preferredSession: sessionNum,
-        status: 'Pending',
+        programId: chosenProgram.id,
         note: childNotes.trim() || undefined,
-        rejectionReason: null,
-        isDeleted: false,
-        deletedAt: null,
-        createdAt: now,
-        updatedAt: now,
-      };
-
-      const existingStudents = mockStore.getStudents();
-      mockStore.saveStudents([newStudent, ...existingStudents]);
-
-      // 2. Associate with first matched program or placeholder
-      const allPrograms = mockStore.getPrograms();
-      const matchedProgram = allPrograms.find((p) =>
-        selectedPrograms.some((sp) => p.name.toLowerCase().includes(sp.toLowerCase().split(' ')[0]))
-      ) || allPrograms[0];
-
-      if (matchedProgram) {
-        const studentProgram: StudentProgram = {
-          id: 'sp-' + Date.now(),
-          studentId: studentId,
-          programId: matchedProgram.id,
-          programNameAtRegistration: matchedProgram.name,
-          feeAtRegistration: matchedProgram.fee,
-          status: 'Aktif',
-          startedAt: now,
-          note: null,
-          createdAt: now,
-          updatedAt: now,
-        };
-        const existingSP = mockStore.getStudentPrograms();
-        mockStore.saveStudentPrograms([...existingSP, studentProgram]);
-      }
-
-      // 3. Compose WhatsApp message
-      const programList = selectedPrograms.join(', ');
-      const rawWa = parentWA.startsWith('0') ? parentWA.slice(1) : parentWA;
-      const notesFormatted = childNotes.trim() || '-';
-
-      const waText =
-        `Halo Bu Khotimah, saya ingin mendaftarkan anak saya di Rumah Belajar:%0A%0A` +
-        `*Data Anak:*%0A` +
-        `- Nama Anak: ${encodeURIComponent(childName.trim())}%0A` +
-        `- Jenis Kelamin: ${encodeURIComponent(childGender)}%0A` +
-        `- Tanggal Lahir: ${encodeURIComponent(childBirthDate)}%0A` +
-        `- Kelas: ${encodeURIComponent(childGrade)}%0A` +
-        `- Asal Sekolah: ${encodeURIComponent(childSchool.trim())}%0A%0A` +
-        `*Data Orang Tua:*%0A` +
-        `- Nama Wali: ${encodeURIComponent(parentName.trim())}%0A` +
-        `- No. WhatsApp: +62${encodeURIComponent(rawWa)}%0A%0A` +
-        `*Program Pilihan:* ${encodeURIComponent(programList)}%0A` +
-        `*Pilihan Waktu:* ${encodeURIComponent(studyTime)}%0A` +
-        `*Catatan Anak:* ${encodeURIComponent(notesFormatted)}%0A%0A` +
-        `Mohon info ketersediaan jadwal belajar terdekat. Terima kasih!`;
+      });
 
       setSuccessNotice(true);
 
       // Open WhatsApp after short delay
       setTimeout(() => {
-        window.open(`https://wa.me/6285865777636?text=${waText}`, '_blank');
+        if (res.whatsAppUrl) {
+          window.open(res.whatsAppUrl, '_blank');
+        }
         setIsSubmitting(false);
       }, 700);
-    } catch {
-      setErrorMessage('Terjadi kesalahan saat memproses pendaftaran. Silakan coba lagi.');
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Terjadi kesalahan saat memproses pendaftaran. Silakan coba lagi.');
       setIsSubmitting(false);
     }
   };
@@ -211,7 +187,7 @@ export default function RegisterPage() {
           {/* Top Decorative Ambient Aura */}
           <div className="relative w-full overflow-hidden">
             <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-gradient-to-b from-primary-fixed/40 via-secondary-container/20 to-transparent blur-3xl pointer-events-none rounded-full"></div>
-            
+
             {/* Hero / Lead Introduction */}
             <section className="relative max-w-[1200px] mx-auto px-margin-mobile lg:px-margin pt-10 pb-12 lg:pt-14 lg:pb-16 text-center">
               <h1 className="font-display-hero text-3xl sm:text-4xl md:text-5xl lg:text-display-hero max-w-4xl mx-auto text-on-surface tracking-tight leading-tight mb-5 font-extrabold">
@@ -305,7 +281,7 @@ export default function RegisterPage() {
           {/* Main Registration Section: Split 7:5 Layout */}
           <section className="max-w-[1200px] mx-auto px-margin-mobile lg:px-margin py-14 lg:py-20 w-full" id="form-daftar">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
+
               {/* Left Column: Interactive Form (7 Cols) */}
               <div className="lg:col-span-7 bg-surface-container-lowest p-6 sm:p-8 lg:p-10 rounded-xl shadow-md">
                 <div className="flex items-center justify-between mb-6 pb-4">
@@ -461,20 +437,20 @@ export default function RegisterPage() {
                         <label className="font-label-md text-label-md text-on-surface font-medium" htmlFor="parentWA">
                           Nomor WhatsApp Aktif <span className="text-error">*</span>
                         </label>
-                        <div className="relative flex items-center">
-                          <span className="absolute left-4 font-label-md text-label-md text-on-surface-variant font-bold">
+                        {/* <div className="relative flex items-center"> */}
+                        {/* <span className="absolute left-4 font-label-md text-label-md text-on-surface-variant font-bold">
                             +62
-                          </span>
-                          <input
-                            className="w-full h-12 pl-14 pr-4 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#006194] transition-all"
-                            id="parentWA"
-                            value={parentWA}
-                            onChange={(e) => setParentWA(e.target.value)}
-                            placeholder="812-3456-7890"
-                            required
-                            type="tel"
-                          />
-                        </div>
+                          </span> */}
+                        <input
+                          className="w-full h-12 px-4 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#006194] transition-all"
+                          id="parentWA"
+                          value={parentWA}
+                          onChange={(e) => setParentWA(e.target.value)}
+                          placeholder="Contoh: 081312345671"
+                          required
+                          type="tel"
+                        />
+                        {/* </div> */}
                         <span className="font-body-sm text-body-sm text-on-surface-variant">
                           Konfirmasi jadwal dan rincian bimbingan dikirim ke nomor ini.
                         </span>
@@ -494,16 +470,15 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" id="programOptions">
-                      {AVAILABLE_PROGRAMS.map((prog) => {
+                      {(availableProgramsList.length > 0 ? availableProgramsList.map((p) => p.name) : AVAILABLE_PROGRAMS).map((prog) => {
                         const isChecked = selectedPrograms.includes(prog);
                         return (
                           <label
                             key={prog}
-                            className={`program-chip flex items-start gap-3 p-3.5 rounded-xl cursor-pointer transition-all border ${
-                              isChecked
-                                ? 'bg-primary-fixed/30 border-primary text-primary font-semibold'
-                                : 'bg-surface-container-low border-transparent hover:bg-surface-container text-on-surface'
-                            }`}
+                            className={`program-chip flex items-start gap-3 p-3.5 rounded-xl cursor-pointer transition-all border ${isChecked
+                              ? 'bg-primary-fixed/30 border-primary text-primary font-semibold'
+                              : 'bg-surface-container-low border-transparent hover:bg-surface-container text-on-surface'
+                              }`}
                           >
                             <input
                               className="mt-1 accent-primary w-4 h-4 rounded"
@@ -537,11 +512,10 @@ export default function RegisterPage() {
                           return (
                             <label
                               key={item.session}
-                              className={`flex flex-col items-start justify-center p-3.5 sm:p-4 rounded-xl border cursor-pointer transition-all shadow-sm text-left ${
-                                isSelected
-                                  ? 'bg-primary-fixed/50 border-primary ring-1 ring-primary'
-                                  : 'border-outline-variant/30 bg-surface-container-low hover:bg-surface-container'
-                              }`}
+                              className={`flex flex-col items-start justify-center p-3.5 sm:p-4 rounded-xl border cursor-pointer transition-all shadow-sm text-left ${isSelected
+                                ? 'bg-primary-fixed/50 border-primary ring-1 ring-primary'
+                                : 'border-outline-variant/30 bg-surface-container-low hover:bg-surface-container'
+                                }`}
                             >
                               <input
                                 className="sr-only"
@@ -784,9 +758,8 @@ export default function RegisterPage() {
                           {faq.question}
                         </span>
                         <span
-                          className={`material-symbols-outlined text-primary faq-icon transition-transform duration-200 ${
-                            isOpen ? 'rotate-180' : ''
-                          }`}
+                          className={`material-symbols-outlined text-primary faq-icon transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
+                            }`}
                         >
                           expand_more
                         </span>

@@ -7,10 +7,13 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import StatusBadge from '@/components/admin/StatusBadge';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { mockStore } from '@/lib/mockData';
-import { Student, StudentProgram, Program, StudentStatus, StudentGender, ScheduleSession } from '@/types';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { studentApi } from '@/lib/api/students';
+import { studentProgramApi } from '@/lib/api/studentPrograms';
+import { programApi } from '@/lib/api/programs';
+import { Student, StudentProgram, Program, StudentGender, ScheduleSession } from '@/types';
 
-export default function StudentDetailPage() {
+function StudentDetailContent() {
   const router = useRouter();
   const params = useParams();
   const studentId = params.id as string;
@@ -19,6 +22,7 @@ export default function StudentDetailPage() {
   const [student, setStudent] = useState<Student | null>(null);
   const [studentPrograms, setStudentPrograms] = useState<StudentProgram[]>([]);
   const [availablePrograms, setAvailablePrograms] = useState<Program[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Edit fields
   const [name, setName] = useState('');
@@ -46,44 +50,51 @@ export default function StudentDetailPage() {
   // Success / Error alerts
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  const loadData = useCallback(() => {
-    const allStudents = mockStore.getStudents();
-    const found = allStudents.find((s) => s.id === studentId && !s.isDeleted);
-    if (!found) {
+  const loadData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const [std, spList, progs] = await Promise.all([
+        studentApi.getById(studentId),
+        studentProgramApi.getByStudent(studentId).catch(() => []),
+        programApi.getAll().catch(() => []),
+      ]);
+
+      if (!std || std.isDeleted) {
+        router.push('/admin/students');
+        return;
+      }
+
+      setStudent(std);
+      setName(std.name);
+      setGender(std.gender);
+      // normalize birthDate to YYYY-MM-DD
+      const bDate = std.birthDate ? String(std.birthDate).split('T')[0] : '';
+      setBirthDate(bDate);
+      setGrade(std.grade);
+      setSchool(std.school);
+      setParentName(std.parentName);
+      setWhatsapp(std.whatsapp);
+      setPreferredSession(std.preferredSession);
+      setNote(std.note || '');
+
+      setStudentPrograms(spList);
+
+      const activeProgs = progs.filter((p) => p.isActive && !p.isDeleted);
+      setAvailablePrograms(activeProgs);
+      if (activeProgs.length > 0) {
+        setSelectedNewProgramId(activeProgs[0].id);
+      }
+    } catch (err) {
+      console.error('Failed to load student details:', err);
       router.push('/admin/students');
-      return;
-    }
-    setStudent(found);
-    setName(found.name);
-    setGender(found.gender);
-    setBirthDate(found.birthDate);
-    setGrade(found.grade);
-    setSchool(found.school);
-    setParentName(found.parentName);
-    setWhatsapp(found.whatsapp);
-    setPreferredSession(found.preferredSession);
-    setNote(found.note || '');
-
-    // Load Student Programs
-    const allSP = mockStore.getStudentPrograms().filter((sp) => sp.studentId === studentId);
-    allSP.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    setStudentPrograms(allSP);
-
-    // Load Available Active Programs
-    const progs = mockStore.getPrograms().filter((p) => p.isActive && !p.isDeleted);
-    setAvailablePrograms(progs);
-    if (progs.length > 0) {
-      setSelectedNewProgramId(progs[0].id);
+    } finally {
+      setIsLoading(false);
     }
   }, [studentId, router]);
 
   useEffect(() => {
-    if (!mockStore.getIsLoggedIn()) {
-      router.push('/auth/login');
-      return;
-    }
     loadData();
-  }, [loadData, router]);
+  }, [loadData]);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setNotification({ message, type });
@@ -91,172 +102,118 @@ export default function StudentDetailPage() {
   };
 
   // 1. Update Student Profile
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!student) return;
 
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === student.id
-        ? {
-            ...s,
-            name: name.trim(),
-            gender,
-            birthDate,
-            grade: grade.trim(),
-            school: school.trim(),
-            parentName: parentName.trim(),
-            whatsapp: mockStore.normalizeWhatsApp(whatsapp),
-            preferredSession,
-            note: note.trim() || null,
-            updatedAt: new Date().toISOString(),
-          }
-        : s
-    );
-
-    mockStore.saveStudents(updated);
-    showToast('Data identitas siswa berhasil diperbarui!');
-    loadData();
+    try {
+      await studentApi.update(student.id, {
+        name: name.trim(),
+        gender,
+        birthDate,
+        grade: grade.trim(),
+        school: school.trim(),
+        parentName: parentName.trim(),
+        whatsapp: whatsapp.trim(),
+        preferredSession,
+        note: note.trim() || undefined,
+      });
+      showToast('Data identitas siswa berhasil diperbarui!');
+      loadData();
+    } catch (err: any) {
+      showToast(err.message || 'Gagal memperbarui profil siswa.', 'error');
+    }
   };
 
   // 2. Accept Student (Pending -> Aktif, rejectionReason -> NULL) (PRD 6.3)
-  const handleAcceptStudent = () => {
+  const handleAcceptStudent = async () => {
     if (!student) return;
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === student.id
-        ? {
-            ...s,
-            status: 'Aktif' as StudentStatus,
-            rejectionReason: null,
-            updatedAt: new Date().toISOString(),
-          }
-        : s
-    );
-    mockStore.saveStudents(updated);
-    showToast(`Pendaftaran ${student.name} berhasil diterima sebagai siswa Aktif!`);
-    loadData();
+    try {
+      await studentApi.updateStatus(student.id, { status: 'Aktif' });
+      showToast(`Pendaftaran ${student.name} berhasil diterima sebagai siswa Aktif!`);
+      loadData();
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menerima siswa.', 'error');
+    }
   };
 
   // 3. Reject Student (Pending -> Nonaktif, rejectionReason disimpan) (PRD 6.3)
-  const handleRejectStudent = () => {
+  const handleRejectStudent = async () => {
     if (!student) return;
     const reason = rejectionReasonInput.trim() || 'Ditolak';
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === student.id
-        ? {
-            ...s,
-            status: 'Nonaktif' as StudentStatus,
-            rejectionReason: reason,
-            updatedAt: new Date().toISOString(),
-          }
-        : s
-    );
-    mockStore.saveStudents(updated);
-    setShowRejectModal(false);
-    showToast(`Pendaftaran ${student.name} ditolak (Status: Nonaktif). Alasan: ${reason}`);
-    loadData();
+    try {
+      await studentApi.updateStatus(student.id, { status: 'Nonaktif', rejectionReason: reason });
+      setShowRejectModal(false);
+      showToast(`Pendaftaran ${student.name} ditolak (Status: Nonaktif). Alasan: ${reason}`);
+      loadData();
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menolak pendaftaran.', 'error');
+    }
   };
 
   // 4. Deactivate Student (Aktif -> Nonaktif)
-  const handleDeactivateStudent = () => {
+  const handleDeactivateStudent = async () => {
     if (!student) return;
     const reason = prompt('Masukkan alasan penonaktifan (opsional):', 'Berhenti bimbingan') || 'Nonaktif';
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === student.id
-        ? {
-            ...s,
-            status: 'Nonaktif' as StudentStatus,
-            rejectionReason: reason,
-            updatedAt: new Date().toISOString(),
-          }
-        : s
-    );
-    mockStore.saveStudents(updated);
-    showToast(`Status siswa ${student.name} diubah menjadi Nonaktif.`);
-    loadData();
+    try {
+      await studentApi.updateStatus(student.id, { status: 'Nonaktif', rejectionReason: reason });
+      showToast(`Status siswa ${student.name} diubah menjadi Nonaktif.`);
+      loadData();
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menonaktifkan siswa.', 'error');
+    }
   };
 
   // 5. Reactivate Student (Nonaktif -> Aktif, rejectionReason -> NULL)
-  const handleReactivateStudent = () => {
+  const handleReactivateStudent = async () => {
     if (!student) return;
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === student.id
-        ? {
-            ...s,
-            status: 'Aktif' as StudentStatus,
-            rejectionReason: null,
-            updatedAt: new Date().toISOString(),
-          }
-        : s
-    );
-    mockStore.saveStudents(updated);
-    showToast(`Siswa ${student.name} berhasil diaktifkan kembali!`);
-    loadData();
+    try {
+      await studentApi.updateStatus(student.id, { status: 'Aktif' });
+      showToast(`Siswa ${student.name} berhasil diaktifkan kembali!`);
+      loadData();
+    } catch (err: any) {
+      showToast(err.message || 'Gagal mengaktifkan kembali siswa.', 'error');
+    }
   };
 
   // 6. Switch Program (PRD 6.5)
-  const handleSwitchProgram = () => {
+  const handleSwitchProgram = async () => {
     if (!student || !selectedNewProgramId) return;
 
     const chosenProg = availablePrograms.find((p) => p.id === selectedNewProgramId);
     if (!chosenProg) return;
 
-    const now = new Date().toISOString();
-    const allSP = mockStore.getStudentPrograms();
-
-    // Mark current active programs of this student as 'Selesai'
-    const updatedSP = allSP.map((sp) => {
-      if (sp.studentId === student.id && sp.status === 'Aktif') {
-        return {
-          ...sp,
-          status: 'Selesai' as const,
-          updatedAt: now,
-        };
-      }
-      return sp;
-    });
-
-    // Create new active program record with current snapshot name & fee
-    const newRecord: StudentProgram = {
-      id: 'sp-' + Date.now(),
-      studentId: student.id,
-      programId: chosenProg.id,
-      programNameAtRegistration: chosenProg.name,
-      feeAtRegistration: chosenProg.fee,
-      status: 'Aktif',
-      startedAt: now.split('T')[0],
-      note: switchNote.trim() || 'Pindah program belajar',
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    mockStore.saveStudentPrograms([newRecord, ...updatedSP]);
-    setShowSwitchProgramModal(false);
-    setSwitchNote('');
-    showToast(`Berhasil memindahkan siswa ke program ${chosenProg.name}. Riwayat lama telah disimpan sebagai Selesai.`);
-    loadData();
+    try {
+      await studentProgramApi.changeProgram(student.id, {
+        newProgramId: chosenProg.id,
+        note: switchNote.trim() || undefined,
+      });
+      setShowSwitchProgramModal(false);
+      setSwitchNote('');
+      showToast(`Berhasil memindahkan siswa ke program ${chosenProg.name}. Riwayat lama telah disimpan sebagai Selesai.`);
+      loadData();
+    } catch (err: any) {
+      showToast(err.message || 'Gagal memindahkan program siswa.', 'error');
+    }
   };
 
   // 7. Soft Delete (Hanya jika Nonaktif) (PRD 6.3)
-  const handleSoftDelete = () => {
+  const handleSoftDelete = async () => {
     if (!student) return;
     if (student.status !== 'Nonaktif') {
       showToast('Hanya siswa berstatus Nonaktif yang dapat dihapus secara logis.', 'error');
       setShowDeleteModal(false);
       return;
     }
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === student.id
-        ? { ...s, isDeleted: true, deletedAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
-        : s
-    );
-    mockStore.saveStudents(updated);
-    router.push('/admin/students');
+
+    try {
+      await studentApi.delete(student.id);
+      setShowDeleteModal(false);
+      showToast(`Data siswa "${student.name}" berhasil dihapus secara logis.`);
+      router.push('/admin/students');
+    } catch (err: any) {
+      showToast(err.message || 'Gagal menghapus siswa.', 'error');
+    }
   };
 
   if (!student) return null;
@@ -754,5 +711,13 @@ export default function StudentDetailPage() {
         onCancel={() => setShowDeleteModal(false)}
       />
     </div>
+  );
+}
+
+export default function StudentDetailPage() {
+  return (
+    <ProtectedRoute>
+      <StudentDetailContent />
+    </ProtectedRoute>
   );
 }

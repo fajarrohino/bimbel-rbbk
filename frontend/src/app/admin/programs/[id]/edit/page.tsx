@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockStore } from '@/lib/mockData';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { programApi } from '@/lib/api/programs';
 import { Program } from '@/types';
 
-export default function EditProgramPage() {
+function EditProgramContent() {
   const router = useRouter();
   const params = useParams();
   const programId = params.id as string;
@@ -26,26 +27,24 @@ export default function EditProgramPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!mockStore.getIsLoggedIn()) {
-      router.push('/auth/login');
-      return;
+    async function loadProgram() {
+      try {
+        const found = await programApi.getById(programId);
+        setProgram(found);
+        setName(found.name);
+        setDescription(found.description);
+        setGradeLevels(found.gradeLevels);
+        setSubjects(found.subjects);
+        setFee(found.fee);
+        setIsActive(found.isActive);
+      } catch {
+        router.push('/admin/programs');
+      }
     }
-    const all = mockStore.getPrograms();
-    const found = all.find((p) => p.id === programId && !p.isDeleted);
-    if (!found) {
-      router.push('/admin/programs');
-      return;
-    }
-    setProgram(found);
-    setName(found.name);
-    setDescription(found.description);
-    setGradeLevels(found.gradeLevels);
-    setSubjects(found.subjects);
-    setFee(found.fee);
-    setIsActive(found.isActive);
+    loadProgram();
   }, [programId, router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -73,26 +72,18 @@ export default function EditProgramPage() {
     setIsSubmitting(true);
 
     try {
-      const all = mockStore.getPrograms();
-      const updated = all.map((p) =>
-        p.id === programId
-          ? {
-              ...p,
-              name: name.trim(),
-              description: description.trim(),
-              gradeLevels: gradeLevels.trim(),
-              subjects: subjects.trim(),
-              fee: Number(fee),
-              isActive,
-              updatedAt: new Date().toISOString(),
-            }
-          : p
-      );
-
-      mockStore.savePrograms(updated);
+      await programApi.update(programId, {
+        name: name.trim(),
+        description: description.trim(),
+        gradeLevels: gradeLevels.trim(),
+        subjects: subjects.trim(),
+        fee: Number(fee),
+        isActive,
+      });
       router.push('/admin/programs');
-    } catch {
-      setError('Gagal memperbarui program.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Gagal memperbarui program.';
+      setError(msg);
       setIsSubmitting(false);
     }
   };
@@ -248,5 +239,13 @@ export default function EditProgramPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function EditProgramPage() {
+  return (
+    <ProtectedRoute>
+      <EditProgramContent />
+    </ProtectedRoute>
   );
 }

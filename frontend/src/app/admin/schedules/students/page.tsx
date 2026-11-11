@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { mockStore } from '@/lib/mockData';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { scheduleApi } from '@/lib/api/schedules';
+import { studentApi } from '@/lib/api/students';
 import { Student, ScheduleAssignment } from '@/types';
 
-export default function AdminScheduleStudentsPage() {
+function AdminScheduleStudentsContent() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -27,19 +29,41 @@ export default function AdminScheduleStudentsPage() {
 
   const [students, setStudents] = useState<Student[]>([]);
   const [schedules, setSchedules] = useState<ScheduleAssignment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Load active students once
   useEffect(() => {
-    if (!mockStore.getIsLoggedIn()) {
-      router.push('/auth/login');
-      return;
+    async function loadStudents() {
+      try {
+        const res = await studentApi.getAll({ limit: 100 });
+        setStudents((res.students || []).filter((s) => !s.isDeleted));
+      } catch (err) {
+        console.error('Failed to load students:', err);
+      }
     }
-    loadData();
-  }, [router]);
+    loadStudents();
+  }, []);
 
-  const loadData = () => {
-    setStudents(mockStore.getStudents().filter((s) => !s.isDeleted));
-    setSchedules(mockStore.getSchedules());
-  };
+  // Load schedules whenever calendarDate changes
+  useEffect(() => {
+    async function loadSchedules() {
+      setIsLoading(true);
+      try {
+        const monthStr = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, '0')}`;
+        const list = await scheduleApi.getByMonth(monthStr);
+        const normalized = list.map((sch) => ({
+          ...sch,
+          date: typeof sch.date === 'string' ? sch.date.split('T')[0] : new Date(sch.date).toISOString().split('T')[0],
+        }));
+        setSchedules(normalized);
+      } catch (err) {
+        console.error('Failed to load schedules for month:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadSchedules();
+  }, [calendarDate]);
 
   // Map student ID to student object for quick lookup
   const studentsMap = React.useMemo(() => {
@@ -664,5 +688,13 @@ export default function AdminScheduleStudentsPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function AdminScheduleStudentsPage() {
+  return (
+    <ProtectedRoute>
+      <AdminScheduleStudentsContent />
+    </ProtectedRoute>
   );
 }

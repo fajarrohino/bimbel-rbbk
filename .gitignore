@@ -21,7 +21,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment files
+.env
 .env*.local
+frontend/.env
+*.env
 
 # Vercel
 .vercel/
@@ -29,6 +32,9 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Documentation
+Api Docs.md
 
 # OS Files
 .DS_Store

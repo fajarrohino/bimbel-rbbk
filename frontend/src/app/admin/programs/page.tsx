@@ -6,28 +6,21 @@ import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { mockStore, INITIAL_PROGRAMS } from '@/lib/mockData';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { programApi } from '@/lib/api/programs';
 import { Program } from '@/types';
 
-export default function AdminProgramsPage() {
-  const router = useRouter();
+function AdminProgramsContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [programs, setPrograms] = useState<Program[]>(INITIAL_PROGRAMS);
+  const [programs, setPrograms] = useState<Program[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<Program | null>(null);
-
-  // Detail Modal State
   const [detailTarget, setDetailTarget] = useState<Program | null>(null);
-
-  // Toast Notification State
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !mockStore.getIsLoggedIn()) {
-      router.push('/auth/login');
-      return;
-    }
     loadPrograms();
-  }, [router]);
+  }, []);
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -36,36 +29,40 @@ export default function AdminProgramsPage() {
     }, 2800);
   };
 
-  const loadPrograms = () => {
-    const all = mockStore.getPrograms().filter((p) => !p.isDeleted);
-    // Sort by displayOrder ascending
-    all.sort((a, b) => a.displayOrder - b.displayOrder);
-    setPrograms(all);
+  const loadPrograms = async () => {
+    setIsLoading(true);
+    try {
+      const all = await programApi.getAll();
+      all.sort((a, b) => a.displayOrder - b.displayOrder);
+      setPrograms(all);
+    } catch (err) {
+      console.error('Failed to load programs', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleToggleActive = (prog: Program) => {
-    const all = mockStore.getPrograms();
-    const nextStatus = !prog.isActive;
-    const updated = all.map((p) =>
-      p.id === prog.id ? { ...p, isActive: nextStatus, updatedAt: new Date().toISOString() } : p
-    );
-    mockStore.savePrograms(updated);
-    loadPrograms();
-    showToast(`Status "${prog.name}" diubah ke ${nextStatus ? 'Enable' : 'Disable'}`);
+  const handleToggleActive = async (prog: Program) => {
+    try {
+      await programApi.toggleActive(prog.id);
+      await loadPrograms();
+      showToast(`Status "${prog.name}" diubah ke ${!prog.isActive ? 'Enable' : 'Disable'}`);
+    } catch (err) {
+      showToast(`Gagal mengubah status program`);
+    }
   };
 
-  const handleSoftDelete = () => {
+  const handleSoftDelete = async () => {
     if (!deleteTarget) return;
-    const all = mockStore.getPrograms();
-    const updated = all.map((p) =>
-      p.id === deleteTarget.id
-        ? { ...p, isDeleted: true, deletedAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
-        : p
-    );
-    mockStore.savePrograms(updated);
-    showToast(`Program "${deleteTarget.name}" berhasil dihapus`);
-    setDeleteTarget(null);
-    loadPrograms();
+    try {
+      await programApi.delete(deleteTarget.id);
+      showToast(`Program "${deleteTarget.name}" berhasil dihapus`);
+      setDeleteTarget(null);
+      await loadPrograms();
+    } catch (err) {
+      showToast(`Gagal menghapus program`);
+      setDeleteTarget(null);
+    }
   };
 
   const activeCount = programs.filter((p) => p.isActive).length;
@@ -182,8 +179,8 @@ export default function AdminProgramsPage() {
                             onClick={() => handleToggleActive(item)}
                             title="Klik untuk ubah status Enable / Disable"
                             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all ${isEnable
-                                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                              ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                               }`}
                           >
                             <span
@@ -293,8 +290,8 @@ export default function AdminProgramsPage() {
                 </span>
                 <span
                   className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${detailTarget.isActive
-                      ? 'bg-emerald-100 text-emerald-700'
-                      : 'bg-slate-100 text-slate-600'
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : 'bg-slate-100 text-slate-600'
                     }`}
                 >
                   <span
@@ -393,5 +390,13 @@ export default function AdminProgramsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminProgramsPage() {
+  return (
+    <ProtectedRoute>
+      <AdminProgramsContent />
+    </ProtectedRoute>
   );
 }

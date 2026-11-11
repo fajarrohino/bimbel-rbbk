@@ -6,14 +6,15 @@ import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { mockStore } from '@/lib/mockData';
-import { Student, StudentProgram, StudentStatus } from '@/types';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { studentApi } from '@/lib/api/students';
+import { Student, StudentStatus } from '@/types';
 
-export default function AdminStudentsPage() {
+function AdminStudentsContent() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [students, setStudents] = useState<Student[]>([]);
-  const [studentPrograms, setStudentPrograms] = useState<StudentProgram[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Filter & Search states
   const [search, setSearch] = useState('');
@@ -36,45 +37,40 @@ export default function AdminStudentsPage() {
   const [rejectReason, setRejectReason] = useState('Pendaftaran ditolak oleh admin');
 
   useEffect(() => {
-    if (!mockStore.getIsLoggedIn()) {
-      router.push('/auth/login');
-      return;
-    }
     loadData();
-  }, [router]);
+  }, []);
 
-  const loadData = () => {
-    const all = mockStore.getStudents().filter((s) => !s.isDeleted);
-    // Sort pending first, then by createdAt desc
-    all.sort((a, b) => {
-      if (a.status === 'Pending' && b.status !== 'Pending') return -1;
-      if (a.status !== 'Pending' && b.status === 'Pending') return 1;
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
-    setStudents(all);
-    setStudentPrograms(mockStore.getStudentPrograms());
+  const loadData = async () => {
+    setIsLoading(true);
+    try {
+      const res = await studentApi.getAll({ limit: 100 });
+      const all = (res.students || []).filter((s) => !s.isDeleted);
+      all.sort((a, b) => {
+        if (a.status === 'Pending' && b.status !== 'Pending') return -1;
+        if (a.status !== 'Pending' && b.status === 'Pending') return 1;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+      setStudents(all);
+    } catch (err: any) {
+      console.error('Failed to load students:', err);
+      setAlertMessage({ text: 'Gagal memuat data siswa.', type: 'error' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Map latest active or registered program name for each student
   const studentProgramMap = useMemo(() => {
     const map: Record<string, string> = {};
-    students.forEach((s) => {
-      // Find active program first
-      const activeProg = studentPrograms.find(
-        (sp) => sp.studentId === s.id && sp.status === 'Aktif'
-      );
-      if (activeProg) {
-        map[s.id] = activeProg.programNameAtRegistration;
-      } else {
-        // Fallback to latest registered program
-        const latestProg = studentPrograms
-          .filter((sp) => sp.studentId === s.id)
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
-        map[s.id] = latestProg ? latestProg.programNameAtRegistration : '-';
-      }
+    students.forEach((s: any) => {
+      const progName =
+        s.studentPrograms?.[0]?.program?.name ||
+        s.studentPrograms?.[0]?.programNameAtRegistration ||
+        '-';
+      map[s.id] = progName;
     });
     return map;
-  }, [students, studentPrograms]);
+  }, [students]);
 
   // Statistics counts (Dynamic from current active/non-deleted data)
   const stats = useMemo(() => {
@@ -153,64 +149,60 @@ export default function AdminStudentsPage() {
     setDeleteTarget(std);
   };
 
-  const handleSoftDelete = () => {
+  const handleSoftDelete = async () => {
     if (!deleteTarget) return;
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === deleteTarget.id
-        ? { ...s, isDeleted: true, deletedAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
-        : s
-    );
-    mockStore.saveStudents(updated);
-    setDeleteTarget(null);
-    setAlertMessage({
-      text: `Data siswa "${deleteTarget.name}" berhasil dihapus secara logis.`,
-      type: 'success',
-    });
-    loadData();
+    try {
+      await studentApi.delete(deleteTarget.id);
+      setDeleteTarget(null);
+      setAlertMessage({
+        text: `Data siswa "${deleteTarget.name}" berhasil dihapus secara logis.`,
+        type: 'success',
+      });
+      await loadData();
+    } catch (err: any) {
+      setAlertMessage({
+        text: err.message || 'Gagal menghapus siswa.',
+        type: 'error',
+      });
+    }
   };
 
   // Pending quick action approval / rejection
-  const handleApprovePending = (std: Student) => {
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === std.id
-        ? {
-          ...s,
-          status: 'Aktif' as StudentStatus,
-          rejectionReason: null,
-          updatedAt: new Date().toISOString(),
-        }
-        : s
-    );
-    mockStore.saveStudents(updated);
-    setPendingActionTarget(null);
-    setAlertMessage({
-      text: `Siswa "${std.name}" berhasil disetujui & diaktifkan!`,
-      type: 'success',
-    });
-    loadData();
+  const handleApprovePending = async (std: Student) => {
+    try {
+      await studentApi.updateStatus(std.id, { status: 'Aktif' });
+      setPendingActionTarget(null);
+      setAlertMessage({
+        text: `Siswa "${std.name}" berhasil disetujui & diaktifkan!`,
+        type: 'success',
+      });
+      await loadData();
+    } catch (err: any) {
+      setAlertMessage({
+        text: err.message || 'Gagal menyetujui siswa.',
+        type: 'error',
+      });
+    }
   };
 
-  const handleRejectPending = (std: Student) => {
-    const all = mockStore.getStudents();
-    const updated = all.map((s) =>
-      s.id === std.id
-        ? {
-          ...s,
-          status: 'Nonaktif' as StudentStatus,
-          rejectionReason: rejectReason.trim() || 'Pendaftaran ditolak',
-          updatedAt: new Date().toISOString(),
-        }
-        : s
-    );
-    mockStore.saveStudents(updated);
-    setPendingActionTarget(null);
-    setAlertMessage({
-      text: `Pendaftaran "${std.name}" telah ditolak (Status: Nonaktif).`,
-      type: 'success',
-    });
-    loadData();
+  const handleRejectPending = async (std: Student) => {
+    try {
+      await studentApi.updateStatus(std.id, {
+        status: 'Nonaktif',
+        rejectionReason: rejectReason.trim() || 'Pendaftaran ditolak',
+      });
+      setPendingActionTarget(null);
+      setAlertMessage({
+        text: `Pendaftaran "${std.name}" telah ditolak (Status: Nonaktif).`,
+        type: 'success',
+      });
+      await loadData();
+    } catch (err: any) {
+      setAlertMessage({
+        text: err.message || 'Gagal menolak pendaftaran.',
+        type: 'error',
+      });
+    }
   };
 
   const handleResetFilters = () => {
@@ -385,8 +377,10 @@ export default function AdminStudentsPage() {
                               rel="noopener noreferrer"
                               className="text-xs text-emerald-700 hover:underline inline-flex items-center gap-1 font-semibold"
                             >
-                              <span className="material-symbols-outlined text-[15px]">chat</span>
-                              <span>+{std.whatsapp}</span>
+                              {/* <span className="material-symbols-outlined text-[15px]">chat</span> */}
+                              <span>{std.whatsapp.startsWith('62')
+                                ? '0' + std.whatsapp.slice(2).replace(/(\d{3,4})(\d{4})(\d{3,4})?/, '$1-$2-$3')
+                                : std.whatsapp}</span>
                             </a>
                           </td>
                           <td className="py-3.5 px-4 font-medium text-slate-700">
@@ -787,5 +781,13 @@ export default function AdminStudentsPage() {
         onCancel={() => setDeleteTarget(null)}
       />
     </div>
+  );
+}
+
+export default function AdminStudentsPage() {
+  return (
+    <ProtectedRoute>
+      <AdminStudentsContent />
+    </ProtectedRoute>
   );
 }

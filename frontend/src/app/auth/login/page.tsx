@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { mockStore } from '@/lib/mockData';
+import { useAuth } from '@/lib/authContext';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const { login, isAuthenticated, isLoading } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -15,13 +16,12 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // If already logged in, redirect to dashboard (PRD 12.2)
-    if (mockStore.getIsLoggedIn()) {
+    if (!isLoading && isAuthenticated) {
       router.push('/admin');
     }
-  }, [router]);
+  }, [isAuthenticated, isLoading, router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -35,13 +35,15 @@ export default function AdminLoginPage() {
     }
 
     setLoading(true);
-
-    // Mock verification for Phase 1
-    setTimeout(() => {
-      // In Phase 1 frontend mock, allow login and store session
-      mockStore.setLoggedIn(true);
+    try {
+      await login(username, password);
       router.push('/admin');
-    }, 400);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Login gagal. Periksa kembali username dan password.';
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -142,12 +144,6 @@ export default function AdminLoginPage() {
                   </span>
                 </button>
               </div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-sky-50/70 border border-sky-100 text-[11px] text-slate-600 space-y-1">
-              <p className="font-bold text-[#0284c7]">Kredensial Uji Coba (Fase 1 Mock):</p>
-              <p>Username: <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 font-bold">bukhotimah</code></p>
-              <p>Password: <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 font-bold">password123</code></p>
             </div>
 
             <button
