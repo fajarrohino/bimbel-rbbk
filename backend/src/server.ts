@@ -72,13 +72,15 @@ export async function initApp() {
       // CORS
       const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000')
         .split(',')
-        .map((o) => o.trim());
+        .map((o) => o.trim().replace(/\/$/, ''));
 
       await app.register(cors, {
         origin: (origin, cb) => {
+          const normalizedOrigin = origin ? origin.replace(/\/$/, '') : '';
           if (
             !origin ||
-            allowedOrigins.includes(origin) ||
+            allowedOrigins.includes('*') ||
+            allowedOrigins.includes(normalizedOrigin) ||
             origin.startsWith('http://localhost:') ||
             origin.startsWith('http://127.0.0.1:')
           ) {

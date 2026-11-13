@@ -9,6 +9,7 @@ import crypto from 'node:crypto'
 const REFRESH_EXPIRES_SECONDS = parseInt(
   process.env.JWT_REFRESH_EXPIRES_SECONDS || "86400", 10
 );
+const isProduction = process.env.NODE_ENV === 'production';
 
 export async function authRoutes(app: FastifyInstance) {
   // ============================================================
@@ -74,8 +75,8 @@ export async function authRoutes(app: FastifyInstance) {
     // Set refresh token sebagai httpOnly cookie
     reply.setCookie('refresh_token', rawRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
       maxAge: REFRESH_EXPIRES_SECONDS,
     });
@@ -159,7 +160,11 @@ export async function authRoutes(app: FastifyInstance) {
         data: { revokedAt: new Date() },
       });
 
-      reply.clearCookie('refresh_token', { path: '/' });
+      reply.clearCookie('refresh_token', {
+        path: '/',
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+      });
       return reply.code(200).send({ message: 'Logout berhasil.' });
     }
   );
