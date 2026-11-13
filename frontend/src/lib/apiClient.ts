@@ -1,7 +1,8 @@
 // API Client — HTTP layer with auto token refresh
 // Access token is stored in memory (not localStorage) because refresh token is in httpOnly cookie.
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const rawBaseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+const BASE_URL = rawBaseUrl.replace(/\/+$/, '');
 
 export class AuthExpiredError extends Error {
   constructor() {
@@ -71,7 +72,8 @@ async function request<T>(
   params?: Record<string, string | number | boolean | undefined>,
   isRetry = false
 ): Promise<T> {
-  let url = `${BASE_URL}${path}`;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  let url = `${BASE_URL}${cleanPath}`;
 
   // Append query params
   if (params) {
