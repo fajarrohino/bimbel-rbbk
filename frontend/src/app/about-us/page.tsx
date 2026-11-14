@@ -29,7 +29,7 @@ export default function AboutUsPage() {
                 <div className="flex flex-wrap items-center gap-space-xs">
                   <div className="inline-flex items-center gap-1.5 px-3 sm:px-space-md py-1 rounded-full bg-primary-fixed/40 text-primary font-label-sm text-label-sm font-semibold tracking-wide">
                     <span className="material-symbols-outlined text-[16px]">school</span>
-                    <span>Mahasiswa PPG Prajabatan 2026</span>
+                    <span>Guru Bersertifikat Pendidikan Profesional</span>
                   </div>
                 </div>
 
@@ -63,7 +63,7 @@ export default function AboutUsPage() {
                   </div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
                     <span className="material-symbols-outlined text-secondary text-[16px]">check_circle</span>
-                    <span>Siklus 1–4 Selesai</span>
+                    <span>Siklus 1-4 Selesai</span>
                   </div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
                     <span className="material-symbols-outlined text-tertiary text-[16px]">auto_awesome</span>

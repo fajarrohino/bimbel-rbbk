@@ -43,11 +43,6 @@ export default function HomePage() {
 
               {/* Hero Copy Content (Left Column) */}
               <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-                {/* Category Chip Badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-100 border border-brand-200 text-brand-800 text-xs sm:text-sm font-bold shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
-                  Bimbingan Belajar Usia 7-13 Tahun
-                </div>
 
                 {/* Primary Heading */}
                 <h1
@@ -59,7 +54,7 @@ export default function HomePage() {
 
                 {/* Subheading / Body Paragraph */}
                 <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                  Pendampingan belajar ramah anak untuk Calistung, Matematika, Bahasa Inggris, dan Sains di Purbalingga.
+                  Rumah belajar bagi siswa SD/MI. Menggabungkan penguatan materi sekolah dengan metode belajar positif agar anak senang belajar setiap hari.
                 </p>
 
                 {/* Dual Call to Action Buttons */}
@@ -72,7 +67,7 @@ export default function HomePage() {
                   </Link>
                   <a
                     className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 transition-all text-center flex items-center justify-center gap-2 shadow-sm"
-                    href="https://wa.me/6285865777636?text=Halo%20Bu%20Khotimah,%20saya%20ingin%20konsultasi%20kelas%20untuk%20anak%20saya"
+                    href={`https://wa.me/${process.env.NEXT_PUBLIC_PHONE_NUMBER}?text=${process.env.NEXT_PUBLIC_MESSAGE}`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -164,9 +159,6 @@ export default function HomePage() {
         <section aria-labelledby="keunggulan-heading" className="py-20 bg-white" id="keunggulan">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 border border-brand-200/60 px-3.5 py-1 rounded-full inline-block mb-3">
-                Keunggulan Bimbel
-              </span>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight" id="keunggulan-heading">
                 Mengapa Memilih Bimbel di Rumah Belajar Bu Khotimah?
               </h2>
@@ -270,14 +262,11 @@ export default function HomePage() {
 
               <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-8 space-y-5">
-                  <span className="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
-                    Tentang Bimbingan Kami
-                  </span>
                   <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight" id="tentang-heading">
                     Membangun Generasi Cerdas &amp; Mandiri Bersama Bu Khotimah
                   </h2>
                   <p className="text-sky-100 text-sm sm:text-base leading-relaxed font-normal">
-                    <strong>Rumah Belajar Bu Khotimah</strong> merupakan sarana bimbingan belajar anak usia 7–13 tahun di wilayah Rembang, Purbalingga. Kami berdedikasi menyediakan pembelajaran terpadu untuk Calistung, Matematika, Bahasa Inggris, dan Sains.
+                    <strong>Rumah Belajar Bu Khotimah</strong> merupakan sarana pendampingan belajar ramah anak bagi siswa Sekolah Dasar maupun Madrasah Ibtidaiyah di wilayah Rembang, Purbalingga. Kami berdedikasi menyediakan bimbingan terpadu yang mendukung pemahaman akademik sekaligus kenyamanan belajar anak.
                   </p>
                   <p className="text-sky-100 text-sm sm:text-base leading-relaxed font-normal">
                     Dengan metode yang terarah, ramah, dan interaktif, kami hadir untuk memastikan anak tidak sekadar menghafal jawaban, melainkan memahami konsep belajar dalam lingkungan yang hangat, aman, serta menyenangkan.
@@ -311,9 +300,6 @@ export default function HomePage() {
         <section aria-labelledby="program-heading" className="py-20 bg-white" id="program">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 border border-brand-200/60 px-3.5 py-1 rounded-full inline-block mb-3">
-                Pilihan Kurikulum
-              </span>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight" id="program-heading">
                 Program Belajar Rumah Belajar Bu Khotimah
               </h2>
@@ -482,9 +468,6 @@ export default function HomePage() {
         <section aria-labelledby="alur-heading" className="py-20 bg-brand-50/60 border-t border-slate-200/80" id="alur-daftar">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-600 bg-white border border-brand-200 px-3.5 py-1 rounded-full inline-block mb-3">
-                Langkah Praktis
-              </span>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight" id="alur-heading">
                 Alur Pendaftaran Mudah &amp; Cepat
               </h2>
@@ -548,9 +531,6 @@ export default function HomePage() {
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
 
               <div className="text-center max-w-2xl mx-auto mb-10">
-                <span className="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wider backdrop-blur-sm mb-3">
-                  Investasi Terbaik Buah Hati
-                </span>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white" id="manfaat-heading">
                   Manfaat Nyata Rumah Belajar Bu Khotimah
                 </h2>
@@ -592,12 +572,10 @@ export default function HomePage() {
                 <span className="text-xs uppercase font-extrabold tracking-wider text-brand-600 block mb-1">
                   Biaya Super Terjangkau
                 </span>
-                <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-1">
-                  Mulai <span className="text-brand-600">10ribuan</span>&nbsp;<span className="text-sm font-semibold text-slate-500">/ pertemuan</span>
+                <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-2">
+                  Mulai <span className="text-brand-600">10ribuan</span><span className="text-sm font-semibold text-slate-500">/ pertemuan</span>
                 </div>
-                <p className="text-xs text-slate-500 mb-6">
-                  Kualitas bimbingan optimal tanpa memberatkan anggaran keluarga.
-                </p>
+
                 <Link
                   href="/registration"
                   className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md transition-all active:scale-95"
@@ -608,7 +586,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        {/* END: BenefitsAndPricingSection */}
+
       </main>
 
       <Footer />
