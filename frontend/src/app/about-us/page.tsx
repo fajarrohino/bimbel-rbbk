@@ -55,70 +55,7 @@ export default function AboutUsPage() {
                   Sebagai pengajar sekolah dasar yang adaptif dan berdedikasi, saya mengombinasikan pembelajaran berdiferensiasi dengan media visual interaktif untuk menciptakan ruang belajar yang menyenangkan, aman, dan memicu rasa ingin tahu anak. Melalui pendekatan berbasis proyek dan pemanfaatan teknologi edukatif yang humanis, saya membimbing setiap murid menemukan potensi terbaiknya serta membentuk karakter Profil Pelajar Pancasila secara berkelanjutan.
                 </p>
 
-                {/* Action Call-to-Actions */}
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <a
-                    href="#portofolio"
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-dark transition-all shadow-md shadow-primary/25 active:scale-95"
-                  >
-                    <span className="material-symbols-outlined text-[20px]">folder_special</span>
-                    <span>Lihat Menu Portofolio</span>
-                    <span className="material-symbols-outlined text-[18px]">arrow_downward</span>
-                  </a>
-                  <a
-                    href={`https://wa.me/${process.env.NEXT_PUBLIC_PHONE_NUMBER || '6285865777636'}?text=${encodeURIComponent(process.env.NEXT_PUBLIC_MESSAGE || 'Halo Bu Khotimah, saya ingin konsultasi mengenai bimbingan belajar')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface hover:bg-surface-container-high border border-outline-variant/40 transition-all font-label-md text-label-md shadow-sm"
-                  >
-                    <span className="material-symbols-outlined text-[20px] text-wa-600">chat</span>
-                    <span>Hubungi via WhatsApp</span>
-                  </a>
-                </div>
 
-                {/* Quick Portfolio Jump Chips */}
-                <div className="pt-2 flex flex-wrap items-center gap-2 text-xs">
-                  <span className="text-on-surface-variant font-medium text-xs mr-1 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[15px] text-primary">link</span>
-                    Akses Cepat:
-                  </span>
-                  <a
-                    href="https://ppg-indonesia.my.canva.site/portofolio-ppg-calon-guru-2026-khotimah/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-primary-fixed/50 text-primary font-medium transition-colors border border-outline-variant/30 text-xs"
-                  >
-                    <span>Portofolio 1 (Canva)</span>
-                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                  </a>
-                  <a
-                    href="https://sites.google.com/view/e-porto-lk3-khotimah/beranda"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-secondary-fixed/50 text-secondary font-medium transition-colors border border-outline-variant/30 text-xs"
-                  >
-                    <span>Portofolio 2 (LK 3)</span>
-                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                  </a>
-                  <a
-                    href="https://sites.google.com/view/e-porto-uts-uas-khotimah/beranda"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary-fixed/50 text-tertiary font-medium transition-colors border border-outline-variant/30 text-xs"
-                  >
-                    <span>Portofolio 3 (UTS/UAS)</span>
-                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                  </a>
-                  <a
-                    href="https://sites.google.com/view/portofolio-artefak-ct-khotimah/beranda"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-brand-100 text-brand-700 font-medium transition-colors border border-outline-variant/30 text-xs"
-                  >
-                    <span>Portofolio CT</span>
-                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                  </a>
-                </div>
               </div>
 
               {/* Tablet & Desktop Cutout Portrait (hidden on mobile, visible on md and up) */}
