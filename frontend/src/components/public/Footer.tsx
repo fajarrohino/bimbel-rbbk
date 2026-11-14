@@ -85,13 +85,13 @@ export default function Footer() {
 
           {/* Kolom Kontak, Sosial & CTA */}
           <div className="lg:col-span-3 space-y-5">
-            <p className="text-xs font-bold tracking-wider uppercase text-sky-400">Kontak &amp; Sosmed</p>
+            <p className="text-xs font-bold tracking-wider uppercase text-sky-400">Kontak & Sosmed</p>
 
             {/* Media Sosial Icons */}
             <div className="flex items-center gap-3">
               {/* WhatsApp Link */}
               <a
-                href="https://wa.me/6285865777636?text=Halo%20Bu%20Khotimah,%20saya%20ingin%20konsultasi%20kelas%20untuk%20anak%20saya"
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_PHONE_NUMBER}?text=${process.env.NEXT_PUBLIC_MESSAGE}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-xl bg-emerald-500/10 hover:bg-emerald-500 border border-emerald-500/30 text-emerald-400 hover:text-white flex items-center justify-center transition-all duration-200 shadow-sm"
@@ -104,7 +104,7 @@ export default function Footer() {
 
               {/* Instagram Link */}
               <a
-                href="#"
+                href="https://www.instagram.com/khctimh_"
                 className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-gradient-to-tr hover:from-amber-500 hover:via-pink-500 hover:to-purple-600 border border-slate-700 hover:border-transparent text-slate-300 hover:text-white flex items-center justify-center transition-all duration-200 shadow-sm"
                 title="Instagram"
               >
@@ -115,7 +115,7 @@ export default function Footer() {
 
               {/* YouTube Link */}
               <a
-                href="#"
+                href="https://www.youtube.com/@khotimah2468"
                 className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-red-600 border border-slate-700 hover:border-transparent text-slate-300 hover:text-white flex items-center justify-center transition-all duration-200 shadow-sm"
                 title="YouTube"
               >
@@ -154,7 +154,7 @@ export default function Footer() {
           <p>© 2025 Rumah Belajar Bu Khotimah. Seluruh hak cipta dilindungi.</p>
           <div className="flex items-center gap-6">
             <span className="hover:text-slate-400 transition cursor-pointer">
-              Bimbingan Belajar Ramah Anak &amp; Terpercaya di Purbalingga
+              Bimbingan Belajar Ramah Anak & Terpercaya di Purbalingga
             </span>
             {/* <Link href="/auth/login" className="hover:text-slate-400 transition-colors">
               Portal Admin
