@@ -55,23 +55,70 @@ export default function AboutUsPage() {
                   Sebagai pengajar sekolah dasar yang adaptif dan berdedikasi, saya mengombinasikan pembelajaran berdiferensiasi dengan media visual interaktif untuk menciptakan ruang belajar yang menyenangkan, aman, dan memicu rasa ingin tahu anak. Melalui pendekatan berbasis proyek dan pemanfaatan teknologi edukatif yang humanis, saya membimbing setiap murid menemukan potensi terbaiknya serta membentuk karakter Profil Pelajar Pancasila secara berkelanjutan.
                 </p>
 
-                {/* Quick Meta Chips */}
-                <div className="pt-space-xs flex flex-wrap gap-2 sm:gap-space-xs">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
-                    <span className="material-symbols-outlined text-primary text-[16px]">domain</span>
-                    <span>SD Negeri Trangsan 01</span>
-                  </div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
-                    <span className="material-symbols-outlined text-secondary text-[16px]">check_circle</span>
-                    <span>Siklus 1-4 Selesai</span>
-                  </div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
-                    <span className="material-symbols-outlined text-tertiary text-[16px]">auto_awesome</span>
-                    <span>Berbasis Proyek &amp; Diferensiasi</span>
-                  </div>
+                {/* Action Call-to-Actions */}
+                <div className="pt-2 flex flex-wrap items-center gap-3">
+                  <a
+                    href="#portofolio"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-dark transition-all shadow-md shadow-primary/25 active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">folder_special</span>
+                    <span>Lihat Menu Portofolio</span>
+                    <span className="material-symbols-outlined text-[18px]">arrow_downward</span>
+                  </a>
+                  <a
+                    href={`https://wa.me/${process.env.NEXT_PUBLIC_PHONE_NUMBER || '6285865777636'}?text=${encodeURIComponent(process.env.NEXT_PUBLIC_MESSAGE || 'Halo Bu Khotimah, saya ingin konsultasi mengenai bimbingan belajar')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface hover:bg-surface-container-high border border-outline-variant/40 transition-all font-label-md text-label-md shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[20px] text-wa-600">chat</span>
+                    <span>Hubungi via WhatsApp</span>
+                  </a>
                 </div>
 
-                {/* Action Call-to-Actions */}
+                {/* Quick Portfolio Jump Chips */}
+                <div className="pt-2 flex flex-wrap items-center gap-2 text-xs">
+                  <span className="text-on-surface-variant font-medium text-xs mr-1 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[15px] text-primary">link</span>
+                    Akses Cepat:
+                  </span>
+                  <a
+                    href="https://ppg-indonesia.my.canva.site/portofolio-ppg-calon-guru-2026-khotimah/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-primary-fixed/50 text-primary font-medium transition-colors border border-outline-variant/30 text-xs"
+                  >
+                    <span>Portofolio 1 (Canva)</span>
+                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                  </a>
+                  <a
+                    href="https://sites.google.com/view/e-porto-lk3-khotimah/beranda"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-secondary-fixed/50 text-secondary font-medium transition-colors border border-outline-variant/30 text-xs"
+                  >
+                    <span>Portofolio 2 (LK 3)</span>
+                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                  </a>
+                  <a
+                    href="https://sites.google.com/view/e-porto-uts-uas-khotimah/beranda"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary-fixed/50 text-tertiary font-medium transition-colors border border-outline-variant/30 text-xs"
+                  >
+                    <span>Portofolio 3 (UTS/UAS)</span>
+                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                  </a>
+                  <a
+                    href="https://sites.google.com/view/portofolio-artefak-ct-khotimah/beranda"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-brand-100 text-brand-700 font-medium transition-colors border border-outline-variant/30 text-xs"
+                  >
+                    <span>Portofolio CT</span>
+                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                  </a>
+                </div>
               </div>
 
               {/* Tablet & Desktop Cutout Portrait (hidden on mobile, visible on md and up) */}
@@ -91,9 +138,6 @@ export default function AboutUsPage() {
             <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin space-y-6 md:space-y-space-xl">
               {/* Section Header */}
               <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-space-xs">
-                <span className="font-label-sm text-label-sm text-primary tracking-widest uppercase">
-                  Prinsip &amp; Landasan Mengajar
-                </span>
                 <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
                   Komitmen Pendidikan
                 </h2>
@@ -133,7 +177,7 @@ export default function AboutUsPage() {
                     Kompetensi Pedagogik
                   </h3>
                   <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed text-sm sm:text-body-md">
-                    Merancang asesmen komprehensif (diagnostik &amp; formatif) serta diferensiasi pembelajaran ramah anak yang menstimulasi rasa ingin tahu dan nalar kritis siswa sejak dini.
+                    Merancang asesmen komprehensif (diagnostik & formatif) serta diferensiasi pembelajaran ramah anak yang menstimulasi rasa ingin tahu dan nalar kritis siswa sejak dini.
                   </p>
                 </div>
 
@@ -175,9 +219,6 @@ export default function AboutUsPage() {
             <div className="space-y-6 md:space-y-space-xl">
               {/* Section Tag & Title */}
               <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-space-xs">
-                <span className="font-label-sm text-label-sm text-secondary tracking-widest uppercase">
-                  Rekam Jejak Lapangan Nyata
-                </span>
                 <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
                   Praktik Pengalaman Lapangan
                 </h2>
@@ -210,10 +251,10 @@ export default function AboutUsPage() {
                       </span>
                     </div>
                     <h4 className="font-headline-sm text-headline-sm text-on-surface font-semibold text-base sm:text-headline-sm">
-                      Fondasi &amp; Observasi Karakteristik Siswa
+                      Fondasi & Observasi Karakteristik Siswa
                     </h4>
                     <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md">
-                      Melakukan pemetaan gaya belajar, asesmen diagnostik kognitif &amp; non-kognitif, observasi dinamika kelas, serta penyusunan modul ajar terbimbing secara intensif bersama Guru Pamong dan Dosen Pembimbing Lapangan.
+                      Melakukan pemetaan gaya belajar, asesmen diagnostik kognitif & non-kognitif, observasi dinamika kelas, serta penyusunan modul ajar terbimbing secara intensif bersama Guru Pamong dan Dosen Pembimbing Lapangan.
                     </p>
                   </div>
                 </div>
@@ -246,11 +287,11 @@ export default function AboutUsPage() {
                   <div className="p-4 sm:p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-shadow space-y-space-xs">
                     <div className="flex flex-wrap items-center justify-between gap-space-xs">
                       <span className="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">
-                        Siklus 3 • Penguatan &amp; Open Class
+                        Siklus 3 • Penguatan & Open Class
                       </span>
                     </div>
                     <h4 className="font-headline-sm text-headline-sm text-on-surface font-semibold text-base sm:text-headline-sm">
-                      Open Class Observasi Sejawat &amp; LKPD Kontekstual
+                      Open Class Observasi Sejawat & LKPD Kontekstual
                     </h4>
                     <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md">
                       Melaksanakan sesi <em>Open Class</em> dengan supervisi teman sejawat, mengembangkan LKPD kontekstual berbasis potensi lingkungan lokal Sukoharjo, serta merancang program intervensi pengayaan dan remedial tepat sasaran.
@@ -266,11 +307,11 @@ export default function AboutUsPage() {
                   <div className="p-4 sm:p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-shadow space-y-space-xs">
                     <div className="flex flex-wrap items-center justify-between gap-space-xs">
                       <span className="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">
-                        Siklus 4 • UAS &amp; Evaluasi Komprehensif
+                        Siklus 4 • UAS & Evaluasi Komprehensif
                       </span>
                     </div>
                     <h4 className="font-headline-sm text-headline-sm text-on-surface font-semibold text-base sm:text-headline-sm">
-                      Gelar Pameran Karya Siswa &amp; Refleksi Siklus Gibbs
+                      Gelar Pameran Karya Siswa & Refleksi Siklus Gibbs
                     </h4>
                     <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md">
                       Penyelenggaraan &quot;Galeri Belajar Siswa&quot; sebagai wujud asesmen sumatif autentik, disempurnakan dengan penulisan laporan refleksi pedagogik mendalam menggunakan kerangka kerja Gibbs Reflective Cycle dan ALPO model.
@@ -285,10 +326,10 @@ export default function AboutUsPage() {
                   </div>
                   <div className="p-4 sm:p-space-lg rounded-2xl bg-surface-container-low shadow-sm space-y-space-xs">
                     <span className="font-label-sm text-label-sm text-secondary uppercase font-bold tracking-wider">
-                      Pengabdian &amp; Kontribusi Sosial
+                      Pengabdian & Kontribusi Sosial
                     </span>
                     <h4 className="font-headline-sm text-headline-sm text-on-surface font-semibold text-base sm:text-headline-sm">
-                      Kegiatan Non-Mengajar &amp; Pengembangan Kultur Sekolah
+                      Kegiatan Non-Mengajar & Pengembangan Kultur Sekolah
                     </h4>
                     <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md">
                       Aktif membina ekstrakurikuler kepramukaan Siaga, kepanitiaan upacara bendera hari nasional, pembiasaan literasi pagi, serta pendampingan sanggar kreasi seni anyam rotan khas Desa Wisata Trangsan bersama paguyuban wali murid.
@@ -304,11 +345,8 @@ export default function AboutUsPage() {
             <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin space-y-6 md:space-y-space-xl">
               {/* Section Header */}
               <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-space-xs">
-                <span className="font-label-sm text-label-sm text-primary tracking-widest uppercase">
-                  Portofolio &amp; Output Akademik
-                </span>
                 <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
-                  Kompetensi Inti &amp; Karya Nyata
+                  Kompetensi Inti & Karya Nyata
                 </h2>
               </div>
 
@@ -321,7 +359,7 @@ export default function AboutUsPage() {
                       <span className="material-symbols-outlined text-primary text-[26px]">menu_book</span>
                     </div>
                     <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                      Perancangan &amp; Analisis Perangkat Pembelajaran
+                      Perancangan & Analisis Perangkat Pembelajaran
                     </h3>
                     <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md">
                       Keahlian sistematis dalam menurunkan Capaian Pembelajaran (CP) ke Alur Tujuan Pembelajaran (ATP), menyusun Modul Ajar Kurikulum Merdeka yang kontekstual, serta merancang rubrik asesmen autentik ramah anak.
@@ -347,7 +385,7 @@ export default function AboutUsPage() {
                       <span className="material-symbols-outlined text-secondary text-[26px]">layers</span>
                     </div>
                     <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                      Analisis Materi &amp; Media Pembelajaran Konkret
+                      Analisis Materi & Media Pembelajaran Konkret
                     </h3>
                     <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md">
                       Pengembangan alat peraga manipulatif konkret, Lembar Kerja Peserta Didik (LKPD) berbasis masalah (PBL) dan proyek (PjBL), serta infografis visual edukatif yang memudahkan logika dan imajinasi anak SD.
@@ -361,7 +399,7 @@ export default function AboutUsPage() {
                       LKPD Interaktif
                     </span>
                     <span className="px-2.5 py-1 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
-                      PBL &amp; PjBL
+                      PBL & PjBL
                     </span>
                   </div>
                 </div>
@@ -399,10 +437,10 @@ export default function AboutUsPage() {
                       <span className="material-symbols-outlined text-primary text-[26px]">insights</span>
                     </div>
                     <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
-                      Perancangan Instrumen Penilaian &amp; Refleksi Diri
+                      Perancangan Instrumen Penilaian & Refleksi Diri
                     </h3>
                     <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md">
-                      Penyusunan instrumen diagnostik non-kognitif, rubrik penilaian performa dan portofolio siswa, serta jurnal refleksi berkelanjutan berbasis kerangka ALPO &amp; Gibbs Cycle untuk peningkatan mutu diri.
+                      Penyusunan instrumen diagnostik non-kognitif, rubrik penilaian performa dan portofolio siswa, serta jurnal refleksi berkelanjutan berbasis kerangka ALPO & Gibbs Cycle untuk peningkatan mutu diri.
                     </p>
                   </div>
                   <div className="pt-space-xs flex flex-wrap gap-1.5">
@@ -421,8 +459,195 @@ export default function AboutUsPage() {
             </div>
           </section>
 
-          {/* SECTION 5: CONTACT & SOCIAL CONNECT (JEJAK DIGITAL & KOLABORASI) */}
-          <section className="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin py-space-xl" id="kontak"></section>
+          <section className="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin py-8 md:py-space-xl scroll-mt-24" id="portofolio">
+            <div className="space-y-6 md:space-y-space-xl">
+              <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-space-xs">
+
+                <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
+                  Portofolio Pendidik
+                </h2>
+                <div className="w-12 h-1 bg-primary rounded-full mt-1"></div>
+                <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl pt-2 text-sm sm:text-base">
+                  Akses langsung dokumen portofolio resmi, telaah modul ajar, asesmen evaluasi PPL, serta artefak Computational Thinking karya <strong>Khotimah, S.Pd.</strong>
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-space-lg">
+
+                <div className="p-5 md:p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-space-md border border-primary/20 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-bl from-primary-fixed/40 to-transparent rounded-bl-full pointer-events-none -z-0"></div>
+
+                  <div className="relative z-10 space-y-space-sm">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-bold shadow-sm">
+                          Portofolio Pertama • Utama
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                          <span className="material-symbols-outlined text-[14px] text-primary">palette</span>
+                          Canva Web
+                        </span>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-on-primary transition-colors text-primary">
+                        <span className="material-symbols-outlined text-[22px]">school</span>
+                      </div>
+                    </div>
+
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold text-lg md:text-xl pt-1">
+                      Portofolio PPG Calon Guru 2026
+                    </h3>
+
+                    <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md leading-relaxed">
+                      Portofolio komprehensif Program Pendidikan Profesi Guru Calon Guru 2026. Merangkum filosofi pendidikan Ki Hadjar Dewantara, rancangan pembelajaran kontekstual Kurikulum Merdeka, rekaman simulasi microteaching, serta jurnal refleksi berkelanjutan.
+                    </p>
+
+
+                  </div>
+
+                  <div className="relative z-10 pt-3 border-t border-surface-container flex items-center justify-end">
+                    <a
+                      href="https://ppg-indonesia.my.canva.site/portofolio-ppg-calon-guru-2026-khotimah/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-dark transition-all font-label-md text-label-md font-semibold shadow-sm hover:shadow active:scale-[0.98]"
+                    >
+                      <span>Buka Portofolio</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="p-5 md:p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-space-md border border-secondary/20 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-bl from-secondary-fixed/40 to-transparent rounded-bl-full pointer-events-none -z-0"></div>
+
+                  <div className="relative z-10 space-y-space-sm">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-1 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm font-bold shadow-sm">
+                          Portofolio Ke-2
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                          <span className="material-symbols-outlined text-[14px] text-secondary">web</span>
+                          Google Sites
+                        </span>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center shrink-0 group-hover:bg-secondary group-hover:text-on-secondary transition-colors text-secondary">
+                        <span className="material-symbols-outlined text-[22px]">assignment</span>
+                      </div>
+                    </div>
+
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold text-lg md:text-xl pt-1">
+                      E-Portofolio Lembar Kerja 3
+                    </h3>
+
+                    <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md leading-relaxed">
+                      Dokumentasi digital Lembar Kerja 3 yang menyajikan hasil telaah dan perancangan modul ajar berdiferensiasi, pemetaan gaya belajar siswa, instrumen asesmen diagnostik, serta Lembar Kerja Peserta Didik berbasis kontekstual.
+                    </p>
+
+
+                  </div>
+
+                  <div className="relative z-10 pt-3 border-t border-surface-container flex items-center justify-end">
+                    <a
+                      href="https://sites.google.com/view/e-porto-lk3-khotimah/beranda"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-on-secondary hover:bg-secondary/90 transition-all font-label-md text-label-md font-semibold shadow-sm hover:shadow active:scale-[0.98]"
+                    >
+                      <span>Buka Portofolio</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="p-5 md:p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-space-md border border-tertiary/20 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-bl from-tertiary-fixed/40 to-transparent rounded-bl-full pointer-events-none -z-0"></div>
+
+                  <div className="relative z-10 space-y-space-sm">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-1 rounded-full bg-tertiary text-on-tertiary font-label-sm text-label-sm font-bold shadow-sm">
+                          Portofolio Ke-3
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                          <span className="material-symbols-outlined text-[14px] text-tertiary">web</span>
+                          Google Sites
+                        </span>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center shrink-0 group-hover:bg-tertiary group-hover:text-on-tertiary transition-colors text-tertiary">
+                        <span className="material-symbols-outlined text-[22px]">fact_check</span>
+                      </div>
+                    </div>
+
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold text-lg md:text-xl pt-1">
+                      E-Portofolio Evaluasi UTS & UAS
+                    </h3>
+
+                    <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md leading-relaxed">
+                      Rekam jejak evaluasi dan asesmen pembelajaran komprehensif selama praktik mengajar di SD Negeri Trangsan 01, memuat laporan pelaksanaan UTS & UAS, pameran hasil karya siswa, serta refleksi kritis siklus belajar dengan ALPO & Gibbs model.
+                    </p>
+
+
+                  </div>
+
+                  <div className="relative z-10 pt-3 border-t border-surface-container flex items-center justify-end">
+                    <a
+                      href="https://sites.google.com/view/e-porto-uts-uas-khotimah/beranda"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-tertiary text-on-tertiary hover:bg-tertiary/90 transition-all font-label-md text-label-md font-semibold shadow-sm hover:shadow active:scale-[0.98]"
+                    >
+                      <span>Buka Portofolio</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="p-5 md:p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-space-md border border-brand-500/25 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-bl from-brand-200/40 to-transparent rounded-bl-full pointer-events-none -z-0"></div>
+
+                  <div className="relative z-10 space-y-space-sm">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-1 rounded-full bg-brand-600 text-white font-label-sm text-label-sm font-bold shadow-sm">
+                          Portofolio Tematik Khusus
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                          <span className="material-symbols-outlined text-[14px] text-brand-600">web</span>
+                          Google Sites
+                        </span>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center shrink-0 group-hover:bg-brand-600 group-hover:text-white transition-colors text-brand-600">
+                        <span className="material-symbols-outlined text-[22px]">memory</span>
+                      </div>
+                    </div>
+
+                    <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold text-lg md:text-xl pt-1">
+                      Portofolio Computational Thinking (CT)
+                    </h3>
+
+                    <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md leading-relaxed">
+                      Kumpulan karya dan artefak integrasi Computational Thinking dalam pembelajaran tingkat sekolah dasar. Melatih 4 pilar nalar logis: dekomposisi masalah, pengenalan pola, abstraksi konsep, dan perancangan algoritma ramah anak.
+                    </p>
+
+
+                  </div>
+
+                  <div className="relative z-10 pt-3 border-t border-surface-container flex items-center justify-end">
+                    <a
+                      href="https://sites.google.com/view/portofolio-artefak-ct-khotimah/beranda"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 text-white hover:bg-brand-700 transition-all font-label-md text-label-md font-semibold shadow-sm hover:shadow active:scale-[0.98]"
+                    >
+                      <span>Buka Portofolio</span>
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+
+
+            </div>
+          </section>
+
         </div>
       </main>
 

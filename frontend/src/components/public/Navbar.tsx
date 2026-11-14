@@ -36,6 +36,12 @@ export default function Navbar() {
             >
               Tentang Kami
             </Link>
+            <Link
+              href="/about-us#portofolio"
+              className="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 rounded-xl hover:bg-slate-50 transition-all"
+            >
+              Portofolio
+            </Link>
           </nav>
 
           {/* Desktop Action Buttons (WhatsApp & Daftar) */}
@@ -91,6 +97,13 @@ export default function Navbar() {
               className="mobile-link flex items-center px-3.5 py-3 rounded-xl text-base font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition-colors"
             >
               Tentang Kami
+            </Link>
+            <Link
+              href="/about-us#portofolio"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-link flex items-center px-3.5 py-3 rounded-xl text-base font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-600 transition-colors"
+            >
+              Portofolio
             </Link>
           </div>
 
