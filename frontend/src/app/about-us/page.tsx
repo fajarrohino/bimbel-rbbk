@@ -428,7 +428,7 @@ export default function AboutUsPage() {
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <span className="px-2.5 py-1 rounded-full bg-brand-600 text-white font-label-sm text-label-sm font-bold shadow-sm">
-                          Portofolio Tematik Khusus
+                          Portofolio Ke-4
                         </span>
                       </div>
                       <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center shrink-0 group-hover:bg-brand-600 group-hover:text-white transition-colors text-brand-600">
@@ -437,7 +437,7 @@ export default function AboutUsPage() {
                     </div>
 
                     <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold text-lg md:text-xl pt-1">
-                      Portofolio Computational Thinking (CT)
+                      Computational Thinking
                     </h3>
 
                     <p className="font-body-md text-body-md text-on-surface-variant text-sm sm:text-body-md leading-relaxed">
