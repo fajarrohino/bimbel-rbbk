@@ -21,17 +21,24 @@ export default function Footer() {
                 />
               </div>
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
-                  <span>Rumah</span>
-                  <span className="text-sky-400">Belajar</span>
-                  <span className="w-2 h-2 rounded-full bg-sky-400 inline-block ml-0.5"></span>
-                </h3>
-                <p className="text-xs sm:text-sm font-medium text-slate-400 mt-0.5">Bu Khotimah</p>
+                <a
+                  href="/auth/login"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Login"
+                >
+                  <h3 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    <span>Rumah</span>
+                    <span className="text-sky-400">Belajar</span>
+                    <span className="w-2 h-2 rounded-full bg-sky-400 inline-block ml-0.5"></span>
+                  </h3>
+                  <p className="text-xs sm:text-sm font-medium text-slate-400 mt-0.5">Bu Khotimah</p>
+                </a>
               </div>
             </div>
 
             <p className="text-slate-400 text-sm leading-relaxed pr-4">
-              Bimbingan belajar anak ramah, sabar, dan terarah untuk usia 7–13 tahun. Membangun dasar berpikir kritis dan karakter anak berprestasi di sekolah dengan suasana belajar yang menyenangkan.
+              Bimbingan belajar anak Sekolah Dasar maupun Madrasah Ibtidaiyah. Membangun dasar berpikir kritis dan karakter anak berprestasi di sekolah dengan suasana belajar yang menyenangkan.
             </p>
 
             {/* Info Lokasi */}
@@ -56,6 +63,11 @@ export default function Footer() {
               <li>
                 <Link href="/about-us" className="text-slate-300 hover:text-white transition duration-200">
                   Tentang Kami
+                </Link>
+              </li>
+              <li>
+                <Link href="/about-us#portofolio" className="text-slate-300 hover:text-white transition duration-200">
+                  Portofolio
                 </Link>
               </li>
             </ul>
