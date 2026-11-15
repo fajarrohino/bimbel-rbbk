@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import apiClient, { setAccessToken, clearAccessToken, AuthExpiredError } from '@/lib/apiClient';
 import { AdminUser } from '@/types';
 
@@ -21,33 +21,64 @@ interface AuthContextValue extends AuthState {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [user, setUser] = useState<AdminUser | null>(null);
   const [accessToken, setAccessTokenState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // On mount — restore session from httpOnly cookie via /api/auth/refresh
+  // Restore session from httpOnly cookie via /api/auth/refresh HANYA di halaman admin
   useEffect(() => {
+    const isAdminRoute = pathname?.startsWith('/admin');
+
+    // Jika bukan halaman admin (halaman publik atau login), lewati pemanggilan refresh
+    if (!isAdminRoute) {
+      if (!user) {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    // Jika sudah di halaman admin dan user sudah terautentikasi di memori, tidak perlu restore lagi
+    if (user) {
+      setIsLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+
     async function restoreSession() {
+      setIsLoading(true);
       try {
         const data = await apiClient.post<{ accessToken: string }>('/api/auth/refresh', {});
-        if (data?.accessToken) {
+        if (data?.accessToken && isMounted) {
           setAccessToken(data.accessToken);
           setAccessTokenState(data.accessToken);
           // Fetch user profile
           const me = await apiClient.get<any>('/api/auth/me');
-          setUser(me?.user || me);
+          if (isMounted) {
+            setUser(me?.user || me);
+          }
         }
       } catch {
         // No valid refresh token — not authenticated
-        clearAccessToken();
-        setAccessTokenState(null);
-        setUser(null);
+        if (isMounted) {
+          clearAccessToken();
+          setAccessTokenState(null);
+          setUser(null);
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     }
+
     restoreSession();
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [pathname, user]);
 
   const login = useCallback(async (username: string, password: string) => {
     try {
@@ -56,13 +87,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
       });
       setAccessToken(data.accessToken);
-
       setAccessTokenState(data.accessToken);
       setUser(data.user);
     } catch (error: any) {
-      throw new Error('Terjadi kesalahan yang tidak diketahui. Mohon untuk menunggu beberapa saat');
+      throw new Error(error?.message || 'Username atau password salah.');
     }
-
   }, []);
 
   const logout = useCallback(async () => {
