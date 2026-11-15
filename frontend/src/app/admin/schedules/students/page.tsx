@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
@@ -11,7 +10,6 @@ import { studentApi } from '@/lib/api/students';
 import { Student, ScheduleAssignment } from '@/types';
 
 function AdminScheduleStudentsContent() {
-  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Real-time current date
@@ -29,7 +27,6 @@ function AdminScheduleStudentsContent() {
 
   const [students, setStudents] = useState<Student[]>([]);
   const [schedules, setSchedules] = useState<ScheduleAssignment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Load active students once
   useEffect(() => {
@@ -47,7 +44,6 @@ function AdminScheduleStudentsContent() {
   // Load schedules whenever calendarDate changes
   useEffect(() => {
     async function loadSchedules() {
-      setIsLoading(true);
       try {
         const monthStr = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, '0')}`;
         const list = await scheduleApi.getByMonth(monthStr);
@@ -58,8 +54,6 @@ function AdminScheduleStudentsContent() {
         setSchedules(normalized);
       } catch (err) {
         console.error('Failed to load schedules for month:', err);
-      } finally {
-        setIsLoading(false);
       }
     }
     loadSchedules();

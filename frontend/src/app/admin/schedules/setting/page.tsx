@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
@@ -25,7 +24,6 @@ interface ToastMessage {
 }
 
 function AdminAturJadwalContent() {
-  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Month state - default to CURRENT REAL-TIME MONTH AND YEAR (mengikuti hari ini)
@@ -45,7 +43,6 @@ function AdminAturJadwalContent() {
   // Data state
   const [students, setStudents] = useState<Student[]>([]);
   const [schedules, setSchedules] = useState<ScheduleAssignment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Search filter for student distribution columns
   const [searchQuery, setSearchQuery] = useState('');
@@ -94,7 +91,6 @@ function AdminAturJadwalContent() {
 
   // Load schedules whenever currentMonthDate changes
   const loadMonthSchedules = useCallback(async () => {
-    setIsLoading(true);
     try {
       const monthStr = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
       const list = await scheduleApi.getByMonth(monthStr);
@@ -105,8 +101,6 @@ function AdminAturJadwalContent() {
       setSchedules(normalized);
     } catch (err) {
       console.error('Failed to load schedules:', err);
-    } finally {
-      setIsLoading(false);
     }
   }, [currentMonthDate]);
 

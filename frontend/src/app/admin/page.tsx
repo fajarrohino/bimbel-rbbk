@@ -2,14 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import { scheduleApi, TodayScheduleResponse } from '@/lib/api/schedules';
 import { studentApi } from '@/lib/api/students';
 import { programApi } from '@/lib/api/programs';
-import { Student } from '@/types';
 
 function AdminDashboardContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,22 +17,9 @@ function AdminDashboardContent() {
   const [activeCount, setActiveCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
   const [programCount, setProgramCount] = useState(0);
-  const [isLoadingData, setIsLoadingData] = useState(true);
-
-  // Current date helpers (YYYY-MM-DD)
-  const getFormattedDate = (d: Date) => {
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  };
-
-  const now = new Date();
-  const todayStr = getFormattedDate(now);
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowStr = getFormattedDate(tomorrow);
 
   useEffect(() => {
     async function loadData() {
-      setIsLoadingData(true);
       try {
         const [todayData, activeRes, pendingRes, programsRes] = await Promise.allSettled([
           scheduleApi.getToday(),
@@ -58,8 +43,6 @@ function AdminDashboardContent() {
         }
       } catch (err) {
         console.error('Dashboard load error:', err);
-      } finally {
-        setIsLoadingData(false);
       }
     }
     loadData();

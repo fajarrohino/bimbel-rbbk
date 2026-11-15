@@ -2,19 +2,16 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import { studentApi } from '@/lib/api/students';
-import { Student, StudentStatus } from '@/types';
+import { Student } from '@/types';
 
 function AdminStudentsContent() {
-  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [students, setStudents] = useState<Student[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Filter & Search states
   const [search, setSearch] = useState('');
@@ -41,7 +38,6 @@ function AdminStudentsContent() {
   }, []);
 
   const loadData = async () => {
-    setIsLoading(true);
     try {
       const res = await studentApi.getAll({ limit: 100 });
       const all = (res.students || []).filter((s) => !s.isDeleted);
@@ -54,8 +50,6 @@ function AdminStudentsContent() {
     } catch (err: any) {
       console.error('Failed to load students:', err);
       setAlertMessage({ text: 'Gagal memuat data siswa.', type: 'error' });
-    } finally {
-      setIsLoading(false);
     }
   };
 

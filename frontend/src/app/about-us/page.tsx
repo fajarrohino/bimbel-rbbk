@@ -189,12 +189,12 @@ export default function AboutUsPage() {
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="font-headline-sm text-lg sm:text-xl text-on-surface font-bold">
-                        MI Ma'arif NU 03 Bantarbarang
+                        MI Ma&apos;arif NU 03 Bantarbarang
                       </h3>
                     </div>
 
                     <p className="font-body-md text-on-surface-variant text-sm sm:text-base leading-relaxed">
-                      Memiliki pengalaman mengajar di MI Ma'arif NU 03 Bantarbarang dan terbiasa membimbing siswa di berbagai jenjang usia, mulai dari pendekatan bermain sambil belajar untuk kelas bawah hingga pendalaman materi bagi kelas atas.
+                      Memiliki pengalaman mengajar di MI Ma&apos;arif NU 03 Bantarbarang dan terbiasa membimbing siswa di berbagai jenjang usia, mulai dari pendekatan bermain sambil belajar untuk kelas bawah hingga pendalaman materi bagi kelas atas.
                     </p>
 
 

@@ -22,7 +22,6 @@ function StudentDetailContent() {
   const [student, setStudent] = useState<Student | null>(null);
   const [studentPrograms, setStudentPrograms] = useState<StudentProgram[]>([]);
   const [availablePrograms, setAvailablePrograms] = useState<Program[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Edit fields
   const [name, setName] = useState('');
@@ -51,7 +50,6 @@ function StudentDetailContent() {
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const loadData = useCallback(async () => {
-    setIsLoading(true);
     try {
       const [std, spList, progs] = await Promise.all([
         studentApi.getById(studentId),
@@ -87,8 +85,6 @@ function StudentDetailContent() {
     } catch (err) {
       console.error('Failed to load student details:', err);
       router.push('/admin/students');
-    } finally {
-      setIsLoading(false);
     }
   }, [studentId, router]);
 

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ConfirmModal from '@/components/common/ConfirmModal';
@@ -16,7 +15,6 @@ function AdminProgramsContent() {
   const [deleteTarget, setDeleteTarget] = useState<Program | null>(null);
   const [detailTarget, setDetailTarget] = useState<Program | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadPrograms();
@@ -30,15 +28,12 @@ function AdminProgramsContent() {
   };
 
   const loadPrograms = async () => {
-    setIsLoading(true);
     try {
       const all = await programApi.getAll();
       all.sort((a, b) => a.displayOrder - b.displayOrder);
       setPrograms(all);
     } catch (err) {
       console.error('Failed to load programs', err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -47,7 +42,7 @@ function AdminProgramsContent() {
       await programApi.toggleActive(prog.id);
       await loadPrograms();
       showToast(`Status "${prog.name}" diubah ke ${!prog.isActive ? 'Enable' : 'Disable'}`);
-    } catch (err) {
+    } catch {
       showToast(`Gagal mengubah status program`);
     }
   };
@@ -59,7 +54,7 @@ function AdminProgramsContent() {
       showToast(`Program "${deleteTarget.name}" berhasil dihapus`);
       setDeleteTarget(null);
       await loadPrograms();
-    } catch (err) {
+    } catch {
       showToast(`Gagal menghapus program`);
       setDeleteTarget(null);
     }
