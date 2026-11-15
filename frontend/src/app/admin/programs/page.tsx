@@ -71,19 +71,12 @@ function AdminProgramsContent() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans">
-      {/* Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-      {/* Main Content Area */}
       <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
-        {/* Header (Top bar with Notifikasi & Profil) */}
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-        // title="Kelola Program Belajar"
         />
-
         <main className="flex-1 p-6 sm:p-8 max-w-7xl w-full">
-          {/* Header Title & Tambah Program Button */}
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Program Belajar
@@ -93,13 +86,11 @@ function AdminProgramsContent() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#0284c7] hover:bg-[#0369a1] text-white font-semibold text-sm shadow-sm transition-all active:scale-95 shrink-0"
             >
               <span className="material-symbols-outlined text-[20px]">add</span>
-              <span>Tambah Program Baru</span>
+              <span>Program Baru</span>
             </Link>
           </div>
 
-          {/* 3 Metric Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {/* Card 1: Program Aktif */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -114,7 +105,6 @@ function AdminProgramsContent() {
               </div>
             </div>
 
-            {/* Card 2: Program Non Aktif */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -129,7 +119,6 @@ function AdminProgramsContent() {
               </div>
             </div>
 
-            {/* Card 3: Total Program */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -145,7 +134,6 @@ function AdminProgramsContent() {
             </div>
           </div>
 
-          {/* Table Container (4 columns: NO, NAMA PROGRAM, STATUS, AKSI) */}
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
@@ -192,7 +180,6 @@ function AdminProgramsContent() {
                         </td>
                         <td className="py-4 px-6 text-center">
                           <div className="inline-flex items-center justify-center gap-1.5">
-                            {/* Detail Icon Button (Mata) */}
                             <button
                               type="button"
                               onClick={() => setDetailTarget(item)}
@@ -204,7 +191,6 @@ function AdminProgramsContent() {
                               </span>
                             </button>
 
-                            {/* Edit Icon Button (Pensil) */}
                             <Link
                               href={`/admin/programs/${item.id}/edit`}
                               title="Edit Program"
@@ -215,7 +201,6 @@ function AdminProgramsContent() {
                               </span>
                             </Link>
 
-                            {/* Hapus Icon Button (Tempat Sampah) */}
                             <button
                               type="button"
                               onClick={() => setDeleteTarget(item)}
@@ -246,7 +231,6 @@ function AdminProgramsContent() {
         </main>
       </div>
 
-      {/* MODAL DETAIL PROGRAM */}
       {detailTarget && (
         <div
           className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 transition-all duration-200"
@@ -256,7 +240,6 @@ function AdminProgramsContent() {
             className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden transform scale-100 transition-all flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-sky-50 text-[#0284c7] flex items-center justify-center">
@@ -273,7 +256,6 @@ function AdminProgramsContent() {
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="p-6 space-y-4">
               <div>
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">
@@ -314,7 +296,7 @@ function AdminProgramsContent() {
               <div className="grid grid-cols-2 gap-4 pt-1">
                 <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                   <span className="text-xs font-medium text-slate-400 block mb-0.5">
-                    Biaya Bulanan
+                    Biaya Perhari
                   </span>
                   <span className="text-xs font-bold text-[#0284c7] block">
                     Rp {detailTarget.fee.toLocaleString('id-ID')}
@@ -322,7 +304,7 @@ function AdminProgramsContent() {
                 </div>
                 <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                   <span className="text-xs font-medium text-slate-400 block mb-0.5">
-                    Jenjang Target
+                    Jenjang
                   </span>
                   <span className="text-xs font-bold text-slate-800 block">
                     {detailTarget.gradeLevels}
@@ -354,7 +336,6 @@ function AdminProgramsContent() {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex justify-end">
               <button
                 type="button"
@@ -368,12 +349,11 @@ function AdminProgramsContent() {
         </div>
       )}
 
-      {/* Soft Delete Confirmation Modal */}
       <ConfirmModal
         isOpen={Boolean(deleteTarget)}
         title="Konfirmasi Hapus Program"
-        message={`Apakah Anda yakin ingin menghapus program "${deleteTarget?.name}"? Data akan disembunyikan dari antarmuka tetapi riwayat historis keikutsertaan siswa terdahulu tetap aman tersimpan di database.`}
-        confirmText="Hapus Program"
+        message={`Apakah Anda yakin ingin menghapus program "${deleteTarget?.name}"?`}
+        confirmText="Hapus"
         cancelText="Batal"
         variant="danger"
         onConfirm={handleSoftDelete}
