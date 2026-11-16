@@ -208,18 +208,15 @@ function AdminStudentsContent() {
 
   return (
     <div className="min-h-screen bg-[#faf8ff] flex">
-      {/* Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
-        {/* Header Bar */}
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-        // title="Data Siswa"
+          title="Data Siswa"
         />
 
         <main className="flex-1 p-4 sm:p-8 space-y-6 w-full">
-          {/* Notification Alert */}
           {alertMessage && (
             <div
               className={`p-4 rounded-xl border flex items-start justify-between gap-3 text-xs sm:text-sm transition-all ${alertMessage.type === 'error'
@@ -243,81 +240,116 @@ function AdminStudentsContent() {
             </div>
           )}
 
-          {/* Top Page Title & Quick Action */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#131b2e] tracking-tight">
-              Data Siswa
-            </h1>
-
-            <Link
-              href="/admin/students/new"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#006194] hover:bg-[#004b73] text-white font-bold text-xs sm:text-sm shadow-xs transition-colors self-start sm:self-auto"
-            >
-              <span className="material-symbols-outlined text-[18px]">person_add</span>
-              <span>Tambah Siswa Manual</span>
-            </Link>
-          </div>
-
-          {/* Metric Statistics Cards (Design Ref: 3 Primary Cards) */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Card 1: Total Siswa Aktif */}
-            <div className="p-5 rounded-2xl bg-white shadow-xs border border-slate-200/70 flex items-center justify-between transition-all hover:shadow-sm">
-              <div className="flex flex-col gap-1">
-                <span className="text-xs sm:text-[13px] font-medium text-slate-500">
-                  Total Siswa Aktif
-                </span>
-                <div className="flex items-baseline gap-1.5">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white shadow-xs border border-slate-200/70">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <button
+                type="button"
+                onClick={() => setStatusFilter(statusFilter === 'aktif' ? 'all' : 'aktif')}
+                className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'aktif'
+                  ? 'bg-emerald-50/90 border-emerald-400 ring-2 ring-emerald-500/20 shadow-xs'
+                  : 'bg-gradient-to-br from-emerald-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-emerald-300 hover:shadow-xs'
+                  }`}
+                title="Klik untuk memfilter Siswa Aktif"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    Total Siswa Aktif
+                  </span>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <span className="material-symbols-outlined text-[22px]">person_check</span>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-baseline gap-2">
                   <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
                     {stats.totalAktif}
                   </span>
-                  <span className="text-xs sm:text-[13px] font-semibold text-emerald-600">
-                    Siswa
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                    Siswa Aktif
                   </span>
                 </div>
-              </div>
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-[24px]">person_check</span>
-              </div>
-            </div>
+              </button>
 
-            {/* Card 2: Total Siswa Lulus */}
-            <div className="p-5 rounded-2xl bg-white shadow-xs border border-slate-200/70 flex items-center justify-between transition-all hover:shadow-sm">
-              <div className="flex flex-col gap-1">
-                <span className="text-xs sm:text-[13px] font-medium text-slate-500">
-                  Total Siswa Lulus
-                </span>
-                <div className="flex items-baseline gap-1.5">
+              <button
+                type="button"
+                onClick={() => setStatusFilter(statusFilter === 'lulus' ? 'all' : 'lulus')}
+                className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'lulus'
+                  ? 'bg-sky-50/90 border-sky-400 ring-2 ring-sky-500/20 shadow-xs'
+                  : 'bg-gradient-to-br from-sky-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-sky-300 hover:shadow-xs'
+                  }`}
+                title="Klik untuk memfilter Siswa Lulus"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-sky-500" />
+                    Total Siswa Lulus
+                  </span>
+                  <div className="w-10 h-10 rounded-xl bg-sky-100 text-[#006194] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <span className="material-symbols-outlined text-[22px]">school</span>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-baseline gap-2">
                   <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
                     {stats.totalLulus}
                   </span>
-                  <span className="text-xs sm:text-[13px] font-semibold text-[#006194]">
-                    Siswa
+                  <span className="text-xs font-bold text-[#006194] bg-sky-100/70 px-2 py-0.5 rounded-md">
+                    Siswa Lulus
                   </span>
                 </div>
-              </div>
-              <div className="w-11 h-11 rounded-xl bg-sky-100 text-[#006194] flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-[24px]">school</span>
-              </div>
-            </div>
+              </button>
 
-            {/* Card 3: Total Siswa Tidak Aktif */}
-            <div className="p-5 rounded-2xl bg-white shadow-xs border border-slate-200/70 flex items-center justify-between transition-all hover:shadow-sm">
-              <div className="flex flex-col gap-1">
-                <span className="text-xs sm:text-[13px] font-medium text-slate-500">
-                  Total Siswa Tidak Aktif
-                </span>
-                <div className="flex items-baseline gap-1.5">
+              <button
+                type="button"
+                onClick={() => setStatusFilter(statusFilter === 'tidak-aktif' ? 'all' : 'tidak-aktif')}
+                className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'tidak-aktif'
+                  ? 'bg-purple-50/90 border-purple-400 ring-2 ring-purple-500/20 shadow-xs'
+                  : 'bg-gradient-to-br from-purple-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-purple-300 hover:shadow-xs'
+                  }`}
+                title="Klik untuk memfilter Siswa Tidak Aktif"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-purple-400" />
+                    Total Siswa Nonaktif
+                  </span>
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <span className="material-symbols-outlined text-[22px]">person_off</span>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-baseline gap-2">
                   <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
                     {stats.totalTidakAktif}
                   </span>
-                  <span className="text-xs sm:text-[13px] font-semibold text-slate-400">
-                    Siswa
+                  <span className="text-xs font-bold text-purple-700 bg-purple-100/70 px-2 py-0.5 rounded-md">
+                    Nonaktif
                   </span>
                 </div>
-              </div>
-              <div className="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-[24px]">person_off</span>
-              </div>
+              </button>
+
+              <Link
+                href="/admin/students/new"
+                className="p-4 sm:p-4.5 rounded-xl bg-gradient-to-br from-[#006194] to-[#0284c7] hover:from-[#004b73] hover:to-[#006194] text-white shadow-xs hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer active:scale-[0.98]"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs font-bold text-sky-100 uppercase tracking-wider flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[15px]">person_add</span>
+                    Pendaftaran
+                  </span>
+                  <span className="material-symbols-outlined text-[18px] text-sky-200 group-hover:translate-x-1 transition-transform">
+                    arrow_forward
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center justify-between w-full">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-black text-white leading-tight">
+                      Tambah Siswa
+                    </h3>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-[22px]">add</span>
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
 
