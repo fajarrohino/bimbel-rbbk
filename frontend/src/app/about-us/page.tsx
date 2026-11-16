@@ -60,7 +60,7 @@ export default function AboutUsPage() {
                 <div className="flex flex-wrap items-center gap-space-xs">
                   <div className="inline-flex items-center gap-1.5 px-3 sm:px-space-md py-1 rounded-full bg-primary-fixed/40 text-primary font-label-sm text-label-sm font-semibold tracking-wide">
                     <span className="material-symbols-outlined text-[16px]">school</span>
-                    <span>Guru Bersertifikat Pendidikan Profesional</span>
+                    <span>Guru Bersertifikat Pendidik Profesional</span>
                   </div>
                 </div>
 
