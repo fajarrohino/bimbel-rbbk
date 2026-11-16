@@ -184,11 +184,8 @@ export default function RegisterPage() {
 
       <main className="w-full flex-1">
         <div className="flex flex-col w-full">
-          {/* Top Decorative Ambient Aura */}
           <div className="relative w-full overflow-hidden">
             <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-gradient-to-b from-primary-fixed/40 via-secondary-container/20 to-transparent blur-3xl pointer-events-none rounded-full"></div>
-
-            {/* Hero / Lead Introduction */}
             <section className="relative max-w-[1200px] mx-auto px-margin-mobile lg:px-margin pt-10 pb-12 lg:pt-14 lg:pb-16 text-center">
               <h1 className="font-display-hero text-3xl sm:text-4xl md:text-5xl lg:text-display-hero max-w-4xl mx-auto text-on-surface tracking-tight leading-tight mb-5 font-extrabold">
                 Mulai Langkah Cerdas Putra-Putri Anda Bersama{' '}
@@ -196,26 +193,9 @@ export default function RegisterPage() {
                   Bu Khotimah
                 </span>
               </h1>
-
-              {/* Trust Badges */}
-              <div className="flex flex-wrap items-center justify-center gap-3 max-w-3xl mx-auto">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-lowest shadow-sm text-on-surface font-label-md text-label-md">
-                  <span className="text-tertiary material-symbols-outlined text-[18px]">group</span>
-                  <span>Kuota Terbatas (Maks. 5-6 Siswa)</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-lowest shadow-sm text-on-surface font-label-md text-label-md">
-                  <span className="text-secondary material-symbols-outlined text-[18px]">verified</span>
-                  <span>Pendampingan Personal</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-lowest shadow-sm text-on-surface font-label-md text-label-md">
-                  <span className="text-tertiary-container material-symbols-outlined text-[18px]">payments</span>
-                  <span>Mulai 10ribuan/ pertemuan</span>
-                </div>
-              </div>
             </section>
           </div>
 
-          {/* Alur Pendaftaran (3 Langkah Praktis) */}
           <section className="w-full bg-surface-container-low py-12">
             <div className="max-w-[1200px] mx-auto px-margin-mobile lg:px-margin">
               <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -227,7 +207,6 @@ export default function RegisterPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-                {/* Step 1 */}
                 <div className="p-6 rounded-xl bg-surface-container-lowest shadow-sm relative group hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
                     <span className="w-10 h-10 rounded-lg bg-primary-fixed text-primary font-headline-sm text-headline-sm flex items-center justify-center font-bold">
@@ -243,7 +222,6 @@ export default function RegisterPage() {
                   </p>
                 </div>
 
-                {/* Step 2 */}
                 <div className="p-6 rounded-xl bg-surface-container-lowest shadow-sm relative group hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
                     <span className="w-10 h-10 rounded-lg bg-secondary-container text-secondary font-headline-sm text-headline-sm flex items-center justify-center font-bold">
@@ -259,7 +237,6 @@ export default function RegisterPage() {
                   </p>
                 </div>
 
-                {/* Step 3 */}
                 <div className="p-6 rounded-xl bg-surface-container-lowest shadow-sm relative group hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
                     <span className="w-10 h-10 rounded-lg bg-tertiary-fixed text-tertiary font-headline-sm text-headline-sm flex items-center justify-center font-bold">
@@ -278,17 +255,12 @@ export default function RegisterPage() {
             </div>
           </section>
 
-          {/* Main Registration Section: Split 7:5 Layout */}
           <section className="max-w-[1200px] mx-auto px-margin-mobile lg:px-margin py-14 lg:py-20 w-full" id="form-daftar">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-              {/* Left Column: Interactive Form (7 Cols) */}
               <div className="lg:col-span-7 bg-surface-container-lowest p-6 sm:p-8 lg:p-10 rounded-xl shadow-md">
                 <div className="flex items-center justify-between mb-6 pb-4">
                   <div>
-                    <span className="text-secondary font-label-sm text-label-sm uppercase tracking-wider block font-semibold">
-                      Registrasi Digital
-                    </span>
                     <h2 className="font-headline-md text-headline-md text-on-surface font-bold">
                       Formulir Peserta Didik Baru
                     </h2>
@@ -306,16 +278,13 @@ export default function RegisterPage() {
                 )}
 
                 <form className="flex flex-col gap-6" id="regForm" onSubmit={handleSubmit}>
-                  {/* Bagian Data Siswa */}
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
                       <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
                         1. Data Siswa
                       </h3>
                     </div>
 
-                    {/* Nama Lengkap Anak */}
                     <div className="flex flex-col gap-1.5">
                       <label className="font-label-md text-label-md text-on-surface font-medium" htmlFor="childName">
                         Nama Lengkap Anak <span className="text-error">*</span>
@@ -331,7 +300,6 @@ export default function RegisterPage() {
                       />
                     </div>
 
-                    {/* Jenis Kelamin */}
                     <div className="flex flex-col gap-1.5">
                       <label className="font-label-md text-label-md text-on-surface font-medium" htmlFor="childGender">
                         Jenis Kelamin <span className="text-error">*</span>
@@ -351,7 +319,6 @@ export default function RegisterPage() {
                       </select>
                     </div>
 
-                    {/* Tanggal Lahir & Pilihan Kelas */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="flex flex-col gap-1.5">
                         <label className="font-label-md text-label-md text-on-surface font-medium" htmlFor="childBirthDate">
@@ -391,7 +358,6 @@ export default function RegisterPage() {
                       </div>
                     </div>
 
-                    {/* Asal Sekolah */}
                     <div className="flex flex-col gap-1.5">
                       <label className="font-label-md text-label-md text-on-surface font-medium" htmlFor="childSchool">
                         Asal Sekolah SD / MI <span className="text-error">*</span>
@@ -408,10 +374,8 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  {/* Bagian Data Orang Tua */}
                   <div className="flex flex-col gap-4 pt-2">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-secondary"></span>
                       <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
                         2. Kontak Orang Tua / Wali
                       </h3>
@@ -437,10 +401,6 @@ export default function RegisterPage() {
                         <label className="font-label-md text-label-md text-on-surface font-medium" htmlFor="parentWA">
                           Nomor WhatsApp Aktif <span className="text-error">*</span>
                         </label>
-                        {/* <div className="relative flex items-center"> */}
-                        {/* <span className="absolute left-4 font-label-md text-label-md text-on-surface-variant font-bold">
-                            +62
-                          </span> */}
                         <input
                           className="w-full h-12 px-4 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#006194] transition-all"
                           id="parentWA"
@@ -450,7 +410,6 @@ export default function RegisterPage() {
                           required
                           type="tel"
                         />
-                        {/* </div> */}
                         <span className="font-body-sm text-body-sm text-on-surface-variant">
                           Konfirmasi jadwal dan rincian bimbingan dikirim ke nomor ini.
                         </span>
@@ -458,11 +417,9 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  {/* Bagian Pilihan Program Belajar */}
                   <div className="flex flex-col gap-4 pt-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
                         <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold">
                           3. Program Bimbingan Pilihan
                         </h3>
@@ -496,7 +453,6 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  {/* Preferensi Waktu & Catatan */}
                   <div className="flex flex-col gap-5 pt-2">
                     <div className="flex flex-col gap-2.5 w-full">
                       <label className="font-label-md text-label-md text-on-surface flex items-center justify-between font-medium">
@@ -549,7 +505,6 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  {/* Privacy statement & Submit CTA Button */}
                   <div className="flex flex-col gap-4 pt-4">
                     <div className="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
                       <span className="material-symbols-outlined text-[18px] text-secondary">lock</span>
@@ -573,7 +528,6 @@ export default function RegisterPage() {
                   </div>
                 </form>
 
-                {/* Feedback Success Notice */}
                 {successNotice && (
                   <div className="mt-6 p-6 rounded-xl bg-secondary-container text-on-secondary-container animate-fadeIn" id="successNotice">
                     <div className="flex items-start gap-4">
@@ -589,9 +543,7 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Right Column: Visual Summary, Image & Trust Badges (5 Cols) */}
               <div className="lg:col-span-5 flex flex-col gap-6">
-                {/* Image Card Hero Superhero Anak */}
                 <div className="rounded-xl overflow-hidden bg-gradient-to-br from-primary-fixed to-secondary-container p-6 relative shadow-md">
                   <div className="flex flex-col sm:flex-row items-center gap-4">
                     <div className="w-40 h-48 shrink-0 flex items-center justify-center relative">
@@ -618,7 +570,6 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                {/* Mengapa Memilih RBBK Box */}
                 <div className="rounded-xl bg-surface-container p-6 shadow-sm flex flex-col gap-4">
                   <h3 className="font-headline-sm text-headline-sm text-on-surface font-semibold flex items-center gap-2">
                     <span className="material-symbols-outlined text-primary text-[22px]">verified_user</span>
@@ -683,7 +634,6 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                {/* Bantuan Cepat WhatsApp */}
                 <div className="p-6 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-secondary-container text-secondary flex items-center justify-center">
@@ -703,7 +653,7 @@ export default function RegisterPage() {
                   </p>
                   <a
                     className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-secondary text-on-secondary font-label-lg text-label-md font-semibold hover:opacity-95 transition-all shadow-sm"
-                    href="https://wa.me/6285865777636?text=Halo%20Bu%20Khotimah,%20saya%20ingin%20tanya%20info%20pendaftaran%20bimbingan%20belajar%20RBBK"
+                    href={`https://wa.me/${process.env.NEXT_PUBLIC_PHONE_NUMBER}?text=${process.env.NEXT_PUBLIC_MESSAGE}`}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -712,7 +662,6 @@ export default function RegisterPage() {
                   </a>
                 </div>
 
-                {/* Box Alamat Lokasi */}
                 <div className="p-6 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2">
                   <div className="flex items-center gap-2 text-primary font-label-md text-label-md font-semibold">
                     <span className="material-symbols-outlined text-[20px]">pin_drop</span>
@@ -729,13 +678,9 @@ export default function RegisterPage() {
             </div>
           </section>
 
-          {/* FAQ Pendaftaran */}
           <section className="w-full bg-surface-container-low py-14 lg:py-20">
             <div className="max-w-[960px] mx-auto px-margin-mobile lg:px-margin">
               <div className="text-center mb-10">
-                <span className="text-primary font-label-sm text-label-sm uppercase tracking-wider block mb-1 font-semibold">
-                  Pertanyaan Seputar Pendaftaran
-                </span>
                 <h2 className="font-headline-lg text-headline-lg text-on-surface font-bold">
                   Tanya Jawab Pendaftaran (FAQ)
                 </h2>
