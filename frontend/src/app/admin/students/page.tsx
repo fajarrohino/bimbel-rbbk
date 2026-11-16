@@ -373,7 +373,7 @@ function AdminStudentsContent() {
                   <table className="w-full text-left text-xs sm:text-sm">
                     <thead>
                       <tr className="bg-amber-100/50 text-amber-900 uppercase tracking-wider font-bold text-[11px] border-b border-amber-200/60">
-                        <th className="py-3 px-4">Nama Calon Siswa</th>
+                        <th className="py-3 px-4">Nama</th>
                         <th className="py-3 px-4">Orang Tua</th>
                         <th className="py-3 px-4">Kontak</th>
                         <th className="py-3 px-4">Program Belajar</th>
@@ -388,12 +388,12 @@ function AdminStudentsContent() {
                           <td className="py-3.5 px-4">
                             <Link
                               href={`/admin/students/${std.id}`}
-                              className="font-bold text-[#131b2e] hover:text-[#006194] transition-colors block"
+                              className="font-bold text-[#131b2e] hover:text-[#006194] transition-colors block capitalize"
                             >
                               {std.name}
                             </Link>
                           </td>
-                          <td className="py-3.5 px-4 font-semibold text-slate-800">
+                          <td className="py-3.5 px-4 font-semibold text-slate-800 capitalize">
                             {std.parentName}
                           </td>
                           <td className="py-3.5 px-4">
@@ -557,7 +557,7 @@ function AdminStudentsContent() {
                       <td className="py-4 px-5">
                         <Link
                           href={`/admin/students/${std.id}`}
-                          className="font-bold text-[#131b2e] hover:text-[#006194] transition-colors block text-sm"
+                          className="font-bold text-[#131b2e] hover:text-[#006194] transition-colors block text-sm capitalize"
                         >
                           {std.name}
                         </Link>
@@ -568,7 +568,7 @@ function AdminStudentsContent() {
 
                       {/* 2. Orang Tua */}
                       <td className="py-4 px-4">
-                        <span className="font-semibold text-[#131b2e]">
+                        <span className="font-semibold text-[#131b2e] capitalize">
                           {std.parentName}
                         </span>
                       </td>

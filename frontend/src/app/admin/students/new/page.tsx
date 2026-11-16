@@ -10,6 +10,15 @@ import { programApi } from '@/lib/api/programs';
 import { studentApi } from '@/lib/api/students';
 import { StudentGender, ScheduleSession, Program } from '@/types';
 
+function capitalizeWords(str: string): string {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1) : ''))
+    .join(' ');
+}
+
 function NewStudentContent() {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -81,12 +90,12 @@ function NewStudentContent() {
 
     try {
       await studentApi.create({
-        name: name.trim(),
+        name: capitalizeWords(name.trim()),
         gender,
         birthDate,
         grade: grade.trim(),
         school: school.trim(),
-        parentName: parentName.trim(),
+        parentName: capitalizeWords(parentName.trim()),
         whatsapp: whatsapp.trim(),
         preferredSession,
         programId: selectedProgramId,
@@ -111,21 +120,6 @@ function NewStudentContent() {
         />
 
         <main className="flex-1 p-4 sm:p-8 space-y-6 max-w-4xl w-full">
-          <div>
-            <Link
-              href="/admin/students"
-              className="text-xs font-bold text-[#0284c7] hover:underline flex items-center gap-1 mb-2"
-            >
-              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-              <span>Kembali ke Daftar Siswa</span>
-            </Link>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-              Tambah Siswa Baru (Status: Aktif)
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Sesuai aturan PRD, siswa yang ditambahkan langsung oleh admin otomatis berstatus <strong>Aktif</strong> dan langsung dapat dijadwalkan pada menu Atur Jadwal.
-            </p>
-          </div>
 
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs">
             {error && (
@@ -144,7 +138,7 @@ function NewStudentContent() {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="name">
-                    Nama Lengkap Siswa *
+                    Nama *
                   </label>
                   <input
                     id="name"
@@ -152,8 +146,9 @@ function NewStudentContent() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Contoh: Dimas Bagus Wibowo"
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
+                    onBlur={() => setName((prev) => capitalizeWords(prev))}
+                    placeholder="Full Name"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7] capitalize"
                   />
                 </div>
 
@@ -190,21 +185,6 @@ function NewStudentContent() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="grade">
-                      Jenjang / Kelas *
-                    </label>
-                    <input
-                      id="grade"
-                      type="text"
-                      required
-                      value={grade}
-                      onChange={(e) => setGrade(e.target.value)}
-                      placeholder="Contoh: Kelas 5 SD"
-                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
-                    />
-                  </div>
-
-                  <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="school">
                       Asal Sekolah *
                     </label>
@@ -214,7 +194,21 @@ function NewStudentContent() {
                       required
                       value={school}
                       onChange={(e) => setSchool(e.target.value)}
-                      placeholder="Contoh: SD Negeri 1 Purbalingga"
+                      placeholder="SD Negeri 1 Wanogara Wetan"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="grade">
+                      Kelas *
+                    </label>
+                    <input
+                      id="grade"
+                      type="text"
+                      required
+                      value={grade}
+                      onChange={(e) => setGrade(e.target.value)}
+                      placeholder="Kelas 5"
                       className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
                     />
                   </div>
@@ -238,8 +232,9 @@ function NewStudentContent() {
                       required
                       value={parentName}
                       onChange={(e) => setParentName(e.target.value)}
-                      placeholder="Contoh: Bpk. Tri Wibowo"
-                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
+                      onBlur={() => setParentName((prev) => capitalizeWords(prev))}
+                      placeholder="Orang Tua/Wali"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7] capitalize"
                     />
                   </div>
 
@@ -253,7 +248,7 @@ function NewStudentContent() {
                       required
                       value={whatsapp}
                       onChange={(e) => setWhatsapp(e.target.value)}
-                      placeholder="Contoh: 081399887766"
+                      placeholder="081399887766"
                       className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
                     />
                   </div>
@@ -295,16 +290,16 @@ function NewStudentContent() {
                       onChange={(e) => setPreferredSession(Number(e.target.value) as ScheduleSession)}
                       className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
                     >
-                      <option value={1}>Sesi 1 (14.00 – 15.00 WIB)</option>
-                      <option value={2}>Sesi 2 (16.00 – 17.00 WIB)</option>
-                      <option value={3}>Sesi 3 (19.00 – 20.00 WIB)</option>
+                      <option value={1}>Sesi 1 (14.00 - 15.00 WIB)</option>
+                      <option value={2}>Sesi 2 (16.00 - 17.00 WIB)</option>
+                      <option value={3}>Sesi 3 (19.00 - 20.00 WIB)</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="note">
-                    Catatan Guru / Penyesuaian (Opsional)
+                    Catatan
                   </label>
                   <textarea
                     id="note"
@@ -329,7 +324,7 @@ function NewStudentContent() {
                   disabled={isSubmitting}
                   className="px-6 py-2.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5 disabled:opacity-70"
                 >
-                  {isSubmitting ? 'Menyimpan...' : 'Simpan Siswa Aktif'}
+                  {isSubmitting ? 'Menyimpan...' : 'Tambahkan'}
                 </button>
               </div>
             </form>

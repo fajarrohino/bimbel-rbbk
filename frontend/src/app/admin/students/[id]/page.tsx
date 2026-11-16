@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
@@ -12,6 +11,15 @@ import { studentApi } from '@/lib/api/students';
 import { studentProgramApi } from '@/lib/api/studentPrograms';
 import { programApi } from '@/lib/api/programs';
 import { Student, StudentProgram, Program, StudentGender, ScheduleSession } from '@/types';
+
+function capitalizeWords(str: string): string {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1) : ''))
+    .join(' ');
+}
 
 function StudentDetailContent() {
   const router = useRouter();
@@ -63,14 +71,14 @@ function StudentDetailContent() {
       }
 
       setStudent(std);
-      setName(std.name);
+      setName(capitalizeWords(std.name));
       setGender(std.gender);
       // normalize birthDate to YYYY-MM-DD
       const bDate = std.birthDate ? String(std.birthDate).split('T')[0] : '';
       setBirthDate(bDate);
       setGrade(std.grade);
-      setSchool(std.school);
-      setParentName(std.parentName);
+      setSchool(capitalizeWords(std.school));
+      setParentName(capitalizeWords(std.parentName));
       setWhatsapp(std.whatsapp);
       setPreferredSession(std.preferredSession);
       setNote(std.note || '');
@@ -104,12 +112,12 @@ function StudentDetailContent() {
 
     try {
       await studentApi.update(student.id, {
-        name: name.trim(),
+        name: capitalizeWords(name.trim()),
         gender,
         birthDate,
         grade: grade.trim(),
         school: school.trim(),
-        parentName: parentName.trim(),
+        parentName: capitalizeWords(parentName.trim()),
         whatsapp: whatsapp.trim(),
         preferredSession,
         note: note.trim() || undefined,
@@ -221,18 +229,17 @@ function StudentDetailContent() {
       <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
-          title={`Detail Siswa: ${student.name}`}
+          title='Detail Siswa'
         />
 
         <main className="flex-1 p-4 sm:p-8 space-y-6 max-w-7xl w-full">
           {/* Notification Toast */}
           {notification && (
             <div
-              className={`p-4 rounded-2xl flex items-center justify-between gap-3 text-xs sm:text-sm font-semibold shadow-sm ${
-                notification.type === 'success'
-                  ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
-                  : 'bg-rose-50 border border-rose-200 text-rose-800'
-              }`}
+              className={`p-4 rounded-2xl flex items-center justify-between gap-3 text-xs sm:text-sm font-semibold shadow-sm ${notification.type === 'success'
+                ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+                : 'bg-rose-50 border border-rose-200 text-rose-800'
+                }`}
             >
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[20px]">
@@ -253,16 +260,9 @@ function StudentDetailContent() {
           {/* Top Info Bar */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-1.5">
-              <Link
-                href="/admin/students"
-                className="text-xs font-bold text-[#0284c7] hover:underline flex items-center gap-1 mb-1"
-              >
-                <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                <span>Kembali ke Daftar Siswa</span>
-              </Link>
               <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                  {student.name}
+                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight capitalize">
+                  {capitalizeWords(student.name)}
                 </h1>
                 <StatusBadge status={student.status} size="md" />
               </div>
@@ -281,7 +281,7 @@ function StudentDetailContent() {
                     className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[18px]">check_circle</span>
-                    <span>Terima Pendaftaran (Jadikan Aktif)</span>
+                    <span>Approve</span>
                   </button>
                   <button
                     type="button"
@@ -292,7 +292,7 @@ function StudentDetailContent() {
                     className="px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[18px]">cancel</span>
-                    <span>Tolak Pendaftaran</span>
+                    <span>Reject</span>
                   </button>
                 </>
               )}
@@ -316,7 +316,7 @@ function StudentDetailContent() {
                     className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[18px]">person_check</span>
-                    <span>Aktifkan Kembali</span>
+                    <span>Aktifkan</span>
                   </button>
                   <button
                     type="button"
@@ -324,13 +324,13 @@ function StudentDetailContent() {
                     className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[18px]">delete</span>
-                    <span>Soft Delete</span>
+                    <span>Hapus</span>
                   </button>
                 </>
               )}
 
               <a
-                href={`https://wa.me/${student.whatsapp}`}
+                href={`https://wa.me/${student.whatsapp}?text=Assalamu'alaikum wr.wb, saya Admin dari Rumah Belajar Bu Khotimah. Apakah anda Bpk/Ibu ${parentName} orang tua dari siswa ${name}?`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-xs transition-colors flex items-center gap-1.5"
@@ -346,7 +346,7 @@ function StudentDetailContent() {
             <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-start gap-2.5">
               <span className="material-symbols-outlined text-rose-600 text-[20px]">info</span>
               <div>
-                <p className="font-bold">Alasan Penolakan / Status Terakhir:</p>
+                <p className="font-bold">Alasan Penolakan:</p>
                 <p className="mt-0.5">{student.rejectionReason}</p>
               </div>
             </div>
@@ -358,9 +358,8 @@ function StudentDetailContent() {
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[#0284c7]">badge</span>
-                  <h2 className="text-base font-bold text-slate-900">Edit Data Identitas Siswa</h2>
+                  <h2 className="text-base font-bold text-slate-900">Data Siswa</h2>
                 </div>
-                <span className="text-xs text-slate-400">Menimpa data langsung</span>
               </div>
 
               <form onSubmit={handleSaveProfile} className="space-y-4">
@@ -374,7 +373,8 @@ function StudentDetailContent() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
+                    onBlur={() => setName((prev) => capitalizeWords(prev))}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7] capitalize"
                   />
                 </div>
 
@@ -450,7 +450,8 @@ function StudentDetailContent() {
                       required
                       value={parentName}
                       onChange={(e) => setParentName(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
+                      onBlur={() => setParentName((prev) => capitalizeWords(prev))}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7] capitalize"
                     />
                   </div>
 
@@ -536,22 +537,20 @@ function StudentDetailContent() {
                 {studentPrograms.map((sp) => (
                   <div
                     key={sp.id}
-                    className={`p-4 rounded-xl border transition-all ${
-                      sp.status === 'Aktif'
-                        ? 'bg-teal-50/60 border-teal-200'
-                        : 'bg-slate-50 border-slate-200/80'
-                    }`}
+                    className={`p-4 rounded-xl border transition-all ${sp.status === 'Aktif'
+                      ? 'bg-teal-50/60 border-teal-200'
+                      : 'bg-slate-50 border-slate-200/80'
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-slate-900 text-sm">
                         {sp.programNameAtRegistration}
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          sp.status === 'Aktif'
-                            ? 'bg-teal-100 text-teal-800'
-                            : 'bg-slate-200 text-slate-600'
-                        }`}
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${sp.status === 'Aktif'
+                          ? 'bg-teal-100 text-teal-800'
+                          : 'bg-slate-200 text-slate-600'
+                          }`}
                       >
                         {sp.status}
                       </span>
@@ -588,18 +587,17 @@ function StudentDetailContent() {
         </main>
       </div>
 
-      {/* Reject Modal */}
       {showRejectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-6 space-y-4">
-            <h3 className="text-base font-bold text-slate-900">Tolak Pendaftaran Siswa</h3>
+            <h3 className="text-base font-bold text-slate-900">Tolak Pendaftaran Siswa Baru</h3>
             <p className="text-xs text-slate-600">
-              Status siswa akan diubah menjadi <strong>Nonaktif</strong>. Silakan masukkan alasan penolakan (PRD 6.3):
+              Status siswa akan diubah menjadi <strong>Nonaktif</strong>
             </p>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Alasan Penolakan (Default: Ditolak)
+                Alasan, default: Ditolak
               </label>
               <input
                 type="text"
@@ -623,7 +621,7 @@ function StudentDetailContent() {
                 onClick={handleRejectStudent}
                 className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
               >
-                Tolak Pendaftaran
+                Tolak
               </button>
             </div>
           </div>
@@ -698,9 +696,9 @@ function StudentDetailContent() {
       {/* Soft Delete Modal */}
       <ConfirmModal
         isOpen={showDeleteModal}
-        title="Konfirmasi Soft Delete Siswa"
-        message={`Hapus siswa "${student.name}" secara logis? Data akan disembunyikan dari daftar antarmuka namun seluruh riwayat pembelajaran masa lalu tetap aman di database.`}
-        confirmText="Hapus Siswa"
+        title={`Yakin akan dihapus?`}
+        message={`Siswa ${name} akan dihapus`}
+        confirmText="Hapus"
         cancelText="Batal"
         variant="danger"
         onConfirm={handleSoftDelete}
