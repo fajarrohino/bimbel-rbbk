@@ -229,537 +229,537 @@ function AdminStudentsContent() {
 
         <main className="flex-1 p-4 sm:p-8 space-y-6 w-full">
           {isLoading ? (
-            <AdminContentLoading message="Memuat data siswa dari server..." />
+            <AdminContentLoading />
           ) : (
             <>
               {alertMessage && (
-            <div
-              className={`p-4 rounded-xl border flex items-start justify-between gap-3 text-xs sm:text-sm transition-all ${alertMessage.type === 'error'
-                ? 'bg-rose-50 border-rose-200 text-rose-900'
-                : 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                }`}
-            >
-              <div className="flex items-start gap-2.5">
-                <span className="material-symbols-outlined text-[20px] shrink-0">
-                  {alertMessage.type === 'error' ? 'info' : 'check_circle'}
-                </span>
-                <span>{alertMessage.text}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setAlertMessage(null)}
-                className="font-bold hover:opacity-70 text-base leading-none"
-              >
-                &times;
-              </button>
-            </div>
-          )}
-
-          <div className="p-4 sm:p-5 rounded-2xl bg-white shadow-xs border border-slate-200/70">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <button
-                type="button"
-                onClick={() => setStatusFilter(statusFilter === 'aktif' ? 'all' : 'aktif')}
-                className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'aktif'
-                  ? 'bg-emerald-50/90 border-emerald-400 ring-2 ring-emerald-500/20 shadow-xs'
-                  : 'bg-gradient-to-br from-emerald-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-emerald-300 hover:shadow-xs'
-                  }`}
-                title="Klik untuk memfilter Siswa Aktif"
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    Total Siswa Aktif
-                  </span>
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <span className="material-symbols-outlined text-[22px]">person_check</span>
-                  </div>
-                </div>
-                <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
-                    {stats.totalAktif}
-                  </span>
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-md">
-                    Siswa Aktif
-                  </span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStatusFilter(statusFilter === 'lulus' ? 'all' : 'lulus')}
-                className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'lulus'
-                  ? 'bg-sky-50/90 border-sky-400 ring-2 ring-sky-500/20 shadow-xs'
-                  : 'bg-gradient-to-br from-sky-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-sky-300 hover:shadow-xs'
-                  }`}
-                title="Klik untuk memfilter Siswa Lulus"
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-sky-500" />
-                    Total Siswa Lulus
-                  </span>
-                  <div className="w-10 h-10 rounded-xl bg-sky-100 text-[#006194] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <span className="material-symbols-outlined text-[22px]">school</span>
-                  </div>
-                </div>
-                <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
-                    {stats.totalLulus}
-                  </span>
-                  <span className="text-xs font-bold text-[#006194] bg-sky-100/70 px-2 py-0.5 rounded-md">
-                    Siswa Lulus
-                  </span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStatusFilter(statusFilter === 'tidak-aktif' ? 'all' : 'tidak-aktif')}
-                className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'tidak-aktif'
-                  ? 'bg-purple-50/90 border-purple-400 ring-2 ring-purple-500/20 shadow-xs'
-                  : 'bg-gradient-to-br from-purple-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-purple-300 hover:shadow-xs'
-                  }`}
-                title="Klik untuk memfilter Siswa Tidak Aktif"
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-purple-400" />
-                    Total Siswa Nonaktif
-                  </span>
-                  <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <span className="material-symbols-outlined text-[22px]">person_off</span>
-                  </div>
-                </div>
-                <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
-                    {stats.totalTidakAktif}
-                  </span>
-                  <span className="text-xs font-bold text-purple-700 bg-purple-100/70 px-2 py-0.5 rounded-md">
-                    Nonaktif
-                  </span>
-                </div>
-              </button>
-
-              <Link
-                href="/admin/students/new"
-                className="p-4 sm:p-4.5 rounded-xl bg-gradient-to-br from-[#006194] to-[#0284c7] hover:from-[#004b73] hover:to-[#006194] text-white shadow-xs hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer active:scale-[0.98]"
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-xs font-bold text-sky-100 uppercase tracking-wider flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[15px]">person_add</span>
-                    Pendaftaran
-                  </span>
-                  <span className="material-symbols-outlined text-[18px] text-sky-200 group-hover:translate-x-1 transition-transform">
-                    arrow_forward
-                  </span>
-                </div>
-                <div className="mt-3 flex items-center justify-between w-full">
-                  <div>
-                    <h3 className="text-base sm:text-lg font-black text-white leading-tight">
-                      Tambah Siswa
-                    </h3>
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-[22px]">add</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          </div>
-
-
-          {pendingStudents.length > 0 && (
-            <div className="bg-amber-50/60 rounded-2xl border border-amber-200/80 p-5 shadow-xs space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
-                  <h2 className="text-sm sm:text-base font-bold text-amber-950 flex items-center gap-2">
-                    <span>Verifikasi Siswa Baru</span>
-                    <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 text-xs font-black">
-                      {pendingStudents.length}
+                <div
+                  className={`p-4 rounded-xl border flex items-start justify-between gap-3 text-xs sm:text-sm transition-all ${alertMessage.type === 'error'
+                    ? 'bg-rose-50 border-rose-200 text-rose-900'
+                    : 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                    }`}
+                >
+                  <div className="flex items-start gap-2.5">
+                    <span className="material-symbols-outlined text-[20px] shrink-0">
+                      {alertMessage.type === 'error' ? 'info' : 'check_circle'}
                     </span>
-                  </h2>
+                    <span>{alertMessage.text}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAlertMessage(null)}
+                    className="font-bold hover:opacity-70 text-base leading-none"
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
+
+              <div className="p-4 sm:p-5 rounded-2xl bg-white shadow-xs border border-slate-200/70">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setStatusFilter(statusFilter === 'aktif' ? 'all' : 'aktif')}
+                    className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'aktif'
+                      ? 'bg-emerald-50/90 border-emerald-400 ring-2 ring-emerald-500/20 shadow-xs'
+                      : 'bg-gradient-to-br from-emerald-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-emerald-300 hover:shadow-xs'
+                      }`}
+                    title="Klik untuk memfilter Siswa Aktif"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        Total Siswa Aktif
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <span className="material-symbols-outlined text-[22px]">person_check</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
+                        {stats.totalAktif}
+                      </span>
+                      <span className="text-xs font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                        Siswa Aktif
+                      </span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setStatusFilter(statusFilter === 'lulus' ? 'all' : 'lulus')}
+                    className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'lulus'
+                      ? 'bg-sky-50/90 border-sky-400 ring-2 ring-sky-500/20 shadow-xs'
+                      : 'bg-gradient-to-br from-sky-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-sky-300 hover:shadow-xs'
+                      }`}
+                    title="Klik untuk memfilter Siswa Lulus"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-sky-500" />
+                        Total Siswa Lulus
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-sky-100 text-[#006194] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <span className="material-symbols-outlined text-[22px]">school</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
+                        {stats.totalLulus}
+                      </span>
+                      <span className="text-xs font-bold text-[#006194] bg-sky-100/70 px-2 py-0.5 rounded-md">
+                        Siswa Lulus
+                      </span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setStatusFilter(statusFilter === 'tidak-aktif' ? 'all' : 'tidak-aktif')}
+                    className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${statusFilter === 'tidak-aktif'
+                      ? 'bg-purple-50/90 border-purple-400 ring-2 ring-purple-500/20 shadow-xs'
+                      : 'bg-gradient-to-br from-purple-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-purple-300 hover:shadow-xs'
+                      }`}
+                    title="Klik untuk memfilter Siswa Tidak Aktif"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-purple-400" />
+                        Total Siswa Nonaktif
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <span className="material-symbols-outlined text-[22px]">person_off</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
+                        {stats.totalTidakAktif}
+                      </span>
+                      <span className="text-xs font-bold text-purple-700 bg-purple-100/70 px-2 py-0.5 rounded-md">
+                        Nonaktif
+                      </span>
+                    </div>
+                  </button>
+
+                  <Link
+                    href="/admin/students/new"
+                    className="p-4 sm:p-4.5 rounded-xl bg-gradient-to-br from-[#006194] to-[#0284c7] hover:from-[#004b73] hover:to-[#006194] text-white shadow-xs hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer active:scale-[0.98]"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-bold text-sky-100 uppercase tracking-wider flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[15px]">person_add</span>
+                        Pendaftaran
+                      </span>
+                      <span className="material-symbols-outlined text-[18px] text-sky-200 group-hover:translate-x-1 transition-transform">
+                        arrow_forward
+                      </span>
+                    </div>
+                    <div className="mt-3 flex items-center justify-between w-full">
+                      <div>
+                        <h3 className="text-base sm:text-lg font-black text-white leading-tight">
+                          Tambah Siswa
+                        </h3>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-[22px]">add</span>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl border border-amber-200/60 overflow-hidden shadow-xs">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs sm:text-sm">
-                    <thead>
-                      <tr className="bg-amber-100/50 text-amber-900 uppercase tracking-wider font-bold text-[11px] border-b border-amber-200/60">
-                        <th className="py-3 px-4">Nama</th>
-                        <th className="py-3 px-4">Orang Tua</th>
-                        <th className="py-3 px-4">Kontak</th>
-                        <th className="py-3 px-4">Program Belajar</th>
-                        <th className="py-3 px-4">Sesi</th>
-                        {/* <th className="py-3 px-4 text-center">Status</th> */}
-                        <th className="py-3 px-4 text-right">Verifikasi Cepat</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-amber-100/60">
-                      {pendingStudents.map((std) => (
-                        <tr key={std.id} className="hover:bg-amber-50/40 transition-colors">
-                          <td className="py-3.5 px-4">
-                            <Link
-                              href={`/admin/students/${std.id}`}
-                              className="font-bold text-[#131b2e] hover:text-[#006194] transition-colors block capitalize"
-                            >
-                              {std.name}
-                            </Link>
-                          </td>
-                          <td className="py-3.5 px-4 font-semibold text-slate-800 capitalize">
-                            {std.parentName}
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <a
-                              href={`https://wa.me/${std.whatsapp}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-emerald-700 hover:underline inline-flex items-center gap-1 font-semibold"
-                            >
-                              {/* <span className="material-symbols-outlined text-[15px]">chat</span> */}
-                              <span>{std.whatsapp.startsWith('62')
-                                ? '0' + std.whatsapp.slice(2).replace(/(\d{3,4})(\d{4})(\d{3,4})?/, '$1-$2-$3')
-                                : std.whatsapp}</span>
-                            </a>
-                          </td>
-                          <td className="py-3.5 px-4 font-medium text-slate-700">
-                            {studentProgramMap[std.id] || '-'}
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md bg-sky-50 text-[#006194] font-semibold text-xs border border-sky-100">
-                              Sesi {std.preferredSession}
-                            </span>
-                          </td>
-                          {/* <td className="py-3.5 px-4 text-center">
+
+              {pendingStudents.length > 0 && (
+                <div className="bg-amber-50/60 rounded-2xl border border-amber-200/80 p-5 shadow-xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+                      <h2 className="text-sm sm:text-base font-bold text-amber-950 flex items-center gap-2">
+                        <span>Verifikasi Siswa Baru</span>
+                        <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 text-xs font-black">
+                          {pendingStudents.length}
+                        </span>
+                      </h2>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl border border-amber-200/60 overflow-hidden shadow-xs">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs sm:text-sm">
+                        <thead>
+                          <tr className="bg-amber-100/50 text-amber-900 uppercase tracking-wider font-bold text-[11px] border-b border-amber-200/60">
+                            <th className="py-3 px-4">Nama</th>
+                            <th className="py-3 px-4">Orang Tua</th>
+                            <th className="py-3 px-4">Kontak</th>
+                            <th className="py-3 px-4">Program Belajar</th>
+                            <th className="py-3 px-4">Sesi</th>
+                            {/* <th className="py-3 px-4 text-center">Status</th> */}
+                            <th className="py-3 px-4 text-right">Verifikasi Cepat</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-amber-100/60">
+                          {pendingStudents.map((std) => (
+                            <tr key={std.id} className="hover:bg-amber-50/40 transition-colors">
+                              <td className="py-3.5 px-4">
+                                <Link
+                                  href={`/admin/students/${std.id}`}
+                                  className="font-bold text-[#131b2e] hover:text-[#006194] transition-colors block capitalize"
+                                >
+                                  {std.name}
+                                </Link>
+                              </td>
+                              <td className="py-3.5 px-4 font-semibold text-slate-800 capitalize">
+                                {std.parentName}
+                              </td>
+                              <td className="py-3.5 px-4">
+                                <a
+                                  href={`https://wa.me/${std.whatsapp}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-xs text-emerald-700 hover:underline inline-flex items-center gap-1 font-semibold"
+                                >
+                                  {/* <span className="material-symbols-outlined text-[15px]">chat</span> */}
+                                  <span>{std.whatsapp.startsWith('62')
+                                    ? '0' + std.whatsapp.slice(2).replace(/(\d{3,4})(\d{4})(\d{3,4})?/, '$1-$2-$3')
+                                    : std.whatsapp}</span>
+                                </a>
+                              </td>
+                              <td className="py-3.5 px-4 font-medium text-slate-700">
+                                {studentProgramMap[std.id] || '-'}
+                              </td>
+                              <td className="py-3.5 px-4">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-md bg-sky-50 text-[#006194] font-semibold text-xs border border-sky-100">
+                                  Sesi {std.preferredSession}
+                                </span>
+                              </td>
+                              {/* <td className="py-3.5 px-4 text-center">
                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[11px]">
                               Pending
                             </span>
                           </td> */}
-                          <td className="py-3.5 px-4 text-right">
-                            <div className="flex items-center justify-end gap-1.5">
-                              {/* Setujui */}
-                              <button
-                                type="button"
-                                onClick={() => handleApprovePending(std)}
-                                className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs inline-flex items-center gap-1 shadow-xs transition-colors"
-                                title="Setujui pendaftaran menjadi Siswa Aktif"
-                              >
-                                <span className="material-symbols-outlined text-[15px]">check</span>
-                                <span>Approv</span>
-                              </button>
+                              <td className="py-3.5 px-4 text-right">
+                                <div className="flex items-center justify-end gap-1.5">
+                                  {/* Setujui */}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleApprovePending(std)}
+                                    className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs inline-flex items-center gap-1 shadow-xs transition-colors"
+                                    title="Setujui pendaftaran menjadi Siswa Aktif"
+                                  >
+                                    <span className="material-symbols-outlined text-[15px]">check</span>
+                                    <span>Approv</span>
+                                  </button>
 
-                              {/* Tolak */}
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setPendingActionTarget({ student: std, action: 'reject' });
-                                  setRejectReason('Kuota bimbingan penuh / Tidak memenuhi syarat');
-                                }}
-                                className="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs inline-flex items-center gap-1 border border-rose-200 transition-colors"
-                                title="Tolak pendaftaran"
-                              >
-                                <span className="material-symbols-outlined text-[15px]">close</span>
-                                <span>Tolak</span>
-                              </button>
+                                  {/* Tolak */}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setPendingActionTarget({ student: std, action: 'reject' });
+                                      setRejectReason('Kuota bimbingan penuh / Tidak memenuhi syarat');
+                                    }}
+                                    className="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs inline-flex items-center gap-1 border border-rose-200 transition-colors"
+                                    title="Tolak pendaftaran"
+                                  >
+                                    <span className="material-symbols-outlined text-[15px]">close</span>
+                                    <span>Tolak</span>
+                                  </button>
 
-                              {/* Detail */}
+                                  {/* Detail */}
+                                  <Link
+                                    href={`/admin/students/${std.id}`}
+                                    className="p-1.5 rounded-lg text-slate-500 hover:text-[#006194] hover:bg-slate-100 transition-colors"
+                                    title="Lihat detail lengkap"
+                                  >
+                                    <span className="material-symbols-outlined text-[18px]">visibility</span>
+                                  </Link>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Search & Multi-Filter Bar (Design Sesuai Gambar Figma/HTML) */}
+              <div className="p-4 rounded-2xl bg-white shadow-xs border border-slate-200/70 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                {/* Input Search */}
+                <div className="relative flex-1 min-w-[240px]">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] pointer-events-none">
+                    search
+                  </span>
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Cari nama..."
+                    className="w-full h-11 pl-10 pr-4 rounded-xl bg-slate-50 text-[#131b2e] placeholder:text-slate-400 text-xs sm:text-sm border border-transparent focus:border-[#006194] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#006194]/20 transition-all"
+                  />
+                </div>
+
+                {/* Filter Sesi & Status & Reset Button */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {/* Dropdown Sesi */}
+                  <div className="relative min-w-[140px]">
+                    <select
+                      value={sessionFilter}
+                      onChange={(e) => setSessionFilter(e.target.value)}
+                      className="w-full h-11 pl-3 pr-8 rounded-xl bg-slate-50 text-[#131b2e] text-xs sm:text-sm font-medium appearance-none border border-transparent focus:border-[#006194] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#006194]/20 cursor-pointer transition-all"
+                    >
+                      <option value="all">Semua Sesi</option>
+                      <option value="1">Sesi 1 (14:00 - 15:00)</option>
+                      <option value="2">Sesi 2 (16:00 - 17:00)</option>
+                      <option value="3">Sesi 3 (19:00 - 20:00)</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
+                      expand_more
+                    </span>
+                  </div>
+
+                  {/* Dropdown Status */}
+                  <div className="relative min-w-[140px]">
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      className="w-full h-11 pl-3 pr-8 rounded-xl bg-slate-50 text-[#131b2e] text-xs sm:text-sm font-medium appearance-none border border-transparent focus:border-[#006194] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#006194]/20 cursor-pointer transition-all"
+                    >
+                      <option value="all">Semua Status</option>
+                      <option value="aktif">Aktif</option>
+                      <option value="lulus">Lulus</option>
+                      <option value="tidak-aktif">Tidak Aktif</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
+                      expand_more
+                    </span>
+                  </div>
+
+                  {/* Reset Button */}
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="h-11 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs sm:text-sm transition-all flex items-center gap-1.5"
+                    title="Reset semua filter"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">restart_alt</span>
+                    <span>Reset</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* ========================================================================= */}
+              {/* TABEL DATA SISWA UTAMA (SUSUNAN: NAMA, ORANG TUA, KONTAK, PROGRAM, SESI, STATUS, AKSI) */}
+              {/* ========================================================================= */}
+              <div className="rounded-2xl bg-white shadow-xs border border-slate-200/70 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs sm:text-sm">
+                    <thead>
+                      <tr className="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-bold text-[11px] border-b border-slate-200/70">
+                        <th className="py-4 px-5">Nama</th>
+                        <th className="py-4 px-4">Orang Tua</th>
+                        <th className="py-4 px-4">Kontak</th>
+                        <th className="py-4 px-4">Program Belajar</th>
+                        <th className="py-4 px-4">Sesi</th>
+                        <th className="py-4 px-4">Status</th>
+                        <th className="py-4 px-5 text-right">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {paginatedStudents.map((std) => (
+                        <tr key={std.id} className="hover:bg-slate-50/70 transition-colors">
+                          {/* 1. Nama */}
+                          <td className="py-4 px-5">
+                            <Link
+                              href={`/admin/students/${std.id}`}
+                              className="font-bold text-[#131b2e] hover:text-[#006194] transition-colors block text-sm capitalize"
+                            >
+                              {std.name}
+                            </Link>
+                            <span className="text-[11px] text-slate-400">
+                              {std.grade} &bull; {std.school}
+                            </span>
+                          </td>
+
+                          {/* 2. Orang Tua */}
+                          <td className="py-4 px-4">
+                            <span className="font-semibold text-[#131b2e] capitalize">
+                              {std.parentName}
+                            </span>
+                          </td>
+
+                          {/* 3. Kontak */}
+                          <td className="py-4 px-4">
+                            <a
+                              href={`https://wa.me/${std.whatsapp}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#131b2e] hover:text-emerald-700 transition-colors font-medium text-xs sm:text-sm"
+                            >
+                              {/* Format telepon rapi seperti 0812-3456-7890 jika lokal */}
+                              {std.whatsapp.startsWith('62')
+                                ? '0' + std.whatsapp.slice(2).replace(/(\d{3,4})(\d{4})(\d{3,4})?/, '$1-$2-$3')
+                                : std.whatsapp}
+                            </a>
+                          </td>
+
+                          {/* 4. Program Belajar */}
+                          <td className="py-4 px-4">
+                            <span className="font-medium text-[#131b2e]">
+                              {studentProgramMap[std.id] || '-'}
+                            </span>
+                          </td>
+
+                          {/* 5. Sesi */}
+                          <td className="py-4 px-4">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md bg-slate-100 text-[#131b2e] font-semibold text-xs">
+                              Sesi {std.preferredSession}
+                            </span>
+                          </td>
+
+                          {/* 6. Status */}
+                          <td className="py-4 px-4">
+                            <span
+                              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${std.status === 'Aktif'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
+                                : std.status === 'Nonaktif'
+                                  ? 'bg-slate-100 text-slate-600 border border-slate-200'
+                                  : std.status === 'Lulus'
+                                    ? 'bg-sky-50 text-sky-700 border border-sky-200'
+                                    : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                }`}
+                            >
+                              {std.status}
+                            </span>
+                          </td>
+
+                          {/* 7. Aksi (Aktif: Detail & Edit | Nonaktif: Detail, Edit & Hapus) */}
+                          <td className="py-4 px-5 text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              {/* 1. Detail (Icon Visibility) */}
                               <Link
                                 href={`/admin/students/${std.id}`}
-                                className="p-1.5 rounded-lg text-slate-500 hover:text-[#006194] hover:bg-slate-100 transition-colors"
-                                title="Lihat detail lengkap"
+                                className="p-2 rounded-lg text-slate-400 hover:text-[#006194] hover:bg-slate-100 transition-colors"
+                                title="Detail Siswa"
                               >
-                                <span className="material-symbols-outlined text-[18px]">visibility</span>
+                                <span className="material-symbols-outlined text-[20px]">visibility</span>
                               </Link>
+
+                              {/* 2. Edit (Icon Edit) */}
+                              <Link
+                                href={`/admin/students/${std.id}`}
+                                className="p-2 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-slate-100 transition-colors"
+                                title="Edit Data Siswa"
+                              >
+                                <span className="material-symbols-outlined text-[20px]">edit</span>
+                              </Link>
+
+                              {/* 3. Delete (Hanya jika status Nonaktif) */}
+                              {std.status === 'Nonaktif' && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRequestDelete(std)}
+                                  className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                                  title="Hapus Siswa (Soft Delete)"
+                                >
+                                  <span className="material-symbols-outlined text-[20px]">delete</span>
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>
                       ))}
+
+                      {paginatedStudents.length === 0 && (
+                        <tr>
+                          <td colSpan={7} className="py-12 text-center text-slate-400 text-xs sm:text-sm">
+                            Tidak ada data siswa yang cocok dengan filter atau kata kunci pencarian.
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* Search & Multi-Filter Bar (Design Sesuai Gambar Figma/HTML) */}
-          <div className="p-4 rounded-2xl bg-white shadow-xs border border-slate-200/70 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-            {/* Input Search */}
-            <div className="relative flex-1 min-w-[240px]">
-              <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] pointer-events-none">
-                search
-              </span>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari nama..."
-                className="w-full h-11 pl-10 pr-4 rounded-xl bg-slate-50 text-[#131b2e] placeholder:text-slate-400 text-xs sm:text-sm border border-transparent focus:border-[#006194] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#006194]/20 transition-all"
-              />
-            </div>
+                {/* Pagination Footer Bar (Design Persis Sesuai Gambar) */}
+                <div className="px-5 py-4 bg-slate-50/80 border-t border-slate-200/70 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <span className="text-xs sm:text-sm text-slate-500">
+                    Menampilkan{' '}
+                    <strong className="text-[#131b2e] font-semibold">
+                      {startRecord}-{endRecord}
+                    </strong>{' '}
+                    dari{' '}
+                    <strong className="text-[#131b2e] font-semibold">
+                      {filteredMainStudents.length}
+                    </strong>{' '}
+                    siswa
+                  </span>
 
-            {/* Filter Sesi & Status & Reset Button */}
-            <div className="flex flex-wrap items-center gap-2.5">
-              {/* Dropdown Sesi */}
-              <div className="relative min-w-[140px]">
-                <select
-                  value={sessionFilter}
-                  onChange={(e) => setSessionFilter(e.target.value)}
-                  className="w-full h-11 pl-3 pr-8 rounded-xl bg-slate-50 text-[#131b2e] text-xs sm:text-sm font-medium appearance-none border border-transparent focus:border-[#006194] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#006194]/20 cursor-pointer transition-all"
-                >
-                  <option value="all">Semua Sesi</option>
-                  <option value="1">Sesi 1 (14:00 - 15:00)</option>
-                  <option value="2">Sesi 2 (16:00 - 17:00)</option>
-                  <option value="3">Sesi 3 (19:00 - 20:00)</option>
-                </select>
-                <span className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
-                  expand_more
-                </span>
-              </div>
+                  <div className="flex items-center gap-1">
+                    {/* Previous Button */}
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${currentPage === 1
+                        ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                        : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs'
+                        }`}
+                      aria-label="Halaman sebelumnya"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+                    </button>
 
-              {/* Dropdown Status */}
-              <div className="relative min-w-[140px]">
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full h-11 pl-3 pr-8 rounded-xl bg-slate-50 text-[#131b2e] text-xs sm:text-sm font-medium appearance-none border border-transparent focus:border-[#006194] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#006194]/20 cursor-pointer transition-all"
-                >
-                  <option value="all">Semua Status</option>
-                  <option value="aktif">Aktif</option>
-                  <option value="lulus">Lulus</option>
-                  <option value="tidak-aktif">Tidak Aktif</option>
-                </select>
-                <span className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
-                  expand_more
-                </span>
-              </div>
-
-              {/* Reset Button */}
-              <button
-                type="button"
-                onClick={handleResetFilters}
-                className="h-11 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs sm:text-sm transition-all flex items-center gap-1.5"
-                title="Reset semua filter"
-              >
-                <span className="material-symbols-outlined text-[18px]">restart_alt</span>
-                <span>Reset</span>
-              </button>
-            </div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* TABEL DATA SISWA UTAMA (SUSUNAN: NAMA, ORANG TUA, KONTAK, PROGRAM, SESI, STATUS, AKSI) */}
-          {/* ========================================================================= */}
-          <div className="rounded-2xl bg-white shadow-xs border border-slate-200/70 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs sm:text-sm">
-                <thead>
-                  <tr className="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-bold text-[11px] border-b border-slate-200/70">
-                    <th className="py-4 px-5">Nama</th>
-                    <th className="py-4 px-4">Orang Tua</th>
-                    <th className="py-4 px-4">Kontak</th>
-                    <th className="py-4 px-4">Program Belajar</th>
-                    <th className="py-4 px-4">Sesi</th>
-                    <th className="py-4 px-4">Status</th>
-                    <th className="py-4 px-5 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {paginatedStudents.map((std) => (
-                    <tr key={std.id} className="hover:bg-slate-50/70 transition-colors">
-                      {/* 1. Nama */}
-                      <td className="py-4 px-5">
-                        <Link
-                          href={`/admin/students/${std.id}`}
-                          className="font-bold text-[#131b2e] hover:text-[#006194] transition-colors block text-sm capitalize"
-                        >
-                          {std.name}
-                        </Link>
-                        <span className="text-[11px] text-slate-400">
-                          {std.grade} &bull; {std.school}
-                        </span>
-                      </td>
-
-                      {/* 2. Orang Tua */}
-                      <td className="py-4 px-4">
-                        <span className="font-semibold text-[#131b2e] capitalize">
-                          {std.parentName}
-                        </span>
-                      </td>
-
-                      {/* 3. Kontak */}
-                      <td className="py-4 px-4">
-                        <a
-                          href={`https://wa.me/${std.whatsapp}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#131b2e] hover:text-emerald-700 transition-colors font-medium text-xs sm:text-sm"
-                        >
-                          {/* Format telepon rapi seperti 0812-3456-7890 jika lokal */}
-                          {std.whatsapp.startsWith('62')
-                            ? '0' + std.whatsapp.slice(2).replace(/(\d{3,4})(\d{4})(\d{3,4})?/, '$1-$2-$3')
-                            : std.whatsapp}
-                        </a>
-                      </td>
-
-                      {/* 4. Program Belajar */}
-                      <td className="py-4 px-4">
-                        <span className="font-medium text-[#131b2e]">
-                          {studentProgramMap[std.id] || '-'}
-                        </span>
-                      </td>
-
-                      {/* 5. Sesi */}
-                      <td className="py-4 px-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md bg-slate-100 text-[#131b2e] font-semibold text-xs">
-                          Sesi {std.preferredSession}
-                        </span>
-                      </td>
-
-                      {/* 6. Status */}
-                      <td className="py-4 px-4">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${std.status === 'Aktif'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
-                            : std.status === 'Nonaktif'
-                              ? 'bg-slate-100 text-slate-600 border border-slate-200'
-                              : std.status === 'Lulus'
-                                ? 'bg-sky-50 text-sky-700 border border-sky-200'
-                                : 'bg-amber-50 text-amber-700 border border-amber-200'
-                            }`}
-                        >
-                          {std.status}
-                        </span>
-                      </td>
-
-                      {/* 7. Aksi (Aktif: Detail & Edit | Nonaktif: Detail, Edit & Hapus) */}
-                      <td className="py-4 px-5 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          {/* 1. Detail (Icon Visibility) */}
-                          <Link
-                            href={`/admin/students/${std.id}`}
-                            className="p-2 rounded-lg text-slate-400 hover:text-[#006194] hover:bg-slate-100 transition-colors"
-                            title="Detail Siswa"
+                    {/* Page Number Buttons */}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                      const isActive = currentPage === page;
+                      // Show current, first, last, or close neighbours
+                      if (
+                        page === 1 ||
+                        page === totalPages ||
+                        (page >= currentPage - 1 && page <= currentPage + 1)
+                      ) {
+                        return (
+                          <button
+                            key={page}
+                            type="button"
+                            onClick={() => setCurrentPage(page)}
+                            className={`w-9 h-9 rounded-lg font-bold text-xs sm:text-sm flex items-center justify-center transition-colors ${isActive
+                              ? 'bg-[#006194] text-white shadow-xs'
+                              : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs'
+                              }`}
                           >
-                            <span className="material-symbols-outlined text-[20px]">visibility</span>
-                          </Link>
+                            {page}
+                          </button>
+                        );
+                      }
+                      // Ellipsis
+                      if (page === currentPage - 2 || page === currentPage + 2) {
+                        return (
+                          <span key={page} className="px-1 text-slate-400 text-xs">
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    })}
 
-                          {/* 2. Edit (Icon Edit) */}
-                          <Link
-                            href={`/admin/students/${std.id}`}
-                            className="p-2 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-slate-100 transition-colors"
-                            title="Edit Data Siswa"
-                          >
-                            <span className="material-symbols-outlined text-[20px]">edit</span>
-                          </Link>
-
-                          {/* 3. Delete (Hanya jika status Nonaktif) */}
-                          {std.status === 'Nonaktif' && (
-                            <button
-                              type="button"
-                              onClick={() => handleRequestDelete(std)}
-                              className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                              title="Hapus Siswa (Soft Delete)"
-                            >
-                              <span className="material-symbols-outlined text-[20px]">delete</span>
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-
-                  {paginatedStudents.length === 0 && (
-                    <tr>
-                      <td colSpan={7} className="py-12 text-center text-slate-400 text-xs sm:text-sm">
-                        Tidak ada data siswa yang cocok dengan filter atau kata kunci pencarian.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination Footer Bar (Design Persis Sesuai Gambar) */}
-            <div className="px-5 py-4 bg-slate-50/80 border-t border-slate-200/70 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs sm:text-sm text-slate-500">
-                Menampilkan{' '}
-                <strong className="text-[#131b2e] font-semibold">
-                  {startRecord}-{endRecord}
-                </strong>{' '}
-                dari{' '}
-                <strong className="text-[#131b2e] font-semibold">
-                  {filteredMainStudents.length}
-                </strong>{' '}
-                siswa
-              </span>
-
-              <div className="flex items-center gap-1">
-                {/* Previous Button */}
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${currentPage === 1
-                    ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
-                    : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs'
-                    }`}
-                  aria-label="Halaman sebelumnya"
-                >
-                  <span className="material-symbols-outlined text-[18px]">chevron_left</span>
-                </button>
-
-                {/* Page Number Buttons */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                  const isActive = currentPage === page;
-                  // Show current, first, last, or close neighbours
-                  if (
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 1 && page <= currentPage + 1)
-                  ) {
-                    return (
-                      <button
-                        key={page}
-                        type="button"
-                        onClick={() => setCurrentPage(page)}
-                        className={`w-9 h-9 rounded-lg font-bold text-xs sm:text-sm flex items-center justify-center transition-colors ${isActive
-                          ? 'bg-[#006194] text-white shadow-xs'
-                          : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs'
-                          }`}
-                      >
-                        {page}
-                      </button>
-                    );
-                  }
-                  // Ellipsis
-                  if (page === currentPage - 2 || page === currentPage + 2) {
-                    return (
-                      <span key={page} className="px-1 text-slate-400 text-xs">
-                        ...
-                      </span>
-                    );
-                  }
-                  return null;
-                })}
-
-                {/* Next Button */}
-                <button
-                  type="button"
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages || totalPages === 0}
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${currentPage === totalPages || totalPages === 0
-                    ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
-                    : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs'
-                    }`}
-                  aria-label="Halaman berikutnya"
-                >
-                  <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-                </button>
+                    {/* Next Button */}
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages || totalPages === 0}
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${currentPage === totalPages || totalPages === 0
+                        ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                        : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs'
+                        }`}
+                      aria-label="Halaman berikutnya"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
             </>
           )}
         </main>

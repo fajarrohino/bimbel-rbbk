@@ -590,10 +590,10 @@ function AdminAturJadwalContent() {
             <div className="flex items-center gap-2.5 min-w-0">
               <span
                 className={`material-symbols-outlined text-[20px] shrink-0 ${toast.type === 'warning'
-                    ? 'text-amber-500'
-                    : toast.type === 'info'
-                      ? 'text-sky-500'
-                      : 'text-secondary'
+                  ? 'text-amber-500'
+                  : toast.type === 'info'
+                    ? 'text-sky-500'
+                    : 'text-secondary'
                   }`}
               >
                 {toast.type === 'warning'
@@ -623,7 +623,7 @@ function AdminAturJadwalContent() {
 
       {/* Main Content Area */}
       <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
-        <AdminHeader onToggleSidebar={() => setSidebarOpen(true)} />
+        <AdminHeader onToggleSidebar={() => setSidebarOpen(true)} title='Atur Jadwal' />
 
         {/* Floating Auto-Scroll Drag Helper Strip saat menyeret siswa */}
         {draggedItem && (
@@ -650,684 +650,680 @@ function AdminAturJadwalContent() {
 
         <main className="relative bg-background min-h-[calc(100vh-80px)] w-full px-4 sm:px-8 pb-16 pt-6 sm:pt-8">
           {isLoading ? (
-            <AdminContentLoading message="Memuat pengaturan jadwal..." />
+            <AdminContentLoading />
           ) : (
             <>
               <div className="flex flex-col w-full gap-6 max-w-[1600px] mx-auto">
-            {/* Top Action & Period Bar - Exact match with HTML Prototype */}
-            <div className="flex flex-col gap-4 bg-surface-container-lowest p-6 rounded-xl shadow-xs border border-slate-100">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h1 className="font-headline-lg text-2xl sm:text-3xl font-bold text-on-surface tracking-tight">
-                    Atur Jadwal
-                  </h1>
-                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                    Plotting kalender interaktif siswa Rumah Belajar Bu Khotimah dengan sistem seret
-                    dan lepas (drag and drop).
-                  </p>
-                </div>
+                {/* Top Action & Period Bar - Exact match with HTML Prototype */}
+                <div className="flex flex-col gap-4 bg-surface-container-lowest p-6 rounded-xl shadow-xs border border-slate-100">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                        Plotting kalender interaktif siswa Rumah Belajar Bu Khotimah dengan sistem drag and drop
+                      </p>
+                    </div>
 
-                {/* Current Date Badge */}
-                <div className="flex items-center gap-2 self-start sm:self-auto bg-sky-50 border border-sky-200/80 px-4 py-2 rounded-xl text-xs font-semibold text-[#0284c7] shadow-2xs">
-                  <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-                  <span>
-                    Hari ini:{' '}
-                    {todayDateObj.toLocaleDateString('id-ID', {
-                      weekday: 'long',
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                    })}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* LAYOUT PERTAMA: Kalender Plotting Bulanan */}
-            <section className="flex flex-col bg-surface-container-lowest rounded-xl p-6 shadow-xs gap-4 border border-slate-100">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 gap-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-4">
-                  <div className="flex items-center gap-3">
-                    <h2 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface">
-                      Kalender Plotting Bulanan
-                    </h2>
+                    {/* Current Date Badge */}
+                    <div className="flex items-center gap-2 self-start sm:self-auto bg-sky-50 border border-sky-200/80 px-4 py-2 rounded-xl text-xs font-semibold text-[#0284c7] shadow-2xs">
+                      <span className="material-symbols-outlined text-[18px]">calendar_today</span>
+                      <span>
+                        Hari ini:{' '}
+                        {todayDateObj.toLocaleDateString('id-ID', {
+                          weekday: 'long',
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })}
+                      </span>
+                    </div>
                   </div>
+                </div>
 
-                  <div className="flex flex-wrap items-center gap-3">
-                    {/* Month Navigator with Hari Ini Reset Button */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center bg-surface-container rounded-xl p-1 shadow-xs border border-slate-200/60">
-                        <button
-                          type="button"
-                          onClick={handlePrevMonth}
-                          id="prev-month-btn"
-                          className="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary transition-all active:scale-95"
-                          title="Bulan sebelumnya"
-                        >
-                          <span className="material-symbols-outlined text-[20px]">chevron_left</span>
-                        </button>
-                        <div className="px-4 flex items-center gap-2 select-none min-w-[150px] justify-center">
-                          <span className="material-symbols-outlined text-primary text-[20px]">
-                            calendar_today
-                          </span>
-                          <span className="font-label-lg font-bold text-sm text-on-surface capitalize">
-                            {monthYearLabel}
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={handleNextMonth}
-                          id="next-month-btn"
-                          className="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary transition-all active:scale-95"
-                          title="Bulan berikutnya"
-                        >
-                          <span className="material-symbols-outlined text-[20px]">chevron_right</span>
-                        </button>
+                {/* LAYOUT PERTAMA: Kalender Plotting Bulanan */}
+                <section className="flex flex-col bg-surface-container-lowest rounded-xl p-6 shadow-xs gap-4 border border-slate-100">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-4">
+                      <div className="flex items-center gap-3">
+                        <h2 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface">
+                          Kalender Plotting Bulanan
+                        </h2>
                       </div>
 
-                      {!isCurrentMonth && (
+                      <div className="flex flex-wrap items-center gap-3">
+                        {/* Month Navigator with Hari Ini Reset Button */}
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center bg-surface-container rounded-xl p-1 shadow-xs border border-slate-200/60">
+                            <button
+                              type="button"
+                              onClick={handlePrevMonth}
+                              id="prev-month-btn"
+                              className="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary transition-all active:scale-95"
+                              title="Bulan sebelumnya"
+                            >
+                              <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+                            </button>
+                            <div className="px-4 flex items-center gap-2 select-none min-w-[150px] justify-center">
+                              <span className="material-symbols-outlined text-primary text-[20px]">
+                                calendar_today
+                              </span>
+                              <span className="font-label-lg font-bold text-sm text-on-surface capitalize">
+                                {monthYearLabel}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleNextMonth}
+                              id="next-month-btn"
+                              className="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest hover:text-primary transition-all active:scale-95"
+                              title="Bulan berikutnya"
+                            >
+                              <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                            </button>
+                          </div>
+
+                          {!isCurrentMonth && (
+                            <button
+                              type="button"
+                              onClick={handleJumpToToday}
+                              className="px-3 py-2 rounded-xl text-xs font-semibold bg-sky-50 text-[#0284c7] hover:bg-sky-100 border border-sky-200/80 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                              title="Kembali ke bulan dan tahun sekarang"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">restart_alt</span>
+                              <span>Hari Ini</span>
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Simpan Jadwal Button */}
                         <button
                           type="button"
-                          onClick={handleJumpToToday}
-                          className="px-3 py-2 rounded-xl text-xs font-semibold bg-sky-50 text-[#0284c7] hover:bg-sky-100 border border-sky-200/80 transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
-                          title="Kembali ke bulan dan tahun sekarang"
+                          onClick={handleSaveSchedule}
+                          id="btn-save-schedule"
+                          className="px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container shadow-xs flex items-center gap-2 font-label-lg font-semibold text-sm transition-all active:scale-95 cursor-pointer"
                         >
-                          <span className="material-symbols-outlined text-[16px]">restart_alt</span>
-                          <span>Hari Ini</span>
+                          <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                          <span>Simpan Jadwal</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Instructions banner */}
+                  <div className="bg-sky-50/70 border border-sky-100 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-sky-800">
+                    <div className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-sky-600 text-[18px]">touch_app</span>
+                      <span>
+                        <strong>Tips:</strong> Seret siswa dari kartu sesi di bawah langsung ke slot sesi
+                        pada tanggal kalender. Anda juga dapat memindahkan siswa antar tanggal atau
+                        mengklik tanda <strong>+</strong> untuk memilih manual.
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Calendar Grid Table Container */}
+                  <div className="overflow-x-auto pb-4 -mx-2 px-2">
+                    <div className="min-w-[1100px] flex flex-col gap-2.5">
+                      {/* Day Names Header (Senin - Minggu) */}
+                      <div className="grid grid-cols-7 gap-2.5 text-center py-1 font-label-lg font-semibold text-sm">
+                        <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
+                          Senin
+                        </div>
+                        <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
+                          Selasa
+                        </div>
+                        <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
+                          Rabu
+                        </div>
+                        <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
+                          Kamis
+                        </div>
+                        <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
+                          Jumat
+                        </div>
+                        <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
+                          Sabtu
+                        </div>
+                        <div className="py-2.5 rounded-lg bg-surface-container-low text-error font-bold">
+                          Minggu
+                        </div>
+                      </div>
+
+                      {/* Calendar Grid Cells */}
+                      <div className="grid grid-cols-7 gap-2.5">
+                        {calendarCells.map((cell) => {
+                          // ================= 1. Bulan Lalu Offset Cell =================
+                          if (cell.type === 'prev-offset') {
+                            return (
+                              <div
+                                key={cell.key}
+                                className="bg-surface-container-low/40 rounded-xl p-3 min-h-[185px] opacity-40 flex flex-col justify-between border border-dashed border-slate-200/60 select-none"
+                              >
+                                <span className="font-label-md font-semibold text-xs text-outline">
+                                  {cell.label}
+                                </span>
+                                <span className="text-center font-body-sm text-xs text-outline italic">
+                                  Bulan Lalu
+                                </span>
+                              </div>
+                            );
+                          }
+
+                          // ================= 2. Bulan Depan Offset Cell =================
+                          if (cell.type === 'next-offset') {
+                            return (
+                              <div
+                                key={cell.key}
+                                className="bg-surface-container-low/40 rounded-xl p-3 min-h-[185px] opacity-40 flex flex-col justify-between border border-dashed border-slate-200/60 select-none"
+                              >
+                                <span className="font-label-md font-semibold text-xs text-outline">
+                                  {cell.label}
+                                </span>
+                                <span className="text-center font-body-sm text-xs text-outline italic">
+                                  Bulan Depan
+                                </span>
+                              </div>
+                            );
+                          }
+
+                          // ================= 3. Minggu (Libur) Cell =================
+                          if (cell.isSunday) {
+                            const isToday = cell.dateStr === todayStr;
+                            return (
+                              <div
+                                key={cell.key}
+                                className={`bg-surface-container rounded-xl p-2.5 flex flex-col gap-2 min-h-[185px] border ${isToday
+                                  ? 'border-2 border-error ring-2 ring-error/20 bg-rose-50/40 relative'
+                                  : 'border-slate-200/50'
+                                  }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="w-7 h-7 rounded-lg bg-error-container text-on-error-container flex items-center justify-center font-label-lg font-bold text-xs">
+                                      {cell.dayStr}
+                                    </span>
+                                    {isToday && (
+                                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-error text-white uppercase tracking-wider">
+                                        Hari Ini
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="font-label-sm text-xs text-error font-bold">
+                                    Libur
+                                  </span>
+                                </div>
+                                <div className="flex-1 flex items-center justify-center bg-surface-container-high/50 rounded-lg p-3 text-center border border-dashed border-slate-200/70">
+                                  <span className="font-body-sm text-xs text-outline italic">
+                                    Rumah Belajar Tutup
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          // ================= 4. Hari Kerja (Senin - Sabtu) Cell =================
+                          const s1Assignments = scheduleLookup.get(`${cell.dateStr}_1`) || [];
+                          const s2Assignments = scheduleLookup.get(`${cell.dateStr}_2`) || [];
+                          const s3Assignments = scheduleLookup.get(`${cell.dateStr}_3`) || [];
+
+                          const isS1Over = dragOverKey === `${cell.dateStr}_1`;
+                          const isS2Over = dragOverKey === `${cell.dateStr}_2`;
+                          const isS3Over = dragOverKey === `${cell.dateStr}_3`;
+
+                          const isToday = cell.dateStr === todayStr;
+
+                          return (
+                            <div
+                              key={cell.key}
+                              className={`bg-surface-container-low rounded-xl p-2.5 flex flex-col gap-2 min-h-[185px] transition-all hover:bg-surface-container/80 shadow-2xs ${isToday
+                                ? 'border-2 border-[#0284c7] ring-2 ring-[#0284c7]/20 bg-sky-50/40 relative'
+                                : 'border border-slate-100'
+                                }`}
+                            >
+                              {/* Day Header Row */}
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1.5">
+                                  <span
+                                    className={`w-7 h-7 rounded-lg flex items-center justify-center font-label-lg font-bold text-xs ${isToday
+                                      ? 'bg-[#0284c7] text-white shadow-xs'
+                                      : 'bg-surface-container-highest text-on-surface'
+                                      }`}
+                                  >
+                                    {cell.dayStr}
+                                  </span>
+                                  {isToday && (
+                                    <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#0284c7] text-white uppercase tracking-wider shadow-2xs">
+                                      Hari Ini
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="font-label-sm text-[11px] text-secondary font-semibold">
+                                  Hari Kerja
+                                </span>
+                              </div>
+
+                              {/* 3 Session Dropzones */}
+                              <div className="flex flex-col gap-1.5 flex-1">
+                                {/* Sesi 1 Dropzone */}
+                                <div
+                                  onDragOver={(e) => {
+                                    e.preventDefault();
+                                    e.dataTransfer.dropEffect = 'move';
+                                    setDragOverKey(`${cell.dateStr}_1`);
+                                  }}
+                                  onDragLeave={() => {
+                                    if (dragOverKey === `${cell.dateStr}_1`) setDragOverKey(null);
+                                  }}
+                                  onDrop={(e) => handleDropOnCalendarSession(e, cell.dateStr, 1)}
+                                  className={`session-dropzone rounded-lg p-1.5 bg-tertiary-fixed/30 hover:bg-tertiary-fixed/60 transition-all min-h-[40px] flex flex-col gap-1 border ${isS1Over
+                                    ? 'ring-2 ring-amber-400 bg-tertiary-fixed/70 scale-[1.02] shadow-sm'
+                                    : 'border-amber-200/40'
+                                    }`}
+                                  data-date={cell.dateStr}
+                                  data-session="Sesi 1"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-label-sm text-[11px] text-tertiary font-bold tracking-tight">
+                                      Sesi 1
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleOpenQuickAssign(cell.dateStr, 1)}
+                                      className="text-tertiary/70 hover:text-tertiary text-[11px] font-bold p-0.5 rounded hover:bg-white/50 transition-colors"
+                                      title="Tambah siswa ke Sesi 1"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+
+                                  <div className="drop-target-area flex flex-wrap gap-1">
+                                    {s1Assignments.map((sch) => {
+                                      const student = studentsMap.get(sch.studentId);
+                                      const sName = student?.name || 'Siswa';
+                                      return (
+                                        <div
+                                          key={sch.id}
+                                          draggable
+                                          onDragStart={(e) =>
+                                            handleDragStartFromCalendar(e, sch, sName)
+                                          }
+                                          onDragEnd={handleDragEnd}
+                                          className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest text-on-surface px-2 py-0.5 rounded shadow-2xs flex items-center justify-between gap-1 font-label-sm text-[11px] hover:text-primary transition-all border border-slate-200/50 group select-none"
+                                          data-student={sName}
+                                          title={`Seret untuk memindahkan atau klik silang untuk menghapus ${sName}`}
+                                        >
+                                          <div className="flex items-center gap-1 min-w-0">
+                                            <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
+                                              drag_indicator
+                                            </span>
+                                            <span className="truncate max-w-[95px]">{sName}</span>
+                                          </div>
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleRemoveAssignment(sch.id, sName, cell.dateStr);
+                                            }}
+                                            className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
+                                            title="Hapus dari sesi ini"
+                                          >
+                                            ✕
+                                          </button>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* Sesi 2 Dropzone */}
+                                <div
+                                  onDragOver={(e) => {
+                                    e.preventDefault();
+                                    e.dataTransfer.dropEffect = 'move';
+                                    setDragOverKey(`${cell.dateStr}_2`);
+                                  }}
+                                  onDragLeave={() => {
+                                    if (dragOverKey === `${cell.dateStr}_2`) setDragOverKey(null);
+                                  }}
+                                  onDrop={(e) => handleDropOnCalendarSession(e, cell.dateStr, 2)}
+                                  className={`session-dropzone rounded-lg p-1.5 bg-primary-fixed/30 hover:bg-primary-fixed/60 transition-all min-h-[40px] flex flex-col gap-1 border ${isS2Over
+                                    ? 'ring-2 ring-sky-400 bg-primary-fixed/70 scale-[1.02] shadow-sm'
+                                    : 'border-sky-200/40'
+                                    }`}
+                                  data-date={cell.dateStr}
+                                  data-session="Sesi 2"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-label-sm text-[11px] text-primary font-bold tracking-tight">
+                                      Sesi 2
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleOpenQuickAssign(cell.dateStr, 2)}
+                                      className="text-primary/70 hover:text-primary text-[11px] font-bold p-0.5 rounded hover:bg-white/50 transition-colors"
+                                      title="Tambah siswa ke Sesi 2"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+
+                                  <div className="drop-target-area flex flex-wrap gap-1">
+                                    {s2Assignments.map((sch) => {
+                                      const student = studentsMap.get(sch.studentId);
+                                      const sName = student?.name || 'Siswa';
+                                      return (
+                                        <div
+                                          key={sch.id}
+                                          draggable
+                                          onDragStart={(e) =>
+                                            handleDragStartFromCalendar(e, sch, sName)
+                                          }
+                                          onDragEnd={handleDragEnd}
+                                          className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest text-on-surface px-2 py-0.5 rounded shadow-2xs flex items-center justify-between gap-1 font-label-sm text-[11px] hover:text-primary transition-all border border-slate-200/50 group select-none"
+                                          data-student={sName}
+                                          title={`Seret untuk memindahkan atau klik silang untuk menghapus ${sName}`}
+                                        >
+                                          <div className="flex items-center gap-1 min-w-0">
+                                            <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
+                                              drag_indicator
+                                            </span>
+                                            <span className="truncate max-w-[95px]">{sName}</span>
+                                          </div>
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleRemoveAssignment(sch.id, sName, cell.dateStr);
+                                            }}
+                                            className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
+                                            title="Hapus dari sesi ini"
+                                          >
+                                            ✕
+                                          </button>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* Sesi 3 Dropzone */}
+                                <div
+                                  onDragOver={(e) => {
+                                    e.preventDefault();
+                                    e.dataTransfer.dropEffect = 'move';
+                                    setDragOverKey(`${cell.dateStr}_3`);
+                                  }}
+                                  onDragLeave={() => {
+                                    if (dragOverKey === `${cell.dateStr}_3`) setDragOverKey(null);
+                                  }}
+                                  onDrop={(e) => handleDropOnCalendarSession(e, cell.dateStr, 3)}
+                                  className={`session-dropzone rounded-lg p-1.5 bg-secondary-fixed/30 hover:bg-secondary-fixed/60 transition-all min-h-[40px] flex flex-col gap-1 border ${isS3Over
+                                    ? 'ring-2 ring-teal-400 bg-secondary-fixed/70 scale-[1.02] shadow-sm'
+                                    : 'border-teal-200/40'
+                                    }`}
+                                  data-date={cell.dateStr}
+                                  data-session="Sesi 3"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-label-sm text-[11px] text-secondary font-bold tracking-tight">
+                                      Sesi 3
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleOpenQuickAssign(cell.dateStr, 3)}
+                                      className="text-secondary/70 hover:text-secondary text-[11px] font-bold p-0.5 rounded hover:bg-white/50 transition-colors"
+                                      title="Tambah siswa ke Sesi 3"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+
+                                  <div className="drop-target-area flex flex-wrap gap-1">
+                                    {s3Assignments.map((sch) => {
+                                      const student = studentsMap.get(sch.studentId);
+                                      const sName = student?.name || 'Siswa';
+                                      return (
+                                        <div
+                                          key={sch.id}
+                                          draggable
+                                          onDragStart={(e) =>
+                                            handleDragStartFromCalendar(e, sch, sName)
+                                          }
+                                          onDragEnd={handleDragEnd}
+                                          className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest text-on-surface px-2 py-0.5 rounded shadow-2xs flex items-center justify-between gap-1 font-label-sm text-[11px] hover:text-primary transition-all border border-slate-200/50 group select-none"
+                                          data-student={sName}
+                                          title={`Seret untuk memindahkan atau klik silang untuk menghapus ${sName}`}
+                                        >
+                                          <div className="flex items-center gap-1 min-w-0">
+                                            <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
+                                              drag_indicator
+                                            </span>
+                                            <span className="truncate max-w-[95px]">{sName}</span>
+                                          </div>
+                                          <button
+                                            type="button"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleRemoveAssignment(sch.id, sName, cell.dateStr);
+                                            }}
+                                            className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
+                                            title="Hapus dari sesi ini"
+                                          >
+                                            ✕
+                                          </button>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* LAYOUT KEDUA: TABEL 3 SESI (Distribusi Siswa Menurut Sesi) */}
+                <section className="flex flex-col bg-surface-container-lowest rounded-xl p-6 shadow-xs gap-6 border border-slate-100">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-2 text-primary">
+                      <span className="material-symbols-outlined text-[24px]">view_column</span>
+                      <h2 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface">
+                        Distribusi Siswa Menurut Sesi
+                      </h2>
+                    </div>
+
+                    {/* Search Filter for Student Roster */}
+                    <div className="relative w-full sm:w-72">
+                      <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">
+                        search
+                      </span>
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Cari nama siswa..."
+                        className="w-full pl-9 pr-4 py-2 rounded-xl text-xs sm:text-sm bg-surface-container-low border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-primary/20 text-on-surface"
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setSearchQuery('')}
+                          className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-xs"
+                        >
+                          ✕
                         </button>
                       )}
                     </div>
-
-                    {/* Simpan Jadwal Button */}
-                    <button
-                      type="button"
-                      onClick={handleSaveSchedule}
-                      id="btn-save-schedule"
-                      className="px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container shadow-xs flex items-center gap-2 font-label-lg font-semibold text-sm transition-all active:scale-95 cursor-pointer"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">check_circle</span>
-                      <span>Simpan Jadwal</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Instructions banner */}
-              <div className="bg-sky-50/70 border border-sky-100 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-sky-800">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sky-600 text-[18px]">touch_app</span>
-                  <span>
-                    <strong>Tips:</strong> Seret siswa dari kartu sesi di bawah langsung ke slot sesi
-                    pada tanggal kalender. Anda juga dapat memindahkan siswa antar tanggal atau
-                    mengklik tanda <strong>+</strong> untuk memilih manual.
-                  </span>
-                </div>
-              </div>
-
-              {/* Calendar Grid Table Container */}
-              <div className="overflow-x-auto pb-4 -mx-2 px-2">
-                <div className="min-w-[1100px] flex flex-col gap-2.5">
-                  {/* Day Names Header (Senin - Minggu) */}
-                  <div className="grid grid-cols-7 gap-2.5 text-center py-1 font-label-lg font-semibold text-sm">
-                    <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
-                      Senin
-                    </div>
-                    <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
-                      Selasa
-                    </div>
-                    <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
-                      Rabu
-                    </div>
-                    <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
-                      Kamis
-                    </div>
-                    <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
-                      Jumat
-                    </div>
-                    <div className="py-2.5 rounded-lg bg-surface-container-low text-on-surface">
-                      Sabtu
-                    </div>
-                    <div className="py-2.5 rounded-lg bg-surface-container-low text-error font-bold">
-                      Minggu
-                    </div>
                   </div>
 
-                  {/* Calendar Grid Cells */}
-                  <div className="grid grid-cols-7 gap-2.5">
-                    {calendarCells.map((cell) => {
-                      // ================= 1. Bulan Lalu Offset Cell =================
-                      if (cell.type === 'prev-offset') {
-                        return (
-                          <div
-                            key={cell.key}
-                            className="bg-surface-container-low/40 rounded-xl p-3 min-h-[185px] opacity-40 flex flex-col justify-between border border-dashed border-slate-200/60 select-none"
-                          >
-                            <span className="font-label-md font-semibold text-xs text-outline">
-                              {cell.label}
-                            </span>
-                            <span className="text-center font-body-sm text-xs text-outline italic">
-                              Bulan Lalu
-                            </span>
-                          </div>
-                        );
-                      }
-
-                      // ================= 2. Bulan Depan Offset Cell =================
-                      if (cell.type === 'next-offset') {
-                        return (
-                          <div
-                            key={cell.key}
-                            className="bg-surface-container-low/40 rounded-xl p-3 min-h-[185px] opacity-40 flex flex-col justify-between border border-dashed border-slate-200/60 select-none"
-                          >
-                            <span className="font-label-md font-semibold text-xs text-outline">
-                              {cell.label}
-                            </span>
-                            <span className="text-center font-body-sm text-xs text-outline italic">
-                              Bulan Depan
-                            </span>
-                          </div>
-                        );
-                      }
-
-                      // ================= 3. Minggu (Libur) Cell =================
-                      if (cell.isSunday) {
-                        const isToday = cell.dateStr === todayStr;
-                        return (
-                          <div
-                            key={cell.key}
-                            className={`bg-surface-container rounded-xl p-2.5 flex flex-col gap-2 min-h-[185px] border ${isToday
-                                ? 'border-2 border-error ring-2 ring-error/20 bg-rose-50/40 relative'
-                                : 'border-slate-200/50'
-                              }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-1.5">
-                                <span className="w-7 h-7 rounded-lg bg-error-container text-on-error-container flex items-center justify-center font-label-lg font-bold text-xs">
-                                  {cell.dayStr}
-                                </span>
-                                {isToday && (
-                                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-error text-white uppercase tracking-wider">
-                                    Hari Ini
-                                  </span>
-                                )}
-                              </div>
-                              <span className="font-label-sm text-xs text-error font-bold">
-                                Libur
-                              </span>
-                            </div>
-                            <div className="flex-1 flex items-center justify-center bg-surface-container-high/50 rounded-lg p-3 text-center border border-dashed border-slate-200/70">
-                              <span className="font-body-sm text-xs text-outline italic">
-                                Rumah Belajar Tutup
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      }
-
-                      // ================= 4. Hari Kerja (Senin - Sabtu) Cell =================
-                      const s1Assignments = scheduleLookup.get(`${cell.dateStr}_1`) || [];
-                      const s2Assignments = scheduleLookup.get(`${cell.dateStr}_2`) || [];
-                      const s3Assignments = scheduleLookup.get(`${cell.dateStr}_3`) || [];
-
-                      const isS1Over = dragOverKey === `${cell.dateStr}_1`;
-                      const isS2Over = dragOverKey === `${cell.dateStr}_2`;
-                      const isS3Over = dragOverKey === `${cell.dateStr}_3`;
-
-                      const isToday = cell.dateStr === todayStr;
-
-                      return (
-                        <div
-                          key={cell.key}
-                          className={`bg-surface-container-low rounded-xl p-2.5 flex flex-col gap-2 min-h-[185px] transition-all hover:bg-surface-container/80 shadow-2xs ${isToday
-                              ? 'border-2 border-[#0284c7] ring-2 ring-[#0284c7]/20 bg-sky-50/40 relative'
-                              : 'border border-slate-100'
-                            }`}
-                        >
-                          {/* Day Header Row */}
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1.5">
-                              <span
-                                className={`w-7 h-7 rounded-lg flex items-center justify-center font-label-lg font-bold text-xs ${isToday
-                                    ? 'bg-[#0284c7] text-white shadow-xs'
-                                    : 'bg-surface-container-highest text-on-surface'
-                                  }`}
-                              >
-                                {cell.dayStr}
-                              </span>
-                              {isToday && (
-                                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#0284c7] text-white uppercase tracking-wider shadow-2xs">
-                                  Hari Ini
-                                </span>
-                              )}
-                            </div>
-                            <span className="font-label-sm text-[11px] text-secondary font-semibold">
-                              Hari Kerja
-                            </span>
-                          </div>
-
-                          {/* 3 Session Dropzones */}
-                          <div className="flex flex-col gap-1.5 flex-1">
-                            {/* Sesi 1 Dropzone */}
-                            <div
-                              onDragOver={(e) => {
-                                e.preventDefault();
-                                e.dataTransfer.dropEffect = 'move';
-                                setDragOverKey(`${cell.dateStr}_1`);
-                              }}
-                              onDragLeave={() => {
-                                if (dragOverKey === `${cell.dateStr}_1`) setDragOverKey(null);
-                              }}
-                              onDrop={(e) => handleDropOnCalendarSession(e, cell.dateStr, 1)}
-                              className={`session-dropzone rounded-lg p-1.5 bg-tertiary-fixed/30 hover:bg-tertiary-fixed/60 transition-all min-h-[40px] flex flex-col gap-1 border ${isS1Over
-                                  ? 'ring-2 ring-amber-400 bg-tertiary-fixed/70 scale-[1.02] shadow-sm'
-                                  : 'border-amber-200/40'
-                                }`}
-                              data-date={cell.dateStr}
-                              data-session="Sesi 1"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-label-sm text-[11px] text-tertiary font-bold tracking-tight">
-                                  Sesi 1
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleOpenQuickAssign(cell.dateStr, 1)}
-                                  className="text-tertiary/70 hover:text-tertiary text-[11px] font-bold p-0.5 rounded hover:bg-white/50 transition-colors"
-                                  title="Tambah siswa ke Sesi 1"
-                                >
-                                  +
-                                </button>
-                              </div>
-
-                              <div className="drop-target-area flex flex-wrap gap-1">
-                                {s1Assignments.map((sch) => {
-                                  const student = studentsMap.get(sch.studentId);
-                                  const sName = student?.name || 'Siswa';
-                                  return (
-                                    <div
-                                      key={sch.id}
-                                      draggable
-                                      onDragStart={(e) =>
-                                        handleDragStartFromCalendar(e, sch, sName)
-                                      }
-                                      onDragEnd={handleDragEnd}
-                                      className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest text-on-surface px-2 py-0.5 rounded shadow-2xs flex items-center justify-between gap-1 font-label-sm text-[11px] hover:text-primary transition-all border border-slate-200/50 group select-none"
-                                      data-student={sName}
-                                      title={`Seret untuk memindahkan atau klik silang untuk menghapus ${sName}`}
-                                    >
-                                      <div className="flex items-center gap-1 min-w-0">
-                                        <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
-                                          drag_indicator
-                                        </span>
-                                        <span className="truncate max-w-[95px]">{sName}</span>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleRemoveAssignment(sch.id, sName, cell.dateStr);
-                                        }}
-                                        className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
-                                        title="Hapus dari sesi ini"
-                                      >
-                                        ✕
-                                      </button>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-
-                            {/* Sesi 2 Dropzone */}
-                            <div
-                              onDragOver={(e) => {
-                                e.preventDefault();
-                                e.dataTransfer.dropEffect = 'move';
-                                setDragOverKey(`${cell.dateStr}_2`);
-                              }}
-                              onDragLeave={() => {
-                                if (dragOverKey === `${cell.dateStr}_2`) setDragOverKey(null);
-                              }}
-                              onDrop={(e) => handleDropOnCalendarSession(e, cell.dateStr, 2)}
-                              className={`session-dropzone rounded-lg p-1.5 bg-primary-fixed/30 hover:bg-primary-fixed/60 transition-all min-h-[40px] flex flex-col gap-1 border ${isS2Over
-                                  ? 'ring-2 ring-sky-400 bg-primary-fixed/70 scale-[1.02] shadow-sm'
-                                  : 'border-sky-200/40'
-                                }`}
-                              data-date={cell.dateStr}
-                              data-session="Sesi 2"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-label-sm text-[11px] text-primary font-bold tracking-tight">
-                                  Sesi 2
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleOpenQuickAssign(cell.dateStr, 2)}
-                                  className="text-primary/70 hover:text-primary text-[11px] font-bold p-0.5 rounded hover:bg-white/50 transition-colors"
-                                  title="Tambah siswa ke Sesi 2"
-                                >
-                                  +
-                                </button>
-                              </div>
-
-                              <div className="drop-target-area flex flex-wrap gap-1">
-                                {s2Assignments.map((sch) => {
-                                  const student = studentsMap.get(sch.studentId);
-                                  const sName = student?.name || 'Siswa';
-                                  return (
-                                    <div
-                                      key={sch.id}
-                                      draggable
-                                      onDragStart={(e) =>
-                                        handleDragStartFromCalendar(e, sch, sName)
-                                      }
-                                      onDragEnd={handleDragEnd}
-                                      className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest text-on-surface px-2 py-0.5 rounded shadow-2xs flex items-center justify-between gap-1 font-label-sm text-[11px] hover:text-primary transition-all border border-slate-200/50 group select-none"
-                                      data-student={sName}
-                                      title={`Seret untuk memindahkan atau klik silang untuk menghapus ${sName}`}
-                                    >
-                                      <div className="flex items-center gap-1 min-w-0">
-                                        <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
-                                          drag_indicator
-                                        </span>
-                                        <span className="truncate max-w-[95px]">{sName}</span>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleRemoveAssignment(sch.id, sName, cell.dateStr);
-                                        }}
-                                        className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
-                                        title="Hapus dari sesi ini"
-                                      >
-                                        ✕
-                                      </button>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-
-                            {/* Sesi 3 Dropzone */}
-                            <div
-                              onDragOver={(e) => {
-                                e.preventDefault();
-                                e.dataTransfer.dropEffect = 'move';
-                                setDragOverKey(`${cell.dateStr}_3`);
-                              }}
-                              onDragLeave={() => {
-                                if (dragOverKey === `${cell.dateStr}_3`) setDragOverKey(null);
-                              }}
-                              onDrop={(e) => handleDropOnCalendarSession(e, cell.dateStr, 3)}
-                              className={`session-dropzone rounded-lg p-1.5 bg-secondary-fixed/30 hover:bg-secondary-fixed/60 transition-all min-h-[40px] flex flex-col gap-1 border ${isS3Over
-                                  ? 'ring-2 ring-teal-400 bg-secondary-fixed/70 scale-[1.02] shadow-sm'
-                                  : 'border-teal-200/40'
-                                }`}
-                              data-date={cell.dateStr}
-                              data-session="Sesi 3"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-label-sm text-[11px] text-secondary font-bold tracking-tight">
-                                  Sesi 3
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleOpenQuickAssign(cell.dateStr, 3)}
-                                  className="text-secondary/70 hover:text-secondary text-[11px] font-bold p-0.5 rounded hover:bg-white/50 transition-colors"
-                                  title="Tambah siswa ke Sesi 3"
-                                >
-                                  +
-                                </button>
-                              </div>
-
-                              <div className="drop-target-area flex flex-wrap gap-1">
-                                {s3Assignments.map((sch) => {
-                                  const student = studentsMap.get(sch.studentId);
-                                  const sName = student?.name || 'Siswa';
-                                  return (
-                                    <div
-                                      key={sch.id}
-                                      draggable
-                                      onDragStart={(e) =>
-                                        handleDragStartFromCalendar(e, sch, sName)
-                                      }
-                                      onDragEnd={handleDragEnd}
-                                      className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest text-on-surface px-2 py-0.5 rounded shadow-2xs flex items-center justify-between gap-1 font-label-sm text-[11px] hover:text-primary transition-all border border-slate-200/50 group select-none"
-                                      data-student={sName}
-                                      title={`Seret untuk memindahkan atau klik silang untuk menghapus ${sName}`}
-                                    >
-                                      <div className="flex items-center gap-1 min-w-0">
-                                        <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
-                                          drag_indicator
-                                        </span>
-                                        <span className="truncate max-w-[95px]">{sName}</span>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleRemoveAssignment(sch.id, sName, cell.dateStr);
-                                        }}
-                                        className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
-                                        title="Hapus dari sesi ini"
-                                      >
-                                        ✕
-                                      </button>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* LAYOUT KEDUA: TABEL 3 SESI (Distribusi Siswa Menurut Sesi) */}
-            <section className="flex flex-col bg-surface-container-lowest rounded-xl p-6 shadow-xs gap-6 border border-slate-100">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined text-[24px]">view_column</span>
-                  <h2 className="font-headline-md text-xl sm:text-2xl font-bold text-on-surface">
-                    Distribusi Siswa Menurut Sesi
-                  </h2>
-                </div>
-
-                {/* Search Filter for Student Roster */}
-                <div className="relative w-full sm:w-72">
-                  <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">
-                    search
-                  </span>
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Cari nama siswa..."
-                    className="w-full pl-9 pr-4 py-2 rounded-xl text-xs sm:text-sm bg-surface-container-low border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-primary/20 text-on-surface"
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-xs"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* 3 Sejajar Kolom Sesi: Sesi 1, Sesi 2, Sesi 3 */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* ================= KOLOM 1: Sesi 1 ================= */}
-                <div className="flex flex-col bg-surface-container-low rounded-xl p-5 gap-4 border border-slate-100/80">
-                  <div className="flex items-center justify-between pb-1 border-b-0">
-                    <div className="flex items-center gap-2.5">
-                      <span className="w-3.5 h-3.5 rounded-full bg-tertiary-fixed-dim" />
-                      <h3 className="font-headline-sm font-bold text-lg text-on-surface">Sesi 1</h3>
-                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100/70 text-amber-800">
-                        {session1Pool.length} Siswa
-                      </span>
-                    </div>
-                    <span
-                      className="material-symbols-outlined text-outline text-[20px]"
-                      title="Area seret untuk memindahkan siswa"
-                    >
-                      pan_tool
-                    </span>
-                  </div>
-
-                  {/* Sesi 1 Student List (Drag source only) */}
-                  <div className="flex flex-col gap-2.5 min-h-[360px] p-2 rounded-xl transition-all">
-                    {session1Pool.length === 0 ? (
-                      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
-                        <span className="material-symbols-outlined text-3xl mb-1 text-slate-300">
-                          person_off
-                        </span>
-                        <p className="text-xs">Tidak ada siswa di Sesi 1</p>
-                      </div>
-                    ) : (
-                      session1Pool.map((student) => (
-                        <div
-                          key={student.id}
-                          draggable
-                          onDragStart={(e) => handleDragStartFromPool(e, student)}
-                          onDragEnd={handleDragEnd}
-                          className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
-                          data-student={student.name}
-                        >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
-                              drag_indicator
-                            </span>
-                            <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
-                              {student.name}
-                            </span>
-                          </div>
-                          <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
-                            open_with
+                  {/* 3 Sejajar Kolom Sesi: Sesi 1, Sesi 2, Sesi 3 */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* ================= KOLOM 1: Sesi 1 ================= */}
+                    <div className="flex flex-col bg-surface-container-low rounded-xl p-5 gap-4 border border-slate-100/80">
+                      <div className="flex items-center justify-between pb-1 border-b-0">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-3.5 h-3.5 rounded-full bg-tertiary-fixed-dim" />
+                          <h3 className="font-headline-sm font-bold text-lg text-on-surface">Sesi 1</h3>
+                          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100/70 text-amber-800">
+                            {session1Pool.length} Siswa
                           </span>
                         </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-
-                {/* ================= KOLOM 2: Sesi 2 ================= */}
-                <div className="flex flex-col bg-surface-container-low rounded-xl p-5 gap-4 border border-slate-100/80">
-                  <div className="flex items-center justify-between pb-1 border-b-0">
-                    <div className="flex items-center gap-2.5">
-                      <span className="w-3.5 h-3.5 rounded-full bg-primary-fixed" />
-                      <h3 className="font-headline-sm font-bold text-lg text-on-surface">Sesi 2</h3>
-                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-sky-100/70 text-sky-800">
-                        {session2Pool.length} Siswa
-                      </span>
-                    </div>
-                    <span
-                      className="material-symbols-outlined text-outline text-[20px]"
-                      title="Area seret untuk memindahkan siswa"
-                    >
-                      pan_tool
-                    </span>
-                  </div>
-
-                  {/* Sesi 2 Student List (Drag source only) */}
-                  <div className="flex flex-col gap-2.5 min-h-[360px] p-2 rounded-xl transition-all">
-                    {session2Pool.length === 0 ? (
-                      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
-                        <span className="material-symbols-outlined text-3xl mb-1 text-slate-300">
-                          person_off
-                        </span>
-                        <p className="text-xs">Tidak ada siswa di Sesi 2</p>
-                      </div>
-                    ) : (
-                      session2Pool.map((student) => (
-                        <div
-                          key={student.id}
-                          draggable
-                          onDragStart={(e) => handleDragStartFromPool(e, student)}
-                          onDragEnd={handleDragEnd}
-                          className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
-                          data-student={student.name}
+                        <span
+                          className="material-symbols-outlined text-outline text-[20px]"
+                          title="Area seret untuk memindahkan siswa"
                         >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
-                              drag_indicator
+                          pan_tool
+                        </span>
+                      </div>
+
+                      {/* Sesi 1 Student List (Drag source only) */}
+                      <div className="flex flex-col gap-2.5 min-h-[360px] p-2 rounded-xl transition-all">
+                        {session1Pool.length === 0 ? (
+                          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                            <span className="material-symbols-outlined text-3xl mb-1 text-slate-300">
+                              person_off
                             </span>
-                            <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
-                              {student.name}
-                            </span>
+                            <p className="text-xs">Tidak ada siswa di Sesi 1</p>
                           </div>
-                          <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
-                            open_with
+                        ) : (
+                          session1Pool.map((student) => (
+                            <div
+                              key={student.id}
+                              draggable
+                              onDragStart={(e) => handleDragStartFromPool(e, student)}
+                              onDragEnd={handleDragEnd}
+                              className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
+                              data-student={student.name}
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
+                                  drag_indicator
+                                </span>
+                                <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
+                                  {student.name}
+                                </span>
+                              </div>
+                              <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
+                                open_with
+                              </span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+
+                    {/* ================= KOLOM 2: Sesi 2 ================= */}
+                    <div className="flex flex-col bg-surface-container-low rounded-xl p-5 gap-4 border border-slate-100/80">
+                      <div className="flex items-center justify-between pb-1 border-b-0">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-3.5 h-3.5 rounded-full bg-primary-fixed" />
+                          <h3 className="font-headline-sm font-bold text-lg text-on-surface">Sesi 2</h3>
+                          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-sky-100/70 text-sky-800">
+                            {session2Pool.length} Siswa
                           </span>
                         </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-
-                {/* ================= KOLOM 3: Sesi 3 ================= */}
-                <div className="flex flex-col bg-surface-container-low rounded-xl p-5 gap-4 border border-slate-100/80">
-                  <div className="flex items-center justify-between pb-1 border-b-0">
-                    <div className="flex items-center gap-2.5">
-                      <span className="w-3.5 h-3.5 rounded-full bg-secondary-fixed" />
-                      <h3 className="font-headline-sm font-bold text-lg text-on-surface">Sesi 3</h3>
-                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-teal-100/70 text-teal-800">
-                        {session3Pool.length} Siswa
-                      </span>
-                    </div>
-                    <span
-                      className="material-symbols-outlined text-outline text-[20px]"
-                      title="Area seret untuk memindahkan siswa"
-                    >
-                      pan_tool
-                    </span>
-                  </div>
-
-                  {/* Sesi 3 Student List (Drag source only) */}
-                  <div className="flex flex-col gap-2.5 min-h-[360px] p-2 rounded-xl transition-all">
-                    {session3Pool.length === 0 ? (
-                      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
-                        <span className="material-symbols-outlined text-3xl mb-1 text-slate-300">
-                          person_off
-                        </span>
-                        <p className="text-xs">Tidak ada siswa di Sesi 3</p>
-                      </div>
-                    ) : (
-                      session3Pool.map((student) => (
-                        <div
-                          key={student.id}
-                          draggable
-                          onDragStart={(e) => handleDragStartFromPool(e, student)}
-                          onDragEnd={handleDragEnd}
-                          className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
-                          data-student={student.name}
+                        <span
+                          className="material-symbols-outlined text-outline text-[20px]"
+                          title="Area seret untuk memindahkan siswa"
                         >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
-                              drag_indicator
+                          pan_tool
+                        </span>
+                      </div>
+
+                      {/* Sesi 2 Student List (Drag source only) */}
+                      <div className="flex flex-col gap-2.5 min-h-[360px] p-2 rounded-xl transition-all">
+                        {session2Pool.length === 0 ? (
+                          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                            <span className="material-symbols-outlined text-3xl mb-1 text-slate-300">
+                              person_off
                             </span>
-                            <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
-                              {student.name}
-                            </span>
+                            <p className="text-xs">Tidak ada siswa di Sesi 2</p>
                           </div>
-                          <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
-                            open_with
+                        ) : (
+                          session2Pool.map((student) => (
+                            <div
+                              key={student.id}
+                              draggable
+                              onDragStart={(e) => handleDragStartFromPool(e, student)}
+                              onDragEnd={handleDragEnd}
+                              className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
+                              data-student={student.name}
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
+                                  drag_indicator
+                                </span>
+                                <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
+                                  {student.name}
+                                </span>
+                              </div>
+                              <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
+                                open_with
+                              </span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+
+                    {/* ================= KOLOM 3: Sesi 3 ================= */}
+                    <div className="flex flex-col bg-surface-container-low rounded-xl p-5 gap-4 border border-slate-100/80">
+                      <div className="flex items-center justify-between pb-1 border-b-0">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-3.5 h-3.5 rounded-full bg-secondary-fixed" />
+                          <h3 className="font-headline-sm font-bold text-lg text-on-surface">Sesi 3</h3>
+                          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-teal-100/70 text-teal-800">
+                            {session3Pool.length} Siswa
                           </span>
                         </div>
-                      ))
-                    )}
+                        <span
+                          className="material-symbols-outlined text-outline text-[20px]"
+                          title="Area seret untuk memindahkan siswa"
+                        >
+                          pan_tool
+                        </span>
+                      </div>
+
+                      {/* Sesi 3 Student List (Drag source only) */}
+                      <div className="flex flex-col gap-2.5 min-h-[360px] p-2 rounded-xl transition-all">
+                        {session3Pool.length === 0 ? (
+                          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl">
+                            <span className="material-symbols-outlined text-3xl mb-1 text-slate-300">
+                              person_off
+                            </span>
+                            <p className="text-xs">Tidak ada siswa di Sesi 3</p>
+                          </div>
+                        ) : (
+                          session3Pool.map((student) => (
+                            <div
+                              key={student.id}
+                              draggable
+                              onDragStart={(e) => handleDragStartFromPool(e, student)}
+                              onDragEnd={handleDragEnd}
+                              className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
+                              data-student={student.name}
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
+                                  drag_indicator
+                                </span>
+                                <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
+                                  {student.name}
+                                </span>
+                              </div>
+                              <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
+                                open_with
+                              </span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </section>
               </div>
-            </section>
-          </div>
             </>
           )}
         </main>

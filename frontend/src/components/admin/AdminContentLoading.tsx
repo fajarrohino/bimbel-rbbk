@@ -4,12 +4,10 @@ import React from 'react';
 
 interface AdminContentLoadingProps {
   message?: string;
-  submessage?: string;
 }
 
 export default function AdminContentLoading({
-  message = 'Memuat data...',
-  submessage = 'Mohon tunggu sebentar, sedang mengambil data dari server...',
+  message = 'Loading',
 }: AdminContentLoadingProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center min-h-[55vh] py-16 gap-4">
@@ -22,9 +20,6 @@ export default function AdminContentLoading({
       <div className="flex flex-col items-center gap-1.5 text-center">
         <p className="text-sm font-bold text-slate-700 tracking-tight">
           {message}
-        </p>
-        <p className="text-xs text-slate-400 font-medium">
-          {submessage}
         </p>
       </div>
     </div>
