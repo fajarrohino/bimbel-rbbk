@@ -11,6 +11,7 @@ import { studentApi } from '@/lib/api/students';
 import { studentProgramApi } from '@/lib/api/studentPrograms';
 import { programApi } from '@/lib/api/programs';
 import { Student, StudentProgram, Program, StudentGender, ScheduleSession } from '@/types';
+import Link from 'next/link';
 
 function capitalizeWords(str: string): string {
   if (!str) return '';
@@ -660,12 +661,17 @@ function StudentDetailContent() {
                   />
                 </div>
 
-                <div className="pt-2 flex justify-end">
+                <div className="pt-2 flex justify-end gap-3">
+                  <Link
+                    href="/admin/students"
+                    className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-xs hover:bg-slate-50"
+                  >
+                    Batal
+                  </Link>
                   <button
                     type="submit"
                     className="px-5 py-2.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
                   >
-                    <span className="material-symbols-outlined text-[16px]">save</span>
                     <span>Simpan</span>
                   </button>
                 </div>
