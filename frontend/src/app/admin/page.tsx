@@ -5,6 +5,7 @@ import Link from 'next/link';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import AdminContentLoading from '@/components/admin/AdminContentLoading';
 import { scheduleApi, TodayScheduleResponse } from '@/lib/api/schedules';
 import { studentApi } from '@/lib/api/students';
 import { programApi } from '@/lib/api/programs';
@@ -17,9 +18,12 @@ function AdminDashboardContent() {
   const [activeCount, setActiveCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
   const [programCount, setProgramCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
+      const startTime = Date.now();
+      setIsLoading(true);
       try {
         const [todayData, activeRes, pendingRes, programsRes] = await Promise.allSettled([
           scheduleApi.getToday(),
@@ -43,6 +47,13 @@ function AdminDashboardContent() {
         }
       } catch (err) {
         console.error('Dashboard load error:', err);
+      } finally {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, 1200 - elapsed);
+        if (remaining > 0) {
+          await new Promise((res) => setTimeout(res, remaining));
+        }
+        setIsLoading(false);
       }
     }
     loadData();
@@ -92,8 +103,12 @@ function AdminDashboardContent() {
         />
 
         <main className="flex-1 p-4 sm:p-8 space-y-6 max-w-7xl w-full">
-          {/* Welcome Banner */}
-          <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#006194] to-[#0284c7] p-6 sm:p-8 text-white shadow-sm">
+          {isLoading ? (
+            <AdminContentLoading message="Memuat data dashboard..." />
+          ) : (
+            <>
+              {/* Welcome Banner */}
+              <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#006194] to-[#0284c7] p-6 sm:p-8 text-white shadow-sm">
             <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
                 <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -356,6 +371,8 @@ function AdminDashboardContent() {
               </div>
             </div>
           </section>
+            </>
+          )}
         </main>
       </div>
     </div>

@@ -6,6 +6,7 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import AdminContentLoading from '@/components/admin/AdminContentLoading';
 import { programApi } from '@/lib/api/programs';
 import { Program } from '@/types';
 
@@ -15,6 +16,7 @@ function AdminProgramsContent() {
   const [deleteTarget, setDeleteTarget] = useState<Program | null>(null);
   const [detailTarget, setDetailTarget] = useState<Program | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadPrograms();
@@ -28,12 +30,21 @@ function AdminProgramsContent() {
   };
 
   const loadPrograms = async () => {
+    const startTime = Date.now();
+    setIsLoading(true);
     try {
       const all = await programApi.getAll();
       all.sort((a, b) => a.displayOrder - b.displayOrder);
       setPrograms(all);
     } catch (err) {
       console.error('Failed to load programs', err);
+    } finally {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 1200 - elapsed);
+      if (remaining > 0) {
+        await new Promise((res) => setTimeout(res, remaining));
+      }
+      setIsLoading(false);
     }
   };
 
@@ -72,7 +83,11 @@ function AdminProgramsContent() {
           onToggleSidebar={() => setSidebarOpen(true)}
         />
         <main className="flex-1 p-6 sm:p-8 max-w-7xl w-full">
-          <div className="flex items-center justify-between mb-8">
+          {isLoading ? (
+            <AdminContentLoading message="Memuat data program belajar..." />
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-8">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Program Belajar
             </h1>
@@ -223,6 +238,8 @@ function AdminProgramsContent() {
               </table>
             </div>
           </div>
+            </>
+          )}
         </main>
       </div>
 

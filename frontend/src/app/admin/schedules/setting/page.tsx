@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import AdminContentLoading from '@/components/admin/AdminContentLoading';
 import { scheduleApi } from '@/lib/api/schedules';
 import { studentApi } from '@/lib/api/students';
 import { Student, ScheduleAssignment, ScheduleSession } from '@/types';
@@ -43,6 +44,8 @@ function AdminAturJadwalContent() {
   // Data state
   const [students, setStudents] = useState<Student[]>([]);
   const [schedules, setSchedules] = useState<ScheduleAssignment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const isFirstMount = React.useRef(true);
 
   // Search filter for student distribution columns
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,20 +79,7 @@ function AdminAturJadwalContent() {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // Load Active Students
-  useEffect(() => {
-    async function loadActiveStudents() {
-      try {
-        const res = await studentApi.getAll({ status: 'Aktif', limit: 100 });
-        setStudents((res.students || []).filter((s) => !s.isDeleted));
-      } catch (err) {
-        console.error('Failed to load active students:', err);
-      }
-    }
-    loadActiveStudents();
-  }, []);
-
-  // Load schedules whenever currentMonthDate changes
+  // Load schedules helper
   const loadMonthSchedules = useCallback(async () => {
     try {
       const monthStr = `${currentMonthDate.getFullYear()}-${String(currentMonthDate.getMonth() + 1).padStart(2, '0')}`;
@@ -104,7 +94,58 @@ function AdminAturJadwalContent() {
     }
   }, [currentMonthDate]);
 
+  // Initial load: active students + initial month schedules with smooth 1.2s delay
   useEffect(() => {
+    let isMounted = true;
+    async function initData() {
+      const startTime = Date.now();
+      setIsLoading(true);
+      try {
+        const nowObj = new Date();
+        const monthStr = `${nowObj.getFullYear()}-${String(nowObj.getMonth() + 1).padStart(2, '0')}`;
+        const [studentsRes, schedulesRes] = await Promise.allSettled([
+          studentApi.getAll({ status: 'Aktif', limit: 100 }),
+          scheduleApi.getByMonth(monthStr),
+        ]);
+
+        if (isMounted) {
+          if (studentsRes.status === 'fulfilled') {
+            setStudents((studentsRes.value.students || []).filter((s) => !s.isDeleted));
+          }
+          if (schedulesRes.status === 'fulfilled') {
+            const normalized = schedulesRes.value.map((sch) => ({
+              ...sch,
+              date: typeof sch.date === 'string' ? sch.date.split('T')[0] : new Date(sch.date).toISOString().split('T')[0],
+            }));
+            setSchedules(normalized);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load initial schedule data:', err);
+      } finally {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, 1200 - elapsed);
+        if (remaining > 0) {
+          await new Promise((res) => setTimeout(res, remaining));
+        }
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    initData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Subsequent month changes
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
     loadMonthSchedules();
   }, [loadMonthSchedules]);
 
@@ -608,7 +649,11 @@ function AdminAturJadwalContent() {
         )}
 
         <main className="relative bg-background min-h-[calc(100vh-80px)] w-full px-4 sm:px-8 pb-16 pt-6 sm:pt-8">
-          <div className="flex flex-col w-full gap-6 max-w-[1600px] mx-auto">
+          {isLoading ? (
+            <AdminContentLoading message="Memuat pengaturan jadwal..." />
+          ) : (
+            <>
+              <div className="flex flex-col w-full gap-6 max-w-[1600px] mx-auto">
             {/* Top Action & Period Bar - Exact match with HTML Prototype */}
             <div className="flex flex-col gap-4 bg-surface-container-lowest p-6 rounded-xl shadow-xs border border-slate-100">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1283,6 +1328,8 @@ function AdminAturJadwalContent() {
               </div>
             </section>
           </div>
+            </>
+          )}
         </main>
       </div>
 

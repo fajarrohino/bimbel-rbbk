@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
 
@@ -72,10 +73,13 @@ export default function AboutUsPage() {
 
                 <div className="md:hidden w-full flex justify-center py-2 relative my-1">
                   <div className="absolute w-[240px] sm:w-[280px] h-[240px] sm:h-[280px] rounded-full bg-gradient-to-b from-primary-fixed/30 to-transparent blur-2xl -z-10 bottom-2"></div>
-                  <img
+                  <Image
                     alt="Khotimah, S.Pd. Toga Portrait"
                     className="w-auto max-h-[300px] sm:max-h-[360px] object-contain object-bottom drop-shadow-sm select-none"
                     src="/toga-khotimah.png"
+                    width={400}
+                    height={400}
+                    priority
                   />
                 </div>
 
@@ -87,10 +91,13 @@ export default function AboutUsPage() {
 
               <div className="hidden md:flex md:w-[44%] lg:w-[48%] lg:absolute lg:right-0 lg:bottom-0 lg:top-0 pointer-events-none select-none items-end justify-center lg:justify-end z-0">
                 <div className="absolute w-[340px] md:w-[380px] lg:w-[460px] h-[340px] md:h-[380px] lg:h-[460px] rounded-full bg-gradient-to-b from-primary-fixed/20 to-transparent blur-3xl -z-10 bottom-6 md:bottom-8 right-4 lg:right-6"></div>
-                <img
+                <Image
                   alt="Khotimah, S.Pd. Toga Portrait"
                   className="h-auto md:max-h-[480px] lg:max-h-[680px] w-auto object-contain object-bottom origin-bottom z-0"
                   src="/toga-khotimah.png"
+                  width={600}
+                  height={700}
+                  priority
                 />
               </div>
             </div>

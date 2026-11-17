@@ -5,6 +5,7 @@ import Link from 'next/link';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import AdminContentLoading from '@/components/admin/AdminContentLoading';
 import { scheduleApi } from '@/lib/api/schedules';
 import { studentApi } from '@/lib/api/students';
 import { Student, ScheduleAssignment } from '@/types';
@@ -27,22 +28,61 @@ function AdminScheduleStudentsContent() {
 
   const [students, setStudents] = useState<Student[]>([]);
   const [schedules, setSchedules] = useState<ScheduleAssignment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const isFirstMount = React.useRef(true);
 
-  // Load active students once
+  // Initial load: active students + initial month schedules with smooth 1.2s delay
   useEffect(() => {
-    async function loadStudents() {
+    let isMounted = true;
+    async function initData() {
+      const startTime = Date.now();
+      setIsLoading(true);
       try {
-        const res = await studentApi.getAll({ limit: 100 });
-        setStudents((res.students || []).filter((s) => !s.isDeleted));
+        const nowObj = new Date();
+        const monthStr = `${nowObj.getFullYear()}-${String(nowObj.getMonth() + 1).padStart(2, '0')}`;
+        const [studentsRes, schedulesRes] = await Promise.allSettled([
+          studentApi.getAll({ limit: 100 }),
+          scheduleApi.getByMonth(monthStr),
+        ]);
+
+        if (isMounted) {
+          if (studentsRes.status === 'fulfilled') {
+            setStudents((studentsRes.value.students || []).filter((s) => !s.isDeleted));
+          }
+          if (schedulesRes.status === 'fulfilled') {
+            const normalized = schedulesRes.value.map((sch) => ({
+              ...sch,
+              date: typeof sch.date === 'string' ? sch.date.split('T')[0] : new Date(sch.date).toISOString().split('T')[0],
+            }));
+            setSchedules(normalized);
+          }
+        }
       } catch (err) {
-        console.error('Failed to load students:', err);
+        console.error('Failed to load initial schedule data:', err);
+      } finally {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, 1200 - elapsed);
+        if (remaining > 0) {
+          await new Promise((res) => setTimeout(res, remaining));
+        }
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     }
-    loadStudents();
+
+    initData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // Load schedules whenever calendarDate changes
+  // Load schedules on subsequent month changes
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
     async function loadSchedules() {
       try {
         const monthStr = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, '0')}`;
@@ -171,12 +211,16 @@ function AdminScheduleStudentsContent() {
         <AdminHeader onToggleSidebar={() => setSidebarOpen(true)} />
 
         <main className="flex-1 px-4 sm:px-8 py-8 w-full space-y-8">
-          {/* Top Title */}
-          <div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Jadwal Siswa
-            </h1>
-          </div>
+          {isLoading ? (
+            <AdminContentLoading message="Memuat jadwal siswa..." />
+          ) : (
+            <>
+              {/* Top Title */}
+              <div>
+                <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Jadwal Siswa
+                </h1>
+              </div>
 
           <section className="flex flex-col">
             {/* Header Bagian: Hari Ini (atau Jadwal [Hari], [dd-mm-yyyy] jika klik tanggal selain hari ini) */}
@@ -679,6 +723,8 @@ function AdminScheduleStudentsContent() {
               </div>
             </div>
           </section>
+            </>
+          )}
         </main>
       </div>
     </div>

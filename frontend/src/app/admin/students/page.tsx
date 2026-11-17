@@ -6,12 +6,14 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import AdminContentLoading from '@/components/admin/AdminContentLoading';
 import { studentApi } from '@/lib/api/students';
 import { Student } from '@/types';
 
 function AdminStudentsContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [students, setStudents] = useState<Student[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Filter & Search states
   const [search, setSearch] = useState('');
@@ -38,6 +40,8 @@ function AdminStudentsContent() {
   }, []);
 
   const loadData = async () => {
+    const startTime = Date.now();
+    setIsLoading(true);
     try {
       const res = await studentApi.getAll({ limit: 100 });
       const all = (res.students || []).filter((s) => !s.isDeleted);
@@ -50,6 +54,13 @@ function AdminStudentsContent() {
     } catch (err: any) {
       console.error('Failed to load students:', err);
       setAlertMessage({ text: 'Gagal memuat data siswa.', type: 'error' });
+    } finally {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 1200 - elapsed);
+      if (remaining > 0) {
+        await new Promise((res) => setTimeout(res, remaining));
+      }
+      setIsLoading(false);
     }
   };
 
@@ -217,7 +228,11 @@ function AdminStudentsContent() {
         />
 
         <main className="flex-1 p-4 sm:p-8 space-y-6 w-full">
-          {alertMessage && (
+          {isLoading ? (
+            <AdminContentLoading message="Memuat data siswa dari server..." />
+          ) : (
+            <>
+              {alertMessage && (
             <div
               className={`p-4 rounded-xl border flex items-start justify-between gap-3 text-xs sm:text-sm transition-all ${alertMessage.type === 'error'
                 ? 'bg-rose-50 border-rose-200 text-rose-900'
@@ -745,6 +760,8 @@ function AdminStudentsContent() {
               </div>
             </div>
           </div>
+            </>
+          )}
         </main>
       </div>
 
