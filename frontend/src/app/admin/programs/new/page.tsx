@@ -76,22 +76,6 @@ function NewProgramContent() {
         />
 
         <main className="flex-1 p-4 sm:p-8 space-y-6 max-w-4xl w-full">
-          {/* Breadcrumb & Title */}
-          <div>
-            <Link
-              href="/admin/programs"
-              className="text-xs font-bold text-[#0284c7] hover:underline flex items-center gap-1 mb-2"
-            >
-              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-              <span>Kembali ke Daftar Program</span>
-            </Link>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-              Formulir Tambah Program Belajar
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Nomor urut tampilan (displayOrder) akan otomatis ditentukan oleh sistem pada posisi terakhir.
-            </p>
-          </div>
 
           {/* Form Card */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs">
@@ -105,7 +89,7 @@ function NewProgramContent() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="name">
-                  Nama Program Belajar *
+                  Nama Program *
                 </label>
                 <input
                   id="name"
@@ -120,7 +104,7 @@ function NewProgramContent() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="description">
-                  Deskripsi Lengkap Program *
+                  Deskripsi Program *
                 </label>
                 <textarea
                   id="description"
@@ -136,7 +120,7 @@ function NewProgramContent() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="gradeLevels">
-                    Jenjang Siswa Target * (Teks bebas)
+                    Kelas
                   </label>
                   <input
                     id="gradeLevels"
@@ -151,7 +135,7 @@ function NewProgramContent() {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="subjects">
-                    Mata Pelajaran Bimbingan * (Teks bebas)
+                    Mata Pelajaran *
                   </label>
                   <input
                     id="subjects"
@@ -168,7 +152,7 @@ function NewProgramContent() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5" htmlFor="fee">
-                    Biaya Bimbingan Bulanan (Rp) *
+                    Biaya Perhari *
                   </label>
                   <input
                     id="fee"
@@ -195,7 +179,7 @@ function NewProgramContent() {
                       className="w-4 h-4 text-[#0284c7] rounded focus:ring-[#0284c7]"
                     />
                     <span className="text-xs font-bold text-slate-800">
-                      Aktifkan Program (Tampil di Home &amp; Formulir)
+                      Aktifkan
                     </span>
                   </label>
                 </div>
@@ -213,7 +197,7 @@ function NewProgramContent() {
                   disabled={isSubmitting}
                   className="px-6 py-2.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5 disabled:opacity-70"
                 >
-                  {isSubmitting ? 'Menyimpan...' : 'Simpan Program Baru'}
+                  {isSubmitting ? 'Menyimpan...' : 'Simpan'}
                 </button>
               </div>
             </form>
