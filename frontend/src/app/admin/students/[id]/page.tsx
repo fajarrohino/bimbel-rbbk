@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import StatusBadge from '@/components/admin/StatusBadge';
-import ConfirmModal from '@/components/common/ConfirmModal';
+import ActionModal from '@/components/common/ActionModal';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import { studentApi } from '@/lib/api/students';
 import { studentProgramApi } from '@/lib/api/studentPrograms';
@@ -47,12 +47,22 @@ function StudentDetailContent() {
   const [selectedNewProgramId, setSelectedNewProgramId] = useState('');
   const [switchNote, setSwitchNote] = useState('');
 
-  // Reject Modal state
-  const [showRejectModal, setShowRejectModal] = useState(false);
-  const [rejectionReasonInput, setRejectionReasonInput] = useState('Ditolak');
+  // Unified Action Modal state (Approve, Reject, Nonaktifkan, Aktifkan, Hapus)
+  type DetailActionType = 'approve' | 'reject' | 'deactivate' | 'reactivate' | 'delete';
 
-  // Soft Delete Modal state
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [actionModal, setActionModal] = useState<{
+    isOpen: boolean;
+    type: DetailActionType;
+    step: 'confirm' | 'loading' | 'success' | 'error';
+    reason: string;
+    errorMessage: string;
+  }>({
+    isOpen: false,
+    type: 'approve',
+    step: 'confirm',
+    reason: '',
+    errorMessage: '',
+  });
 
   // Success / Error alerts
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -129,54 +139,227 @@ function StudentDetailContent() {
     }
   };
 
-  // 2. Accept Student (Pending -> Aktif, rejectionReason -> NULL) (PRD 6.3)
-  const handleAcceptStudent = async () => {
+  // 2. Action Modal Handlers (Approve, Reject, Deactivate, Reactivate, Delete)
+  const handleOpenApprove = () => {
+    setActionModal({
+      isOpen: true,
+      type: 'approve',
+      step: 'confirm',
+      reason: '',
+      errorMessage: '',
+    });
+  };
+
+  const handleOpenReject = () => {
+    setActionModal({
+      isOpen: true,
+      type: 'reject',
+      step: 'confirm',
+      reason: 'Ditolak',
+      errorMessage: '',
+    });
+  };
+
+  const handleOpenDeactivate = () => {
+    setActionModal({
+      isOpen: true,
+      type: 'deactivate',
+      step: 'confirm',
+      reason: 'Berhenti bimbingan belajar',
+      errorMessage: '',
+    });
+  };
+
+  const handleOpenReactivate = () => {
+    setActionModal({
+      isOpen: true,
+      type: 'reactivate',
+      step: 'confirm',
+      reason: '',
+      errorMessage: '',
+    });
+  };
+
+  const handleOpenDelete = () => {
+    if (student?.status !== 'Nonaktif') {
+      showToast('Hanya siswa berstatus "Nonaktif" yang dapat dihapus secara logis.', 'error');
+      return;
+    }
+    setActionModal({
+      isOpen: true,
+      type: 'delete',
+      step: 'confirm',
+      reason: '',
+      errorMessage: '',
+    });
+  };
+
+  const handleCloseActionModal = () => {
+    if (actionModal.step === 'loading') return;
+    setActionModal((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const handleExecuteAction = async () => {
     if (!student) return;
+    const { type, reason } = actionModal;
+
+    setActionModal((prev) => ({ ...prev, step: 'loading' }));
+    const startTime = Date.now();
+
     try {
-      await studentApi.updateStatus(student.id, { status: 'Aktif' });
-      showToast(`Pendaftaran ${student.name} berhasil diterima sebagai siswa Aktif!`);
-      loadData();
+      if (type === 'approve') {
+        await studentApi.updateStatus(student.id, { status: 'Aktif' });
+      } else if (type === 'reject') {
+        await studentApi.updateStatus(student.id, {
+          status: 'Nonaktif',
+          rejectionReason: reason.trim() || 'Pendaftaran ditolak',
+        });
+      } else if (type === 'deactivate') {
+        await studentApi.updateStatus(student.id, {
+          status: 'Nonaktif',
+          rejectionReason: reason.trim() || 'Nonaktif',
+        });
+      } else if (type === 'reactivate') {
+        await studentApi.updateStatus(student.id, { status: 'Aktif' });
+      } else if (type === 'delete') {
+        await studentApi.delete(student.id);
+      }
+
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 1000 - elapsed);
+      if (remaining > 0) {
+        await new Promise((res) => setTimeout(res, remaining));
+      }
+
+      if (type !== 'delete') {
+        await loadData();
+      }
+
+      setActionModal((prev) => ({ ...prev, step: 'success' }));
     } catch (err: any) {
-      showToast(err.message || 'Gagal menerima siswa.', 'error');
+      console.error('Detail action error:', err);
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 1000 - elapsed);
+      if (remaining > 0) {
+        await new Promise((res) => setTimeout(res, remaining));
+      }
+      setActionModal((prev) => ({
+        ...prev,
+        step: 'error',
+        errorMessage: err.message || 'Terjadi kesalahan saat memproses tindakan.',
+      }));
     }
   };
 
-  // 3. Reject Student (Pending -> Nonaktif, rejectionReason disimpan) (PRD 6.3)
-  const handleRejectStudent = async () => {
-    if (!student) return;
-    const reason = rejectionReasonInput.trim() || 'Ditolak';
-    try {
-      await studentApi.updateStatus(student.id, { status: 'Nonaktif', rejectionReason: reason });
-      setShowRejectModal(false);
-      showToast(`Pendaftaran ${student.name} ditolak (Status: Nonaktif). Alasan: ${reason}`);
-      loadData();
-    } catch (err: any) {
-      showToast(err.message || 'Gagal menolak pendaftaran.', 'error');
-    }
-  };
-
-  // 4. Deactivate Student (Aktif -> Nonaktif)
-  const handleDeactivateStudent = async () => {
-    if (!student) return;
-    const reason = prompt('Masukkan alasan penonaktifan (opsional):', 'Berhenti bimbingan') || 'Nonaktif';
-    try {
-      await studentApi.updateStatus(student.id, { status: 'Nonaktif', rejectionReason: reason });
-      showToast(`Status siswa ${student.name} diubah menjadi Nonaktif.`);
-      loadData();
-    } catch (err: any) {
-      showToast(err.message || 'Gagal menonaktifkan siswa.', 'error');
-    }
-  };
-
-  // 5. Reactivate Student (Nonaktif -> Aktif, rejectionReason -> NULL)
-  const handleReactivateStudent = async () => {
-    if (!student) return;
-    try {
-      await studentApi.updateStatus(student.id, { status: 'Aktif' });
-      showToast(`Siswa ${student.name} berhasil diaktifkan kembali!`);
-      loadData();
-    } catch (err: any) {
-      showToast(err.message || 'Gagal mengaktifkan kembali siswa.', 'error');
+  // Helper for Modal Configuration
+  const getModalConfig = () => {
+    const sName = student ? capitalizeWords(student.name) : 'Siswa';
+    switch (actionModal.type) {
+      case 'approve':
+        return {
+          variant: 'success' as const,
+          icon: 'how_to_reg',
+          title: 'Persetujuan Siswa Baru',
+          description: (
+            <span>
+              Apakah Anda yakin ingin menyetujui pendaftaran <strong>{sName}</strong>?
+            </span>
+          ),
+          confirmText: 'Approve',
+          loadingTitle: 'Memproses Persetujuan Siswa...',
+          // loadingMessage: `Sedang memperbarui status pendaftaran ${sName} menjadi Siswa Aktif.`,
+          successTitle: 'Persetujuan Berhasil!',
+          successMessage: (
+            <span>
+              Siswa <strong>{sName}</strong> resmi menjadi siswa aktif.
+            </span>
+          ),
+          errorTitle: 'Gagal Menyetujui Siswa Baru',
+        };
+      case 'reject':
+        return {
+          variant: 'danger' as const,
+          icon: 'person_cancel',
+          title: 'Penolakan Siswa Baru',
+          description: (
+            <span>
+              Penolakan siswa <strong>{sName}</strong>  akan mengubah statusnya menjadi Nonaktif.
+            </span>
+          ),
+          confirmText: 'Tolak',
+          loadingTitle: 'Memproses Penolakan Pendaftaran...',
+          // loadingMessage: `Sedang menyimpan status penolakan pendaftaran untuk ${sName}.`,
+          successTitle: 'Pendaftaran Telah Ditolak',
+          successMessage: (
+            <span>
+              Pendaftaran siswa <strong>{sName}</strong> telah ditolak Status: Nonaktif.
+            </span>
+          ),
+          errorTitle: 'Gagal Menolak Pendaftaran',
+        };
+      case 'deactivate':
+        return {
+          variant: 'warning' as const,
+          icon: 'person_off',
+          title: 'Konfirmasi Penonaktifan Siswa',
+          description: (
+            <span>
+              Apakah Anda yakin ingin menonaktifkan siswa <strong>{sName}</strong>? Siswa tidak akan muncul di plotting jadwal aktif.
+            </span>
+          ),
+          confirmText: 'Nonaktifkan Siswa',
+          loadingTitle: 'Memproses Penonaktifan Siswa...',
+          // loadingMessage: `Sedang mengubah status siswa ${sName} menjadi Nonaktif.`,
+          successTitle: 'Siswa Berhasil Dinonaktifkan',
+          successMessage: (
+            <span>
+              Status siswa <strong>{sName}</strong> berhasil diubah menjadi Nonaktif.
+            </span>
+          ),
+          errorTitle: 'Gagal Menonaktifkan Siswa',
+        };
+      case 'reactivate':
+        return {
+          variant: 'success' as const,
+          icon: 'person_check',
+          title: 'Pengaktifan Kembali Siswa',
+          description: (
+            <span>
+              Apakah Anda yakin ingin mengaktifkan kembali siswa <strong>{sName}</strong> menjadi Siswa Aktif?
+            </span>
+          ),
+          confirmText: 'Aktifkan',
+          loadingTitle: 'Memproses Pengaktifan Kembali...',
+          // loadingMessage: `Sedang mengembalikan status siswa ${sName} menjadi Siswa Aktif.`,
+          successTitle: 'Siswa Berhasil Diaktifkan!',
+          successMessage: (
+            <span>
+              Siswa <strong>{sName}</strong> kini telah aktif kembali dan dapat dijadwalkan kembali.
+            </span>
+          ),
+          errorTitle: 'Gagal Mengaktifkan Siswa',
+        };
+      case 'delete':
+        return {
+          variant: 'danger' as const,
+          icon: 'delete_forever',
+          title: 'Hapus Siswa',
+          description: (
+            <span>
+              Apakah Anda yakin ingin menghapus data siswa <strong>&ldquo;{sName}&rdquo;</strong>?
+            </span>
+          ),
+          confirmText: 'Hapus',
+          loadingTitle: 'Menghapus Data Siswa...',
+          // loadingMessage: `Sedang menghapus data siswa ${sName} secara logis dari sistem.`,
+          successTitle: 'Data Siswa Berhasil Dihapus',
+          successMessage: (
+            <span>
+              Data siswa <strong>&ldquo;{sName}&rdquo;</strong> telah berhasil dihapus.
+            </span>
+          ),
+          errorTitle: 'Gagal Menghapus Siswa',
+        };
     }
   };
 
@@ -198,25 +381,6 @@ function StudentDetailContent() {
       loadData();
     } catch (err: any) {
       showToast(err.message || 'Gagal memindahkan program siswa.', 'error');
-    }
-  };
-
-  // 7. Soft Delete (Hanya jika Nonaktif) (PRD 6.3)
-  const handleSoftDelete = async () => {
-    if (!student) return;
-    if (student.status !== 'Nonaktif') {
-      showToast('Hanya siswa berstatus Nonaktif yang dapat dihapus secara logis.', 'error');
-      setShowDeleteModal(false);
-      return;
-    }
-
-    try {
-      await studentApi.delete(student.id);
-      setShowDeleteModal(false);
-      showToast(`Data siswa "${student.name}" berhasil dihapus secara logis.`);
-      router.push('/admin/students');
-    } catch (err: any) {
-      showToast(err.message || 'Gagal menghapus siswa.', 'error');
     }
   };
 
@@ -277,7 +441,7 @@ function StudentDetailContent() {
                 <>
                   <button
                     type="button"
-                    onClick={handleAcceptStudent}
+                    onClick={handleOpenApprove}
                     className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[18px]">check_circle</span>
@@ -285,10 +449,7 @@ function StudentDetailContent() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      setRejectionReasonInput('Ditolak');
-                      setShowRejectModal(true);
-                    }}
+                    onClick={handleOpenReject}
                     className="px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[18px]">cancel</span>
@@ -300,7 +461,7 @@ function StudentDetailContent() {
               {student.status === 'Aktif' && (
                 <button
                   type="button"
-                  onClick={handleDeactivateStudent}
+                  onClick={handleOpenDeactivate}
                   className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors flex items-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-[18px]">person_off</span>
@@ -312,7 +473,7 @@ function StudentDetailContent() {
                 <>
                   <button
                     type="button"
-                    onClick={handleReactivateStudent}
+                    onClick={handleOpenReactivate}
                     className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[18px]">person_check</span>
@@ -320,7 +481,7 @@ function StudentDetailContent() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setShowDeleteModal(true)}
+                    onClick={handleOpenDelete}
                     className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -480,9 +641,9 @@ function StudentDetailContent() {
                     onChange={(e) => setPreferredSession(Number(e.target.value) as ScheduleSession)}
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
                   >
-                    <option value={1}>Sesi 1 (14.00 – 15.00 WIB)</option>
-                    <option value={2}>Sesi 2 (16.00 – 17.00 WIB)</option>
-                    <option value={3}>Sesi 3 (19.00 – 20.00 WIB)</option>
+                    <option value={1}>Sesi 1 (14.00 - 15.00 WIB)</option>
+                    <option value={2}>Sesi 2 (16.00 - 17.00 WIB)</option>
+                    <option value={3}>Sesi 3 (19.00 - 20.00 WIB)</option>
                   </select>
                 </div>
 
@@ -505,13 +666,12 @@ function StudentDetailContent() {
                     className="px-5 py-2.5 rounded-xl bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold text-xs shadow-sm transition-colors flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[16px]">save</span>
-                    <span>Simpan Perubahan Identitas</span>
+                    <span>Simpan</span>
                   </button>
                 </div>
               </form>
             </div>
 
-            {/* Right Column: Riwayat Program Belajar (5 Cols) (PRD Section 6.5) */}
             <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2">
@@ -587,48 +747,6 @@ function StudentDetailContent() {
         </main>
       </div>
 
-      {showRejectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-6 space-y-4">
-            <h3 className="text-base font-bold text-slate-900">Tolak Pendaftaran Siswa Baru</h3>
-            <p className="text-xs text-slate-600">
-              Status siswa akan diubah menjadi <strong>Nonaktif</strong>
-            </p>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Alasan, default: Ditolak
-              </label>
-              <input
-                type="text"
-                value={rejectionReasonInput}
-                onChange={(e) => setRejectionReasonInput(e.target.value)}
-                placeholder="Contoh: Kuota sesi penuh / Jadwal tidak cocok"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0284c7]"
-              />
-            </div>
-
-            <div className="pt-2 flex items-center justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setShowRejectModal(false)}
-                className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                onClick={handleRejectStudent}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold"
-              >
-                Tolak
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Switch Program Modal (PRD Section 6.5) */}
       {showSwitchProgramModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-6 space-y-4">
@@ -693,17 +811,70 @@ function StudentDetailContent() {
         </div>
       )}
 
-      {/* Soft Delete Modal */}
-      <ConfirmModal
-        isOpen={showDeleteModal}
-        title={`Yakin akan dihapus?`}
-        message={`Siswa ${name} akan dihapus`}
-        confirmText="Hapus"
-        cancelText="Batal"
-        variant="danger"
-        onConfirm={handleSoftDelete}
-        onCancel={() => setShowDeleteModal(false)}
-      />
+      {actionModal.isOpen && student && (
+        <ActionModal
+          isOpen={actionModal.isOpen}
+          step={actionModal.step}
+          variant={getModalConfig().variant}
+          icon={getModalConfig().icon}
+          title={getModalConfig().title}
+          description={getModalConfig().description}
+          confirmText={getModalConfig().confirmText}
+          cancelText="Batal"
+          confirmDisabled={actionModal.type === 'reject' && !actionModal.reason.trim()}
+          onConfirm={handleExecuteAction}
+          onCancel={handleCloseActionModal}
+          loadingTitle={getModalConfig().loadingTitle}
+          // loadingMessage={getModalConfig().loadingMessage}
+          successTitle={getModalConfig().successTitle}
+          successMessage={getModalConfig().successMessage}
+          successButtonText="Selesai"
+          onSuccessClose={() => {
+            if (actionModal.type === 'delete') {
+              router.push('/admin/students');
+            } else {
+              handleCloseActionModal();
+            }
+          }}
+          errorTitle={getModalConfig().errorTitle}
+          errorMessage={actionModal.errorMessage}
+          onRetry={handleExecuteAction}
+          onErrorClose={handleCloseActionModal}
+        >
+          {/* Form alasan jika reject atau nonaktifkan */}
+          {(actionModal.type === 'reject' || actionModal.type === 'deactivate') && (
+            <div className="space-y-1.5 text-left">
+              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>{actionModal.type === 'reject' ? 'Alasan Penolakan:' : 'Alasan Penonaktifan:'}</span>
+                <span className="text-[11px] font-normal text-rose-500">
+                  {actionModal.type === 'reject' ? '*wajib diisi' : '(opsional)'}
+                </span>
+              </label>
+              <textarea
+                rows={3}
+                value={actionModal.reason}
+                onChange={(e) => setActionModal((prev) => ({ ...prev, reason: e.target.value }))}
+                className="w-full p-3 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#006194] text-slate-800"
+                placeholder={
+                  actionModal.type === 'reject'
+                    ? 'Masukkan alasan penolakan pendaftaran...'
+                    : 'Masukkan alasan penonaktifan siswa...'
+                }
+              />
+            </div>
+          )}
+
+          {/* Info keamanan untuk soft delete */}
+          {/* {actionModal.type === 'delete' && (
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200/80 text-rose-800 text-xs flex items-start gap-2.5 text-left">
+              <span className="material-symbols-outlined text-[20px] text-rose-600 shrink-0">info</span>
+              <span className="leading-relaxed">
+                Tindakan ini aman dan tidak akan merusak relasi database riwayat bimbingan atau presensi terdahulu.
+              </span>
+            </div>
+          )} */}
+        </ActionModal>
+      )}
     </div>
   );
 }

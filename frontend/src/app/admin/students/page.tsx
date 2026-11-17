@@ -7,6 +7,7 @@ import AdminHeader from '@/components/admin/AdminHeader';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import AdminContentLoading from '@/components/admin/AdminContentLoading';
+import StudentApprovalModal from '@/components/admin/StudentApprovalModal';
 import { studentApi } from '@/lib/api/students';
 import { Student } from '@/types';
 
@@ -28,12 +29,22 @@ function AdminStudentsContent() {
   const [deleteTarget, setDeleteTarget] = useState<Student | null>(null);
   const [alertMessage, setAlertMessage] = useState<{ text: string; type: 'error' | 'success' } | null>(null);
 
-  // Quick action confirmation for pending approval / rejection
-  const [pendingActionTarget, setPendingActionTarget] = useState<{
-    student: Student;
+  // Action modal state for Pending Approval / Rejection (Confirm -> Loading -> Success / Error)
+  const [actionModal, setActionModal] = useState<{
+    isOpen: boolean;
+    student: Student | null;
     action: 'approve' | 'reject';
-  } | null>(null);
-  const [rejectReason, setRejectReason] = useState('Pendaftaran ditolak oleh admin');
+    step: 'confirm' | 'loading' | 'success' | 'error';
+    rejectReason: string;
+    errorMessage: string;
+  }>({
+    isOpen: false,
+    student: null,
+    action: 'approve',
+    step: 'confirm',
+    rejectReason: 'Kuota bimbingan penuh / Tidak memenuhi syarat',
+    errorMessage: '',
+  });
 
   useEffect(() => {
     loadData();
@@ -172,41 +183,79 @@ function AdminStudentsContent() {
     }
   };
 
-  // Pending quick action approval / rejection
-  const handleApprovePending = async (std: Student) => {
-    try {
-      await studentApi.updateStatus(std.id, { status: 'Aktif' });
-      setPendingActionTarget(null);
-      setAlertMessage({
-        text: `Siswa "${std.name}" berhasil disetujui & diaktifkan!`,
-        type: 'success',
-      });
-      await loadData();
-    } catch (err: any) {
-      setAlertMessage({
-        text: err.message || 'Gagal menyetujui siswa.',
-        type: 'error',
-      });
-    }
+  // Pending quick action approval / rejection with confirmation, loading, & result modal
+  const handleOpenApproveModal = (std: Student) => {
+    setActionModal({
+      isOpen: true,
+      student: std,
+      action: 'approve',
+      step: 'confirm',
+      rejectReason: '',
+      errorMessage: '',
+    });
   };
 
-  const handleRejectPending = async (std: Student) => {
+  const handleOpenRejectModal = (std: Student) => {
+    setActionModal({
+      isOpen: true,
+      student: std,
+      action: 'reject',
+      step: 'confirm',
+      rejectReason: 'Ditolak',
+      errorMessage: '',
+    });
+  };
+
+  const handleCloseActionModal = () => {
+    if (actionModal.step === 'loading') return;
+    setActionModal((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const handleExecuteAction = async () => {
+    if (!actionModal.student) return;
+    const std = actionModal.student;
+    const action = actionModal.action;
+    const reason = actionModal.rejectReason;
+
+    setActionModal((prev) => ({ ...prev, step: 'loading' }));
+    const startTime = Date.now();
+
     try {
-      await studentApi.updateStatus(std.id, {
-        status: 'Nonaktif',
-        rejectionReason: rejectReason.trim() || 'Pendaftaran ditolak',
-      });
-      setPendingActionTarget(null);
-      setAlertMessage({
-        text: `Pendaftaran "${std.name}" telah ditolak (Status: Nonaktif).`,
-        type: 'success',
-      });
+      if (action === 'approve') {
+        await studentApi.updateStatus(std.id, { status: 'Aktif' });
+      } else {
+        await studentApi.updateStatus(std.id, {
+          status: 'Nonaktif',
+          rejectionReason: reason.trim() || 'Pendaftaran ditolak oleh admin',
+        });
+      }
+
+      // Beri jeda loading yang nyaman (1 - 1.5 detik) agar transisi jelas terlihat
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 1000 - elapsed);
+      if (remaining > 0) {
+        await new Promise((res) => setTimeout(res, remaining));
+      }
+
+      // Refresh data siswa di latar belakang
       await loadData();
+
+      setActionModal((prev) => ({
+        ...prev,
+        step: 'success',
+      }));
     } catch (err: any) {
-      setAlertMessage({
-        text: err.message || 'Gagal menolak pendaftaran.',
-        type: 'error',
-      });
+      console.error('Pending action error:', err);
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 1000 - elapsed);
+      if (remaining > 0) {
+        await new Promise((res) => setTimeout(res, remaining));
+      }
+      setActionModal((prev) => ({
+        ...prev,
+        step: 'error',
+        errorMessage: err.message || `Gagal ${action === 'approve' ? 'menyetujui' : 'menolak'} pendaftaran siswa.`,
+      }));
     }
   };
 
@@ -393,7 +442,6 @@ function AdminStudentsContent() {
                             <th className="py-3 px-4">Kontak</th>
                             <th className="py-3 px-4">Program Belajar</th>
                             <th className="py-3 px-4">Sesi</th>
-                            {/* <th className="py-3 px-4 text-center">Status</th> */}
                             <th className="py-3 px-4 text-right">Verifikasi Cepat</th>
                           </tr>
                         </thead>
@@ -432,36 +480,28 @@ function AdminStudentsContent() {
                                   Sesi {std.preferredSession}
                                 </span>
                               </td>
-                              {/* <td className="py-3.5 px-4 text-center">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[11px]">
-                              Pending
-                            </span>
-                          </td> */}
                               <td className="py-3.5 px-4 text-right">
                                 <div className="flex items-center justify-end gap-1.5">
                                   {/* Setujui */}
                                   <button
                                     type="button"
-                                    onClick={() => handleApprovePending(std)}
+                                    onClick={() => handleOpenApproveModal(std)}
                                     className="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs inline-flex items-center gap-1 shadow-xs transition-colors"
                                     title="Setujui pendaftaran menjadi Siswa Aktif"
                                   >
                                     <span className="material-symbols-outlined text-[15px]">check</span>
-                                    <span>Approv</span>
+                                    <span>Approve</span>
                                   </button>
 
                                   {/* Tolak */}
                                   <button
                                     type="button"
-                                    onClick={() => {
-                                      setPendingActionTarget({ student: std, action: 'reject' });
-                                      setRejectReason('Kuota bimbingan penuh / Tidak memenuhi syarat');
-                                    }}
+                                    onClick={() => handleOpenRejectModal(std)}
                                     className="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs inline-flex items-center gap-1 border border-rose-200 transition-colors"
                                     title="Tolak pendaftaran"
                                   >
                                     <span className="material-symbols-outlined text-[15px]">close</span>
-                                    <span>Tolak</span>
+                                    <span>Reject</span>
                                   </button>
 
                                   {/* Detail */}
@@ -483,7 +523,6 @@ function AdminStudentsContent() {
                 </div>
               )}
 
-              {/* Search & Multi-Filter Bar (Design Sesuai Gambar Figma/HTML) */}
               <div className="p-4 rounded-2xl bg-white shadow-xs border border-slate-200/70 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
                 {/* Input Search */}
                 <div className="relative flex-1 min-w-[240px]">
@@ -548,9 +587,6 @@ function AdminStudentsContent() {
                 </div>
               </div>
 
-              {/* ========================================================================= */}
-              {/* TABEL DATA SISWA UTAMA (SUSUNAN: NAMA, ORANG TUA, KONTAK, PROGRAM, SESI, STATUS, AKSI) */}
-              {/* ========================================================================= */}
               <div className="rounded-2xl bg-white shadow-xs border border-slate-200/70 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs sm:text-sm">
@@ -765,54 +801,21 @@ function AdminStudentsContent() {
         </main>
       </div>
 
-      {/* Reject Modal for Pending Student */}
-      {pendingActionTarget && pendingActionTarget.action === 'reject' && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">cancel</span>
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900">Tolak Pendaftaran Siswa</h3>
-                <p className="text-xs text-slate-500">{pendingActionTarget.student.name}</p>
-              </div>
-            </div>
+      <StudentApprovalModal
+        isOpen={actionModal.isOpen}
+        student={actionModal.student}
+        programName={actionModal.student ? studentProgramMap[actionModal.student.id] : undefined}
+        action={actionModal.action}
+        step={actionModal.step}
+        rejectReason={actionModal.rejectReason}
+        errorMessage={actionModal.errorMessage}
+        onRejectReasonChange={(reason) =>
+          setActionModal((prev) => ({ ...prev, rejectReason: reason }))
+        }
+        onConfirm={handleExecuteAction}
+        onClose={handleCloseActionModal}
+      />
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700">
-                Alasan Penolakan:
-              </label>
-              <textarea
-                rows={3}
-                value={rejectReason}
-                onChange={(e) => setRejectReason(e.target.value)}
-                className="w-full p-3 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
-                placeholder="Masukkan alasan penolakan pendaftaran..."
-              />
-            </div>
-
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setPendingActionTarget(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                onClick={() => handleRejectPending(pendingActionTarget.student)}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs"
-              >
-                Tolak Pendaftaran
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Confirm Soft Delete Modal (PRD Section 6.3 & 13.4) */}
       <ConfirmModal
         isOpen={Boolean(deleteTarget)}
         title="Konfirmasi Hapus Siswa (Soft Delete)"
