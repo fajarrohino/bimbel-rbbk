@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
@@ -17,6 +17,7 @@ function AdminProgramsContent() {
   const [detailTarget, setDetailTarget] = useState<Program | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'aktif' | 'nonaktif'>('all');
 
   useEffect(() => {
     loadPrograms();
@@ -71,9 +72,17 @@ function AdminProgramsContent() {
     }
   };
 
-  const activeCount = programs.filter((p) => p.isActive).length;
-  const inactiveCount = programs.filter((p) => !p.isActive).length;
+  const activeCount = useMemo(() => programs.filter((p) => p.isActive).length, [programs]);
+  const inactiveCount = useMemo(() => programs.filter((p) => !p.isActive).length, [programs]);
   const totalCount = programs.length;
+
+  const filteredPrograms = useMemo(() => {
+    return programs.filter((p) => {
+      if (statusFilter === 'aktif') return p.isActive;
+      if (statusFilter === 'nonaktif') return !p.isActive;
+      return true;
+    });
+  }, [programs, statusFilter]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans">
@@ -81,70 +90,171 @@ function AdminProgramsContent() {
       <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
+          title='Program Belajar'
         />
-        <main className="flex-1 p-6 sm:p-8 max-w-7xl w-full">
+        <main className="flex-1 p-4 sm:p-8 space-y-6 max-w-7xl w-full">
           {isLoading ? (
             <AdminContentLoading />
           ) : (
             <>
-              <div className="flex items-center justify-between mb-8">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                  Program Belajar
-                </h1>
-                <Link
-                  href="/admin/programs/new"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#0284c7] hover:bg-[#0369a1] text-white font-semibold text-sm shadow-sm transition-all active:scale-95 shrink-0"
-                >
-                  <span className="material-symbols-outlined text-[20px]">add</span>
-                  <span>Program Baru</span>
-                </Link>
+              {toastMessage && (
+                <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-900 flex items-center justify-between gap-3 text-xs sm:text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[20px] text-emerald-600">check_circle</span>
+                    <span>{toastMessage}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setToastMessage(null)}
+                    className="font-bold hover:opacity-70 text-base leading-none"
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
+
+              {/* Statistics Cards - Desain persis seperti Data Siswa */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-white shadow-xs border border-slate-200/70">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  {/* Card 1: Program Aktif */}
+                  <button
+                    type="button"
+                    onClick={() => setStatusFilter(statusFilter === 'aktif' ? 'all' : 'aktif')}
+                    className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${
+                      statusFilter === 'aktif'
+                        ? 'bg-emerald-50/90 border-emerald-400 ring-2 ring-emerald-500/20 shadow-xs'
+                        : 'bg-gradient-to-br from-emerald-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-emerald-300 hover:shadow-xs'
+                    }`}
+                    title="Klik untuk memfilter Program Aktif"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        Program Aktif
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <span className="material-symbols-outlined text-[22px]">check_circle</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
+                        {activeCount}
+                      </span>
+                      <span className="text-xs font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                        Program Aktif
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Card 2: Program Non Aktif */}
+                  <button
+                    type="button"
+                    onClick={() => setStatusFilter(statusFilter === 'nonaktif' ? 'all' : 'nonaktif')}
+                    className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${
+                      statusFilter === 'nonaktif'
+                        ? 'bg-purple-50/90 border-purple-400 ring-2 ring-purple-500/20 shadow-xs'
+                        : 'bg-gradient-to-br from-purple-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-purple-300 hover:shadow-xs'
+                    }`}
+                    title="Klik untuk memfilter Program Non Aktif"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-purple-400" />
+                        Program Non Aktif
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <span className="material-symbols-outlined text-[22px]">pause_circle</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
+                        {inactiveCount}
+                      </span>
+                      <span className="text-xs font-bold text-purple-700 bg-purple-100/70 px-2 py-0.5 rounded-md">
+                        Nonaktif
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Card 3: Total Program */}
+                  <button
+                    type="button"
+                    onClick={() => setStatusFilter('all')}
+                    className={`p-4 sm:p-4.5 rounded-xl text-left border flex flex-col justify-between transition-all cursor-pointer w-full group ${
+                      statusFilter === 'all'
+                        ? 'bg-sky-50/90 border-sky-400 ring-2 ring-sky-500/20 shadow-xs'
+                        : 'bg-gradient-to-br from-sky-50/40 via-white to-slate-50/50 border-slate-200/70 hover:border-sky-300 hover:shadow-xs'
+                    }`}
+                    title="Klik untuk menampilkan Semua Program"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-sky-500" />
+                        Total Program
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-sky-100 text-[#006194] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <span className="material-symbols-outlined text-[22px]">menu_book</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-[#131b2e]">
+                        {totalCount}
+                      </span>
+                      <span className="text-xs font-bold text-[#006194] bg-sky-100/70 px-2 py-0.5 rounded-md">
+                        Semua Program
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Card 4: Action Card Tambah Program */}
+                  <Link
+                    href="/admin/programs/new"
+                    className="p-4 sm:p-4.5 rounded-xl bg-gradient-to-br from-[#006194] to-[#0284c7] hover:from-[#004b73] hover:to-[#006194] text-white shadow-xs hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer active:scale-[0.98]"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xs font-bold text-sky-100 uppercase tracking-wider flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[15px]">add_circle</span>
+                        Program Baru
+                      </span>
+                      <span className="material-symbols-outlined text-[18px] text-sky-200 group-hover:translate-x-1 transition-transform">
+                        arrow_forward
+                      </span>
+                    </div>
+                    <div className="mt-3 flex items-center justify-between w-full">
+                      <div>
+                        <h3 className="text-base sm:text-lg font-black text-white leading-tight">
+                          Tambah Program
+                        </h3>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-white/20 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-[22px]">add</span>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                      Program Aktif
-                    </p>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-                      {activeCount} Program
-                    </h3>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[28px]">check_circle</span>
-                  </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                      Program Non Aktif
-                    </p>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-                      {inactiveCount} Program
-                    </h3>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[28px]">pause_circle</span>
-                  </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
-                      Total Program
-                    </p>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0284c7]">
-                      {totalCount} Program
-                    </h3>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl bg-sky-50 text-[#0284c7] flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[28px]">menu_book</span>
-                  </div>
-                </div>
-              </div>
-
+              {/* Tabel Program */}
               <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+                {statusFilter !== 'all' && (
+                  <div className="px-6 py-3 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between text-xs">
+                    <span className="text-slate-600 font-medium">
+                      Filter aktif:{' '}
+                      <strong className="text-slate-900 font-bold">
+                        {statusFilter === 'aktif' ? 'Program Aktif' : 'Program Non Aktif'}
+                      </strong>{' '}
+                      ({filteredPrograms.length} program ditemukan)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setStatusFilter('all')}
+                      className="text-[#006194] hover:underline font-bold inline-flex items-center gap-1"
+                    >
+                      <span className="material-symbols-outlined text-[15px]">close</span>
+                      <span>Reset Filter</span>
+                    </button>
+                  </div>
+                )}
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
@@ -156,83 +266,87 @@ function AdminProgramsContent() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {programs.map((item, index) => {
-                        const isEnable = item.isActive;
-                        return (
-                          <tr
-                            key={item.id}
-                            className="hover:bg-slate-50/70 transition-colors"
-                          >
-                            <td className="py-4 px-6 text-center text-slate-500 font-semibold text-sm">
-                              {index + 1}
-                            </td>
-                            <td className="py-4 px-6">
-                              <span className="font-bold text-slate-900 text-sm sm:text-[15px]">
-                                {item.name}
-                              </span>
-                            </td>
-                            <td className="py-4 px-6 text-center">
-                              <button
-                                type="button"
-                                onClick={() => handleToggleActive(item)}
-                                title="Klik untuk ubah status Enable / Disable"
-                                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all ${isEnable
-                                  ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                                  }`}
-                              >
-                                <span
-                                  className={`w-1.5 h-1.5 rounded-full ${isEnable ? 'bg-emerald-500' : 'bg-slate-400'
-                                    }`}
-                                />
-                                <span>{isEnable ? 'Enable' : 'Disable'}</span>
-                              </button>
-                            </td>
-                            <td className="py-4 px-6 text-center">
-                              <div className="inline-flex items-center justify-center gap-1.5">
-                                <button
-                                  type="button"
-                                  onClick={() => setDetailTarget(item)}
-                                  title="Lihat Detail Program"
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-[#0284c7] hover:bg-sky-50 transition-colors"
-                                >
-                                  <span className="material-symbols-outlined text-[20px]">
-                                    visibility
-                                  </span>
-                                </button>
-
-                                <Link
-                                  href={`/admin/programs/${item.id}/edit`}
-                                  title="Edit Program"
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
-                                >
-                                  <span className="material-symbols-outlined text-[20px]">
-                                    edit
-                                  </span>
-                                </Link>
-
-                                <button
-                                  type="button"
-                                  onClick={() => setDeleteTarget(item)}
-                                  title="Hapus Program"
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                                >
-                                  <span className="material-symbols-outlined text-[20px]">
-                                    delete
-                                  </span>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-
-                      {programs.length === 0 && (
+                      {filteredPrograms.length === 0 ? (
                         <tr>
-                          <td colSpan={4} className="py-12 text-center text-slate-400 text-sm">
-                            Belum ada program belajar yang ditambahkan.
+                          <td colSpan={4} className="py-12 text-center text-slate-400 text-sm font-semibold">
+                            {statusFilter !== 'all'
+                              ? `Tidak ada program dengan status "${statusFilter === 'aktif' ? 'Aktif' : 'Non Aktif'}".`
+                              : 'Belum ada program belajar yang ditambahkan.'}
                           </td>
                         </tr>
+                      ) : (
+                        filteredPrograms.map((item, index) => {
+                          const isEnable = item.isActive;
+                          return (
+                            <tr
+                              key={item.id}
+                              className="hover:bg-slate-50/70 transition-colors"
+                            >
+                              <td className="py-4 px-6 text-center text-slate-500 font-semibold text-sm">
+                                {index + 1}
+                              </td>
+                              <td className="py-4 px-6">
+                                <span className="font-bold text-slate-900 text-sm sm:text-[15px]">
+                                  {item.name}
+                                </span>
+                              </td>
+                              <td className="py-4 px-6 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleActive(item)}
+                                  title="Klik untuk ubah status Enable / Disable"
+                                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all ${
+                                    isEnable
+                                      ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                  }`}
+                                >
+                                  <span
+                                    className={`w-1.5 h-1.5 rounded-full ${
+                                      isEnable ? 'bg-emerald-500' : 'bg-slate-400'
+                                    }`}
+                                  />
+                                  <span>{isEnable ? 'Enable' : 'Disable'}</span>
+                                </button>
+                              </td>
+                              <td className="py-4 px-6 text-center">
+                                <div className="inline-flex items-center justify-center gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => setDetailTarget(item)}
+                                    title="Lihat Detail Program"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-[#0284c7] hover:bg-sky-50 transition-colors"
+                                  >
+                                    <span className="material-symbols-outlined text-[20px]">
+                                      visibility
+                                    </span>
+                                  </button>
+
+                                  <Link
+                                    href={`/admin/programs/${item.id}/edit`}
+                                    title="Edit Program"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                                  >
+                                    <span className="material-symbols-outlined text-[20px]">
+                                      edit
+                                    </span>
+                                  </Link>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => setDeleteTarget(item)}
+                                    title="Hapus Program"
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                                  >
+                                    <span className="material-symbols-outlined text-[20px]">
+                                      delete
+                                    </span>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
                       )}
                     </tbody>
                   </table>

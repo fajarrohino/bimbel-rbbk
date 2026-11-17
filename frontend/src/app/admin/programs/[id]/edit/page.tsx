@@ -97,16 +97,11 @@ function EditProgramContent() {
       <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(true)}
+          title='Edit Program Belajar'
         />
 
         <main className="flex-1 p-4 sm:p-8 space-y-6 max-w-4xl w-full">
-          <div>
 
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-              Perbarui Program
-            </h1>
-
-          </div>
 
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs">
             {error && (
