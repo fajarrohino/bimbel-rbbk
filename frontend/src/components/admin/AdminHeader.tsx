@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/authContext';
+import ActionModal from '@/components/common/ActionModal';
 
 interface AdminHeaderProps {
   onToggleSidebar?: () => void;
@@ -14,10 +15,22 @@ export default function AdminHeader({ onToggleSidebar, title }: AdminHeaderProps
   const { logout, user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const profileContainerRef = useRef<HTMLDivElement>(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [logoutStep, setLogoutStep] = useState<'confirm' | 'loading'>('confirm');
 
-  const handleLogout = async () => {
-    if (confirm('Apakah Anda yakin ingin logout dari sesi admin?')) {
+  const handleOpenLogout = () => {
+    setDropdownOpen(false);
+    setLogoutStep('confirm');
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    setLogoutStep('loading');
+    try {
       await logout();
+      router.push('/auth/login');
+    } catch (err) {
+      console.error('Logout error:', err);
       router.push('/auth/login');
     }
   };
@@ -158,7 +171,7 @@ export default function AdminHeader({ onToggleSidebar, title }: AdminHeaderProps
               {/* Item 2: Logout */}
               <button
                 type="button"
-                onClick={handleLogout}
+                onClick={handleOpenLogout}
                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors text-left"
               >
                 <svg
@@ -180,6 +193,20 @@ export default function AdminHeader({ onToggleSidebar, title }: AdminHeaderProps
           )}
         </div>
       </div>
+
+      <ActionModal
+        isOpen={showLogoutModal}
+        step={logoutStep}
+        variant="danger"
+        icon="logout"
+        title="Log out?"
+        description="Apakah kamu yakin ingin keluar dari akun?"
+        confirmText="Logout"
+        cancelText="Batal"
+        onConfirm={handleConfirmLogout}
+        onCancel={() => setShowLogoutModal(false)}
+        loadingTitle="Loading"
+      />
     </header>
   );
 }
