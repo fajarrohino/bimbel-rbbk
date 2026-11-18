@@ -22,17 +22,17 @@ const FAQ_LIST: FaqItem[] = [
   {
     question: 'Bagaimana sistem pembayaran dan berapa biayanya?',
     answer:
-      'Sistem pembayaran sangat fleksibel. Orang tua dapat memilih pembayaran per pertemuan (mulai dari Rp10.000) atau paket bulanan yang lebih hemat. Tidak ada biaya administrasi pendaftaran atau uang gedung tersembunyi.',
+      'Sistem pembayaran sangat fleksibel. Orang tua dapat melakukan pembayaran per pertemuan mulai dari 10ribuan. Tidak ada biaya administrasi pendaftaran atau uang gedung.',
   },
   {
     question: 'Apakah bimbingan belajar berbentuk les privat atau kelompok?',
     answer:
-      'Rumah Belajar mengutamakan kelompok kecil (3 hingga 5 siswa per sesi) agar anak tetap bersosialisasi dan bertukar pikiran namun tetap mendapatkan perhatian personal penuh dari pengajar. Layanan privat 1-on-1 juga tersedia atas permintaan khusus orang tua.',
+      'Rumah Belajar mengutamakan kelompok kecil agar anak tetap bersosialisasi dan bertukar pikiran namun tetap mendapatkan perhatian personal penuh dari pengajar. Layanan privat 1-on-1 juga tersedia atas permintaan khusus orang tua.',
   },
   {
     question: 'Bagaimana jika anak berhalangan hadir di jadwal tertentu?',
     answer:
-      'Cukup kabari Bu Khotimah melalui WhatsApp paling lambat 2 jam sebelum sesi bimbingan dimulai. Anak dapat mengikuti sesi pengganti di kelompok lain atau mendapatkan rangkuman tugas mandiri tanpa dikenakan denda.',
+      'Cukup kabari Bu Khotimah melalui WhatsApp paling lambat 2 jam sebelum sesi bimbingan dimulai. Anak dapat mengikuti sesi pengganti di kelompok lain.',
   },
 ];
 
