@@ -451,7 +451,6 @@ export function SchedulePrintDocument({
                           <span className="font-bold text-amber-700 w-4">{idx + 1}.</span>
                           <div className="flex-1">
                             <span className="font-bold block capitalize">{capitalizeWords(st?.name) || 'Siswa'}</span>
-                            {/* <span className="text-[10px] text-slate-500">{st?.school || st?.grade || '-'}</span> */}
                           </div>
                         </li>
                       );
@@ -482,7 +481,6 @@ export function SchedulePrintDocument({
                           <span className="font-bold text-sky-700 w-4">{idx + 1}.</span>
                           <div className="flex-1">
                             <span className="font-bold block capitalize">{capitalizeWords(st?.name) || 'Siswa'}</span>
-                            <span className="text-[10px] text-slate-500">{st?.school || st?.grade || '-'}</span>
                           </div>
                         </li>
                       );
@@ -513,7 +511,6 @@ export function SchedulePrintDocument({
                           <span className="font-bold text-teal-700 w-4">{idx + 1}.</span>
                           <div className="flex-1">
                             <span className="font-bold block capitalize">{capitalizeWords(st?.name) || 'Siswa'}</span>
-                            <span className="text-[10px] text-slate-500">{st?.school || st?.grade || '-'}</span>
                           </div>
                         </li>
                       );

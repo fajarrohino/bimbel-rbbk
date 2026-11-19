@@ -323,7 +323,6 @@ function AdminScheduleStudentsContent() {
                               </div>
                               <div className="min-w-0 flex-1">
                                 <p className="font-semibold text-sm text-slate-800 break-words capitalize">{capitalizeWords(student.name)}</p>
-                                <p className="text-[11px] text-slate-400 truncate">{student.school || student.grade}</p>
                               </div>
                             </div>
                           ))
@@ -374,7 +373,6 @@ function AdminScheduleStudentsContent() {
                               </div>
                               <div className="min-w-0 flex-1">
                                 <p className="font-semibold text-sm text-slate-800 break-words capitalize">{capitalizeWords(student.name)}</p>
-                                <p className="text-[11px] text-slate-400 truncate">{student.school || student.grade}</p>
                               </div>
                             </div>
                           ))
