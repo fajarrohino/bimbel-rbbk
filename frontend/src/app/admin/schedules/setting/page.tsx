@@ -24,6 +24,16 @@ interface ToastMessage {
   type?: 'success' | 'warning' | 'info';
 }
 
+function formatCapitalizeName(name?: string | null): string {
+  if (!name) return '';
+  return name
+    .toLowerCase()
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function AdminAturJadwalContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -110,7 +120,13 @@ function AdminAturJadwalContent() {
 
         if (isMounted) {
           if (studentsRes.status === 'fulfilled') {
-            setStudents((studentsRes.value.students || []).filter((s) => !s.isDeleted));
+            const list = (studentsRes.value.students || [])
+              .filter((s) => !s.isDeleted)
+              .map((s) => ({
+                ...s,
+                name: formatCapitalizeName(s.name),
+              }));
+            setStudents(list);
           }
           if (schedulesRes.status === 'fulfilled') {
             const normalized = schedulesRes.value.map((sch) => ({
@@ -287,13 +303,7 @@ function AdminAturJadwalContent() {
 
   const handleJumpToToday = () => {
     setCurrentMonthDate(new Date(todayDateObj.getFullYear(), todayDateObj.getMonth(), 1));
-    addToast(
-      `Menampilkan kalender hari ini (${todayDateObj.toLocaleDateString('id-ID', {
-        month: 'long',
-        year: 'numeric',
-      })})`,
-      'info'
-    );
+    addToast('Kembali ke hari ini', 'info');
   };
 
   // Month label formatted
@@ -401,10 +411,11 @@ function AdminAturJadwalContent() {
   // ==================== DRAG & DROP HANDLERS ====================
 
   const handleDragStartFromPool = (e: React.DragEvent, student: Student) => {
+    const formattedName = formatCapitalizeName(student.name);
     const payload: DragPayload = {
       type: 'student-pool',
       studentId: student.id,
-      studentName: student.name,
+      studentName: formattedName,
     };
     setDraggedItem(payload);
     e.dataTransfer.setData('application/json', JSON.stringify(payload));
@@ -416,10 +427,11 @@ function AdminAturJadwalContent() {
     assignment: ScheduleAssignment,
     studentName: string
   ) => {
+    const formattedName = formatCapitalizeName(studentName);
     const payload: DragPayload = {
       type: 'calendar-badge',
       studentId: assignment.studentId,
-      studentName,
+      studentName: formattedName,
       sourceDate: assignment.date,
       sourceSession: assignment.session,
       sourceAssignmentId: assignment.id,
@@ -455,6 +467,7 @@ function AdminAturJadwalContent() {
     if (!payload) return;
 
     const { studentId, studentName, type, sourceAssignmentId, sourceDate, sourceSession } = payload;
+    const displayName = formatCapitalizeName(studentName || studentsMap.get(studentId)?.name || 'Siswa');
 
     // Check if already assigned to this date and session
     const isAlreadyInTarget = schedules.some(
@@ -467,7 +480,7 @@ function AdminAturJadwalContent() {
 
     if (isAlreadyInTarget) {
       addToast(
-        `${studentName} sudah terdaftar pada tanggal ${dateStr} (Sesi ${sessionNum})`,
+        `${displayName} sudah ada di Sesi ${sessionNum}`,
         'warning'
       );
       return;
@@ -481,48 +494,55 @@ function AdminAturJadwalContent() {
       try {
         await scheduleApi.delete(sourceAssignmentId);
         const created = await scheduleApi.create({ studentId, date: dateStr, session: sessionNum });
-        const normalizedNew = {
-          ...created,
-          date: typeof created.date === 'string' ? created.date.split('T')[0] : new Date(created.date).toISOString().split('T')[0],
+        const scheduleItem = (created as any)?.schedule ?? created;
+        const normalizedNew: ScheduleAssignment = {
+          ...scheduleItem,
+          date: typeof scheduleItem.date === 'string'
+            ? scheduleItem.date.split('T')[0]
+            : (scheduleItem.date ? new Date(scheduleItem.date).toISOString().split('T')[0] : dateStr),
         };
         setSchedules((prev) => [
           ...prev.filter((sch) => sch.id !== sourceAssignmentId),
           normalizedNew,
         ]);
         addToast(
-          `Berhasil memindahkan ${studentName} ke Tanggal ${dateStr} - Sesi ${sessionNum}`,
+          `${displayName} dipindahkan ke Sesi ${sessionNum}`,
           'success'
         );
       } catch (err: any) {
-        addToast(err.message || 'Gagal memindahkan jadwal.', 'warning');
+        addToast(err.message || 'Gagal memindahkan jadwal', 'warning');
       }
     } else {
       // Add from pool
       try {
         const created = await scheduleApi.create({ studentId, date: dateStr, session: sessionNum });
-        const normalizedNew = {
-          ...created,
-          date: typeof created.date === 'string' ? created.date.split('T')[0] : new Date(created.date).toISOString().split('T')[0],
+        const scheduleItem = (created as any)?.schedule ?? created;
+        const normalizedNew: ScheduleAssignment = {
+          ...scheduleItem,
+          date: typeof scheduleItem.date === 'string'
+            ? scheduleItem.date.split('T')[0]
+            : (scheduleItem.date ? new Date(scheduleItem.date).toISOString().split('T')[0] : dateStr),
         };
         setSchedules((prev) => [...prev, normalizedNew]);
         addToast(
-          `Berhasil menjadwalkan ${studentName} ke Tanggal ${dateStr} - Sesi ${sessionNum}`,
+          `${displayName} masuk Sesi ${sessionNum}`,
           'success'
         );
       } catch (err: any) {
-        addToast(err.message || 'Gagal menjadwalkan siswa.', 'warning');
+        addToast(err.message || 'Gagal menjadwalkan siswa', 'warning');
       }
     }
   };
 
   // Quick remove from calendar badge button
-  const handleRemoveAssignment = async (assignmentId: string, studentName: string, dateStr: string) => {
+  const handleRemoveAssignment = async (assignmentId: string, studentName: string) => {
+    const displayName = formatCapitalizeName(studentName);
     try {
       await scheduleApi.delete(assignmentId);
       setSchedules((prev) => prev.filter((sch) => sch.id !== assignmentId));
-      addToast(`${studentName} dihapus dari jadwal tanggal ${dateStr}`, 'info');
+      addToast(`${displayName} dihapus dari jadwal`, 'info');
     } catch (err: any) {
-      addToast(err.message || 'Gagal menghapus jadwal.', 'warning');
+      addToast(err.message || 'Gagal menghapus jadwal', 'warning');
     }
   };
 
@@ -554,25 +574,28 @@ function AdminAturJadwalContent() {
 
     const { date, session } = quickAssignModal;
     const studentObj = studentsMap.get(selectedStudentToAssign);
-    const studentName = studentObj?.name || 'Siswa';
+    const displayName = formatCapitalizeName(studentObj?.name || 'Siswa');
 
     try {
       const created = await scheduleApi.create({ studentId: selectedStudentToAssign, date, session });
-      const normalizedNew = {
-        ...created,
-        date: typeof created.date === 'string' ? created.date.split('T')[0] : new Date(created.date).toISOString().split('T')[0],
+      const scheduleItem = (created as any)?.schedule ?? created;
+      const normalizedNew: ScheduleAssignment = {
+        ...scheduleItem,
+        date: typeof scheduleItem.date === 'string'
+          ? scheduleItem.date.split('T')[0]
+          : (scheduleItem.date ? new Date(scheduleItem.date).toISOString().split('T')[0] : date),
       };
       setSchedules((prev) => [...prev, normalizedNew]);
-      addToast(`Berhasil menjadwalkan ${studentName} ke Tanggal ${date} - Sesi ${session}`, 'success');
+      addToast(`${displayName} masuk Sesi ${session}`, 'success');
       setQuickAssignModal(null);
     } catch (err: any) {
-      addToast(err.message || 'Gagal menjadwalkan siswa.', 'warning');
+      addToast(err.message || 'Gagal menjadwalkan siswa', 'warning');
     }
   };
 
   // Save Schedule Button
   const handleSaveSchedule = () => {
-    addToast('Perubahan jadwal & plotting siswa sudah otomatis tersimpan di database!', 'success');
+    addToast('Jadwal tersimpan otomatis', 'success');
   };
 
   return (
@@ -938,7 +961,7 @@ function AdminAturJadwalContent() {
                                   <div className="drop-target-area flex flex-wrap gap-1">
                                     {s1Assignments.map((sch) => {
                                       const student = studentsMap.get(sch.studentId);
-                                      const sName = student?.name || 'Siswa';
+                                      const sName = formatCapitalizeName(student?.name || (sch as any).student?.name || 'Siswa');
                                       return (
                                         <div
                                           key={sch.id}
@@ -955,13 +978,13 @@ function AdminAturJadwalContent() {
                                             <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
                                               drag_indicator
                                             </span>
-                                            <span className="truncate max-w-[95px]">{sName}</span>
+                                            <span className="truncate max-w-[95px] capitalize">{sName}</span>
                                           </div>
                                           <button
                                             type="button"
                                             onClick={(e) => {
                                               e.stopPropagation();
-                                              handleRemoveAssignment(sch.id, sName, cell.dateStr);
+                                              handleRemoveAssignment(sch.id, sName);
                                             }}
                                             className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
                                             title="Hapus dari sesi ini"
@@ -1009,7 +1032,7 @@ function AdminAturJadwalContent() {
                                   <div className="drop-target-area flex flex-wrap gap-1">
                                     {s2Assignments.map((sch) => {
                                       const student = studentsMap.get(sch.studentId);
-                                      const sName = student?.name || 'Siswa';
+                                      const sName = formatCapitalizeName(student?.name || (sch as any).student?.name || 'Siswa');
                                       return (
                                         <div
                                           key={sch.id}
@@ -1026,13 +1049,13 @@ function AdminAturJadwalContent() {
                                             <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
                                               drag_indicator
                                             </span>
-                                            <span className="truncate max-w-[95px]">{sName}</span>
+                                            <span className="truncate max-w-[95px] capitalize">{sName}</span>
                                           </div>
                                           <button
                                             type="button"
                                             onClick={(e) => {
                                               e.stopPropagation();
-                                              handleRemoveAssignment(sch.id, sName, cell.dateStr);
+                                              handleRemoveAssignment(sch.id, sName);
                                             }}
                                             className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
                                             title="Hapus dari sesi ini"
@@ -1080,7 +1103,7 @@ function AdminAturJadwalContent() {
                                   <div className="drop-target-area flex flex-wrap gap-1">
                                     {s3Assignments.map((sch) => {
                                       const student = studentsMap.get(sch.studentId);
-                                      const sName = student?.name || 'Siswa';
+                                      const sName = formatCapitalizeName(student?.name || (sch as any).student?.name || 'Siswa');
                                       return (
                                         <div
                                           key={sch.id}
@@ -1097,13 +1120,13 @@ function AdminAturJadwalContent() {
                                             <span className="material-symbols-outlined text-[13px] text-outline group-hover:text-primary shrink-0">
                                               drag_indicator
                                             </span>
-                                            <span className="truncate max-w-[95px]">{sName}</span>
+                                            <span className="truncate max-w-[95px] capitalize">{sName}</span>
                                           </div>
                                           <button
                                             type="button"
                                             onClick={(e) => {
                                               e.stopPropagation();
-                                              handleRemoveAssignment(sch.id, sName, cell.dateStr);
+                                              handleRemoveAssignment(sch.id, sName);
                                             }}
                                             className="opacity-0 group-hover:opacity-100 hover:text-rose-500 text-slate-400 text-[10px] ml-1 transition-opacity"
                                             title="Hapus dari sesi ini"
@@ -1188,28 +1211,31 @@ function AdminAturJadwalContent() {
                             <p className="text-xs">Tidak ada siswa di Sesi 1</p>
                           </div>
                         ) : (
-                          session1Pool.map((student) => (
-                            <div
-                              key={student.id}
-                              draggable
-                              onDragStart={(e) => handleDragStartFromPool(e, student)}
-                              onDragEnd={handleDragEnd}
-                              className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
-                              data-student={student.name}
-                            >
-                              <div className="flex items-center gap-3 min-w-0">
-                                <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
-                                  drag_indicator
-                                </span>
-                                <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
-                                  {student.name}
+                          session1Pool.map((student) => {
+                            const capitalizedStudentName = formatCapitalizeName(student.name);
+                            return (
+                              <div
+                                key={student.id}
+                                draggable
+                                onDragStart={(e) => handleDragStartFromPool(e, student)}
+                                onDragEnd={handleDragEnd}
+                                className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
+                                data-student={capitalizedStudentName}
+                              >
+                                <div className="flex items-center gap-3 min-w-0">
+                                  <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
+                                    drag_indicator
+                                  </span>
+                                  <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate capitalize">
+                                    {capitalizedStudentName}
+                                  </span>
+                                </div>
+                                <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
+                                  open_with
                                 </span>
                               </div>
-                              <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
-                                open_with
-                              </span>
-                            </div>
-                          ))
+                            );
+                          })
                         )}
                       </div>
                     </div>
@@ -1242,28 +1268,31 @@ function AdminAturJadwalContent() {
                             <p className="text-xs">Tidak ada siswa di Sesi 2</p>
                           </div>
                         ) : (
-                          session2Pool.map((student) => (
-                            <div
-                              key={student.id}
-                              draggable
-                              onDragStart={(e) => handleDragStartFromPool(e, student)}
-                              onDragEnd={handleDragEnd}
-                              className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
-                              data-student={student.name}
-                            >
-                              <div className="flex items-center gap-3 min-w-0">
-                                <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
-                                  drag_indicator
-                                </span>
-                                <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
-                                  {student.name}
+                          session2Pool.map((student) => {
+                            const capitalizedStudentName = formatCapitalizeName(student.name);
+                            return (
+                              <div
+                                key={student.id}
+                                draggable
+                                onDragStart={(e) => handleDragStartFromPool(e, student)}
+                                onDragEnd={handleDragEnd}
+                                className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
+                                data-student={capitalizedStudentName}
+                              >
+                                <div className="flex items-center gap-3 min-w-0">
+                                  <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
+                                    drag_indicator
+                                  </span>
+                                  <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate capitalize">
+                                    {capitalizedStudentName}
+                                  </span>
+                                </div>
+                                <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
+                                  open_with
                                 </span>
                               </div>
-                              <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
-                                open_with
-                              </span>
-                            </div>
-                          ))
+                            );
+                          })
                         )}
                       </div>
                     </div>
@@ -1296,28 +1325,31 @@ function AdminAturJadwalContent() {
                             <p className="text-xs">Tidak ada siswa di Sesi 3</p>
                           </div>
                         ) : (
-                          session3Pool.map((student) => (
-                            <div
-                              key={student.id}
-                              draggable
-                              onDragStart={(e) => handleDragStartFromPool(e, student)}
-                              onDragEnd={handleDragEnd}
-                              className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
-                              data-student={student.name}
-                            >
-                              <div className="flex items-center gap-3 min-w-0">
-                                <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
-                                  drag_indicator
-                                </span>
-                                <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate">
-                                  {student.name}
+                          session3Pool.map((student) => {
+                            const capitalizedStudentName = formatCapitalizeName(student.name);
+                            return (
+                              <div
+                                key={student.id}
+                                draggable
+                                onDragStart={(e) => handleDragStartFromPool(e, student)}
+                                onDragEnd={handleDragEnd}
+                                className="student-card cursor-grab active:cursor-grabbing bg-surface-container-lowest hover:shadow-md p-3.5 rounded-xl flex items-center justify-between transition-all group border border-slate-100 select-none"
+                                data-student={capitalizedStudentName}
+                              >
+                                <div className="flex items-center gap-3 min-w-0">
+                                  <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-[20px] shrink-0">
+                                    drag_indicator
+                                  </span>
+                                  <span className="font-label-lg font-semibold text-sm text-on-surface group-hover:text-primary truncate capitalize">
+                                    {capitalizedStudentName}
+                                  </span>
+                                </div>
+                                <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
+                                  open_with
                                 </span>
                               </div>
-                              <span className="material-symbols-outlined text-[16px] text-outline/60 group-hover:text-primary transition-colors shrink-0">
-                                open_with
-                              </span>
-                            </div>
-                          ))
+                            );
+                          })
                         )}
                       </div>
                     </div>
@@ -1369,7 +1401,7 @@ function AdminAturJadwalContent() {
                 </option>
                 {students.map((st) => (
                   <option key={st.id} value={st.id}>
-                    {st.name} (Sesi Rekomendasi: {st.preferredSession})
+                    {formatCapitalizeName(st.name)} (Sesi Rekomendasi: {st.preferredSession})
                   </option>
                 ))}
               </select>

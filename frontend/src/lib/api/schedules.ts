@@ -58,12 +58,14 @@ export const scheduleApi = {
     return res.students || [];
   },
 
-  create: (data: {
+  create: async (data: {
     studentId: string;
     date: string;
     session: number;
-  }): Promise<ScheduleAssignment> =>
-    apiClient.post('/api/schedules', data),
+  }): Promise<ScheduleAssignment> => {
+    const res = await apiClient.post<{ schedule: ScheduleAssignment }>('/api/schedules', data);
+    return res?.schedule ?? (res as unknown as ScheduleAssignment);
+  },
 
   bulkCreate: (
     assignments: Array<{ studentId: string; date: string; session: number }>
